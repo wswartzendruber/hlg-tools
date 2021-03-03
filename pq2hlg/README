@@ -1,0 +1,23 @@
+PQ2HLG 1.0.0
+Generates a Cube LUT for Converting from PQ to HLG
+
+USAGE:
+    pq2hlg [OPTIONS] <OUTPUT-FILE>
+
+FLAGS:
+    -h, --help       Prints help information
+    -V, --version    Prints version information
+
+OPTIONS:
+    -m, --max-channel <RATIO>    Linear ratio of the input video stream's brightest color channel [default: 1.0]
+    -r, --ref-white <NITS>       Brightness of the input video stream's reference white level [default: 203]
+    -s, --size <COUNT>           The size of each dimension of the 3D LUT [default: 32]
+    -t, --title <STRING>         Title of the LUT
+
+ARGS:
+    <OUTPUT-FILE>    Output Cube LUT file; use - for STDOUT
+
+This utility follows the BT.2390 method for generating a PQ-to-HLG conversion LUT. If a ref-white value is supplied,
+then the input will first be linearly scaled to bring that level to 203 nits. If a max-channel value has been provided,
+then it will be internally adjusted by this factor to reflect the effect of the scaling. If the internal max-channel
+value exceeds 0.1, then BT.2390 tone mapping will be applied, otherwise, no tone mapping is necessary.
