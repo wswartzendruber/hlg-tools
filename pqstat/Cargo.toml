@@ -1,0 +1,15 @@
+#
+# Any copyright is dedicated to the Public Domain.
+# https://creativecommons.org/publicdomain/zero/1.0/
+#
+
+[package]
+name = "pqstat"
+version = "1.0.0"
+authors = ["William Swartzendruber <wswartzendruber@gmail.com>"]
+edition = "2018"
+license = "OSL-3.0"
+
+[dependencies]
+byteorder = "1"
+clap = "~2.27.0"
