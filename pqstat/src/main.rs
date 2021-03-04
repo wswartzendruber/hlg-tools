@@ -15,7 +15,7 @@ use std::{
 };
 use io::read_frame;
 use tf::{pq_eotf, Pixel};
-use clap::{crate_version, Arg, App};
+use clap::{app_from_crate, crate_authors, crate_description, crate_name, crate_version, Arg};
 
 struct FrameStats {
     max_cll: f64,
@@ -24,10 +24,7 @@ struct FrameStats {
 
 fn main() {
 
-    let matches = App::new("PQStat")
-        .version(crate_version!())
-        .about("Determine a PQ stream's brightest pixel (MaxCLL) and highest subpixel level \
-            (MaxChannel).")
+    let matches = app_from_crate!()
         .arg(Arg::with_name("width")
             .long("width")
             .short("w")
@@ -64,6 +61,9 @@ fn main() {
             .help("Raw input video stream (PQ, BT.2020, RGB48LE); use - for STDIN")
             .required(true)
         )
+        .after_help(format!("Copyright © 2021 William Swartzendruber\n\
+            Licensed under the Open Software License version 3.0\n\
+            <{}>", env!("CARGO_PKG_REPOSITORY")).as_str())
         .get_matches();
     let width = matches.value_of("width").unwrap().parse::<usize>().unwrap();
     let height = matches.value_of("height").unwrap().parse::<usize>().unwrap();

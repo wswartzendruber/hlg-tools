@@ -5,10 +5,12 @@
 
 [package]
 name = "pqstat"
+description = "Determines a PQ stream's brightness characteristics for HLG conversion"
 version = "1.0.0"
 authors = ["William Swartzendruber <wswartzendruber@gmail.com>"]
 edition = "2018"
 license = "OSL-3.0"
+repository = "https://github.com/wswartzendruber/hlg-tools"
 
 [dependencies]
 tf = { path = "../tf" }

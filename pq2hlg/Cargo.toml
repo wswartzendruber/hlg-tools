@@ -5,10 +5,12 @@
 
 [package]
 name = "pq2hlg"
+description = "Generates a Cube LUT for Converting from PQ to HLG"
 version = "1.0.0"
 authors = ["William Swartzendruber <wswartzendruber@gmail.com>"]
 edition = "2018"
 license = "OSL-3.0"
+repository = "https://github.com/wswartzendruber/hlg-tools"
 
 [dependencies]
 tf = { path = "../tf" }

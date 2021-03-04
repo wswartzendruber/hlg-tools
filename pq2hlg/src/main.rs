@@ -9,13 +9,11 @@ use std::{
     io::{stdout, BufWriter, Write},
 };
 use tf::{Pixel, PqHlgMapper};
-use clap::{crate_version, Arg, App};
+use clap::{app_from_crate, crate_authors, crate_description, crate_name, crate_version, Arg};
 
 fn main() {
 
-    let matches = App::new("PQ2HLG")
-        .version(crate_version!())
-        .about("Generates a Cube LUT for Converting from PQ to HLG")
+    let matches = app_from_crate!()
         .arg(Arg::with_name("title")
             .long("title")
             .short("t")
@@ -108,12 +106,16 @@ fn main() {
             .help("Output Cube LUT file; use - for STDOUT")
             .required(true)
         )
-        .after_help("This utility follows the BT.2390 method for generating a PQ-to-HLG \
-            conversion LUT. If a ref-white value is supplied, then the input will first be \
-            linearly scaled to bring that level to 203 nits. If a max-channel value has been \
-            provided, then it will be internally adjusted by this factor to reflect the effect \
-            of the scaling. If the internal max-channel value exceeds 0.1, then BT.2390 tone \
-            mapping will be applied, otherwise, no tone mapping is necessary.")
+        .after_help(format!("This utility follows the BT.2390 method for generating a \
+            PQ-to-HLG conversion LUT. If a --ref-white value is supplied, the input will first \
+            be linearly scaled to bring that level to 203 nits. The --max-channel value will \
+            then be internally adjusted by that factor to reflect the effect of the scaling. \
+            If the internal max-channel value then exceeds 0.1, BT.2390 tone mapping will be \
+            applied to each color channel independently, otherwise, no tone mapping will be \
+            necessary.\n\n\
+            Copyright © 2021 William Swartzendruber\n\
+            Licensed under the Open Software License version 3.0\n\
+            <{}>", env!("CARGO_PKG_REPOSITORY")).as_str())
         .get_matches();
     let title = matches.value_of("title");
     let ref_white = matches.value_of("ref-white").unwrap().parse::<f64>().unwrap();
