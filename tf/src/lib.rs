@@ -1,7 +1,6 @@
 /*
  * Copyright © 2021 William Swartzendruber
- *
- * Licensed under the Open Software License (OSL 3.0).
+ * Licensed under the Open Software License version 3.0
  */
 
 #[cfg(test)]
