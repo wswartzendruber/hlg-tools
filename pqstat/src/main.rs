@@ -8,26 +8,18 @@
 mod tests;
 
 mod io;
-mod tf;
 
 use std::{
     fs::File,
     io::{stdin, BufReader, ErrorKind, Read},
 };
 use io::read_frame;
-use tf::pq_eotf;
+use tf::{pq_eotf, Pixel};
 use clap::{crate_version, Arg, App};
 
 struct FrameStats {
     max_cll: f64,
     max_channel: f64,
-}
-
-#[derive(Debug, Clone, Copy, PartialEq)]
-pub struct Pixel {
-    red: f64,
-    green: f64,
-    blue: f64,
 }
 
 fn main() {

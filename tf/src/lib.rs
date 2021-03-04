@@ -7,7 +7,12 @@
 #[cfg(test)]
 mod tests;
 
-use super::Pixel;
+#[derive(Debug, Clone, Copy, PartialEq)]
+pub struct Pixel {
+    pub red: f64,
+    pub green: f64,
+    pub blue: f64,
+}
 
 pub struct PqHlgMapper {
     factor: f64,
@@ -98,6 +103,19 @@ impl PqOotf {
     }
 }
 
+fn p(ks: f64, ml: f64, b: f64) -> f64 {
+
+    let t = (b - ks) / (1.0 - ks);
+    let t2 = t.powf(2.0);
+    let t3 = t.powf(3.0);
+
+    (2.0 * t3 - 3.0 * t2 + 1.0) * ks
+    +
+    (t3 - 2.0 * t2 + t) * (1.0 - ks)
+    +
+    (-2.0 * t3 + 3.0 * t2) * ml
+}
+
 fn pq_oetf(e: f64) -> f64 {
 
     //
@@ -113,20 +131,7 @@ fn pq_oetf(e: f64) -> f64 {
     .powf(78.84375)
 }
 
-fn p(ks: f64, ml: f64, b: f64) -> f64 {
-
-    let t = (b - ks) / (1.0 - ks);
-    let t2 = t.powf(2.0);
-    let t3 = t.powf(3.0);
-
-    (2.0 * t3 - 3.0 * t2 + 1.0) * ks
-    +
-    (t3 - 2.0 * t2 + t) * (1.0 - ks)
-    +
-    (-2.0 * t3 + 3.0 * t2) * ml
-}
-
-fn pq_eotf(e: f64) -> f64 {
+pub fn pq_eotf(e: f64) -> f64 {
 
     //
     // ITU-R BT.2100-2

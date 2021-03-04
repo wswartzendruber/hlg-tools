@@ -11,5 +11,5 @@ edition = "2018"
 license = "OSL-3.0"
 
 [dependencies]
-byteorder = "1"
+tf = { path = "../tf" }
 clap = "~2.27.0"

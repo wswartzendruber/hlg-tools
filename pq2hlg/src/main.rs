@@ -4,22 +4,12 @@
  * Licensed under the Open Software License (OSL 3.0).
  */
 
-mod tf;
-
 use std::{
     fs::File,
     io::{stdout, BufWriter, Write},
 };
-use tf::PqHlgMapper;
+use tf::{Pixel, PqHlgMapper};
 use clap::{crate_version, Arg, App};
-
-#[derive(Debug, Clone, Copy, PartialEq)]
-pub struct Pixel {
-    red: f64,
-    green: f64,
-    blue: f64,
-}
-
 
 fn main() {
 
