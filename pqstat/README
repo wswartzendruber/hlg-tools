@@ -1,5 +1,6 @@
-PQStat 0.1.0
-Determine a PQ stream's brightest pixel (MaxCLL) and highest subpixel level (MaxChannel).
+pqstat 0.1.0
+William Swartzendruber <wswartzendruber@gmail.com>
+Determines a PQ stream's brightness characteristics for HLG conversion
 
 USAGE:
     pqstat <INPUT-FILE> --height <PIXELS> --width <PIXELS>
@@ -14,3 +15,7 @@ OPTIONS:
 
 ARGS:
     <INPUT-FILE>    Raw input video stream (PQ, BT.2020, RGB48LE); use - for STDIN
+
+Copyright © 2021 William Swartzendruber
+Licensed under the Open Software License version 3.0
+<https://github.com/wswartzendruber/hlg-tools>

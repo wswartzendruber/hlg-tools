@@ -1,4 +1,5 @@
-PQ2HLG 1.0.0
+pq2hlg 0.1.0
+William Swartzendruber <wswartzendruber@gmail.com>
 Generates a Cube LUT for Converting from PQ to HLG
 
 USAGE:
@@ -17,7 +18,11 @@ OPTIONS:
 ARGS:
     <OUTPUT-FILE>    Output Cube LUT file; use - for STDOUT
 
-This utility follows the BT.2390 method for generating a PQ-to-HLG conversion LUT. If a ref-white value is supplied,
-then the input will first be linearly scaled to bring that level to 203 nits. If a max-channel value has been provided,
-then it will be internally adjusted by this factor to reflect the effect of the scaling. If the internal max-channel
-value exceeds 0.1, then BT.2390 tone mapping will be applied, otherwise, no tone mapping is necessary.
+This utility follows the BT.2390 method for generating a PQ-to-HLG conversion LUT. If a --ref-white value is supplied,
+the input will first be linearly scaled to bring that level to 203 nits. The --max-channel value will then be internally
+adjusted by that factor to reflect the effect of the scaling. If the internal max-channel value then exceeds 0.1,
+BT.2390 tone mapping will be applied to each color channel independently, otherwise, no tone mapping will be necessary.
+
+Copyright © 2021 William Swartzendruber
+Licensed under the Open Software License version 3.0
+<https://github.com/wswartzendruber/hlg-tools>
