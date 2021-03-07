@@ -101,7 +101,7 @@ the 3D LUT and the conclusion to the process.
 
 So let's walk through converting a 4K UltraHD Blu-ray to HLG. For this scenario, we'll be using
 `hlg-tools` along with `ffmpeg`. In particular, we'll be assuming that the following binaries
-are in the PATH:
+are in the `PATH`:
 
 - `pqstat`
 - `pq2hlg`
@@ -137,7 +137,7 @@ You can ignore MaxCLL here, but we absolutely need MaxChannel.
 ## Determine `ref-white`
 
 The second thing we're after is the movie's `ref-white` property. The unfortunate truth of the
-matter is that there is no straight forward way to handle this. Yet if it's not correctly
+matter is that there is no straightforward way to handle this. Yet if it's not correctly
 determined, the picture will appear either too bright or too dim when played back on SDR.
 
 What we need to determine is how bright the current movie shows a fully diffused white surface.
@@ -202,7 +202,7 @@ subtitles.
 
 While the resulting HLG output is genuine HDR, we can also measure its usefulness by how it
 appears when played back on a SDR display. I have gathered some screenshots from the above
-example:
+example. Here, MPV is being used to convert BT.2020 HLG into BT.709 SDR.
 
 ![](img/alita-0.jpg)
 
@@ -223,3 +223,8 @@ example:
 ![](img/alita-8.jpg)
 
 ![](img/alita-9.jpg)
+
+# Conclusion
+
+It is feasible to convert HDR10 discs into HLG for compatible viewing with excellent results.
+The weak point in this process is correctly evaluating each disc's reference white level.
