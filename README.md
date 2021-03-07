@@ -59,7 +59,7 @@ player.
 The tooling here works to facilitate the following procedure:
 
 - Gather color data on the PQ stream.
-- Determine the its reference white level.
+- Determine its reference white level.
 - Adjust the brightness to bring reference white to 203 nits.
 - Tone map the PQ stream to be within HLG's dynamic range.
 - Apply the PQ-to-HLG conversion algorithm.
@@ -93,4 +93,4 @@ This will permit a pure white pixel to hit exactly 1,000 nits in accordance with
 step is also covered by the 3D LUT.
 
 Fifth, the video signal finally gets converted from PQ to HLG. This is the last step convered by
-the 3D LUT and the conclusion of the process.
+the 3D LUT and the conclusion to the process.
