@@ -5,6 +5,8 @@ streams from Perceptual Quantizer (PQ) HDR into Hybrid-Log Gamma (HLG) HDR. This
 to facilitate individuals in converting their physical HDR10 video libraries into HLG, thereby
 allowing more universal viewing on devices including SDR displays.
 
+Most of the work here is based on ITU-R BT.2390.
+
 Note that nothing here addresses the topic of decrypting physical media.
 
 # Rationale
@@ -51,3 +53,44 @@ correctly mastered (or converted) HLG stream and a HLG-aware player, it can be e
 difficult to tell that the picture wasn't natively mastered for SDR. Some players are also good
 at downconverting BT.2020 color to BT.709 color as a part of this process. MPV is one such
 player.
+
+# How It Works
+
+The tooling here works to facilitate the following procedure:
+
+- Gather color data on the PQ stream.
+- Determine the its reference white level.
+- Adjust the brightness to bring reference white to 203 nits.
+- Tone map the PQ stream to be within HLG's dynamic range.
+- Apply the PQ-to-HLG conversion algorithm.
+
+First, color data needs to be gathered on the PQ stream. The one and only thing we really care
+about here is what the tooling refers to as `max-channel`. This is the highest ratio of linear
+brightness between all three color channels. A value of `0.0` represents pitch black while a
+value of `1.0` represents full brightness. Effectively, `max-channel` is the value of the
+brightest pixel's highest color channel in linear space. The `pqstat` utility provides this
+information.
+
+Second, the reference white level needs to be determined. This is not as important if the HLG
+output is going to be viewed on HDR displays only, but it is absolutely critical for SDR
+compatibility. If `ref-white` is set too low, the SDR downconversion will appear too bright. If
+`ref-white` is set too high, the SDR downconversion will appear too dim. This is the only part
+of the process that requires human judgment and will be covered in detail below. This step is
+unfortunately necessary because PQ content, especially from 4K UltraHD Blu-rays, tends to be
+anywhere between 100 and 203 nits.
+
+Third, the linear brightness of the PQ stream needs to be adjusted so that `ref-white` sits at
+203 nits. The `max-channel` value is also going to be adjusted accordingly, even preserving
+values higher than `1.0`. This step is handled by each 3D LUT that `pq2hlg` generates.
+
+Fourth, each color channel will be tone mapped such that:
+
+- All red subpixels fall within 262.7 nits.
+- All green subpixels fall within 678 nits.
+- All blue subpixels fall within 59.3 nits.
+
+This will permit a pure white pixel to hit exactly 1,000 nits in accordance with BT.2390. This
+step is also covered by the 3D LUT.
+
+Fifth, the video signal finally gets converted from PQ to HLG. This is the last step convered by
+the 3D LUT and the conclusion of the process.
