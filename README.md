@@ -58,39 +58,31 @@ player.
 
 The tooling here works to facilitate the following procedure:
 
-- Gather color data on the PQ stream.
+- Determine the input stream's MaxCLL property.
 - Determine its reference white level.
 - Adjust the brightness to bring reference white to 203 nits.
 - Tone map the PQ stream to be within HLG's dynamic range.
 - Apply the PQ-to-HLG conversion algorithm.
 
-First, color data needs to be gathered on the PQ stream. The one and only thing we really care
-about here is what the tooling refers to as `max-channel`. This is the highest ratio of linear
-brightness between all three color channels. A value of `0.0` represents pitch black while a
-value of `1.0` represents full brightness. Effectively, `max-channel` is the value of the
-brightest pixel's highest color channel in linear space. The `pqstat` utility provides this
-information.
+First, the MaxCLL value of the input stream needs to be determined. This is essentially the
+maximum brightness any pixel in the stream can be. There are numerous tools available for this
+task.
 
-Second, the reference white level needs to be determined. This is not as important if the HLG
+Second, the reference white level needs to be determined. This is not so important if the HLG
 output is going to be viewed on HDR displays only, but it is absolutely critical for SDR
-compatibility. If `ref-white` is set too low, the SDR downconversion will appear too bright. If
-`ref-white` is set too high, the SDR downconversion will appear too dim. This is the only part
-of the process that requires human judgment and will be covered in detail below. This step is
-unfortunately necessary because PQ content, especially from 4K UltraHD Blu-rays, tends to be
+compatibility. If reference white is set too low, the SDR downconversion will appear too bright.
+If reference white is set too high, the SDR downconversion will appear too dim. This is the only
+part of the process that requires human judgment and will be covered in detail below. This step
+is unfortunately necessary because PQ content, especially from 4K UltraHD Blu-rays, tends to be
 anywhere between 100 and 203 nits.
 
-Third, the linear brightness of the PQ stream needs to be adjusted so that `ref-white` sits at
-203 nits. The `max-channel` value is also going to be adjusted accordingly, even preserving
-values higher than `1.0`. This step is handled by each 3D LUT that `pq2hlg` generates.
+Third, the linear brightness of the PQ stream needs to be adjusted so that reference white sits
+at 203 nits. The MaxCLL value is also going to be adjusted accordingly, even preserving values
+higher than 10,000. This step is handled by each 3D LUT that gets generated.
 
-Fourth, each color channel will be tone mapped such that:
-
-- All red subpixels fall within 262.7 nits.
-- All green subpixels fall within 678 nits.
-- All blue subpixels fall within 59.3 nits.
-
-This will permit a pure white pixel to hit exactly 1,000 nits in accordance with BT.2390. This
-step is also covered by the 3D LUT.
+Fourth, luminosity-based tone mapping is applied to bring MaxCLL down to 1,000 nits. This
+prevents hard clipping from occurring in the brightest areas of the video, provided MaxCLL has
+been set correctly.
 
 Fifth, the video signal finally gets converted from PQ to HLG. This is the last step convered by
 the 3D LUT and the conclusion to the process.
@@ -100,8 +92,8 @@ the 3D LUT and the conclusion to the process.
 ## Prerequisites
 
 So let's walk through converting a 4K UltraHD Blu-ray to HLG. For this scenario, we'll be using
-`hlg-tools` along with `ffmpeg`. In particular, we'll be assuming that the following binaries
-are in the `PATH`:
+`hlg-tools` along with `ffmpeg` and a video player like VLC. In particular, we'll be assuming
+that the following binaries are in the `PATH`:
 
 - `pqstat`
 - `pq2hlg`
@@ -115,48 +107,47 @@ actuality, this is a MakeMKV dump of *Alita: Battle Angel*. We'll also be scalin
 1920x800, which is this movie's native aspect ratio inside of a 1080p frame. This will allow
 important detail to be preserved while also permitting playback on most current mobile devices.
 
-## Determine `max-channel`
+## Determine MaxCLL
 
-The first thing we're after is the movie's `max-channel` property. To get this, we're going to
-have `ffmpeg` pipe raw RGB48LE into `pqstat`. Once the entire video has played back, `pqstat`
-will output what we need.
+The first thing we're after is the movie's MaxCLL properity. According to specification, each
+HDR10 video stream is supposed to have a single, fixed value for this. However, I have found
+that at least one movie has two different MaxCLL values, one for the 20th Century Fox intro and
+another for the rest of the stream. I am, of course, referring to our example movie.
 
-```
-ffmpeg -i source.mkv -f rawvideo -vf crop=3840:1600,scale=1920x800,format=rgb48le - | pqstat -w 1920 -h 800 -
-```
+For this part, I recommend opening the HDR10 stream in a player like VLC and skipping around,
+checking the MaxCLL value at different parts of the movie. Use the highest value you find.
 
-This will cause the following to sent to be sent to STDOUT:
+With VLC 3, this information is available via the menu bar: `Tools` -> `Codec Information`.
+In the dialog that appears, look for the item called `MaxCLL`.
 
-```
-MaxCLL....: 988.9885283470023
-MaxChannel: 0.09891422020140718
-```
+In the case of *Alita: Battle Angel*, this value is 737 nits.
 
-You can ignore MaxCLL here, but we absolutely need MaxChannel.
-
-## Determine `ref-white`
+## Determine Reference White
 
 The second thing we're after is the movie's `ref-white` property. The unfortunate truth of the
 matter is that there is no straightforward way to handle this. Yet if it's not correctly
 determined, the picture will appear either too bright or too dim when played back on SDR.
 
 What we need to determine is how bright the current movie shows a fully diffused white surface.
-One way to do this is to find a single frame where such an object is the brightest object in the
-frame, and then have `ffmpeg` output only that frame to `pqstat`. In this case, the MaxChannel
-result is ignored, and MaxCLL is taken as `ref-white`. Be sure to avoid frames that have either
-direct light or light reflecting off a shiny surface.
+One way to do this is to find a single frame where such an object is the brightest thing in the
+frame, and then have `ffmpeg` output that frame to a tool called `pqstat`. This supplemental
+utility will then output a MaxCLL value which will be used for `ref-white`. Be sure to avoid
+frames that have either direct light or light reflecting off a shiny surface.
 
 From personal experimentation, I have used the following objects for determining `ref-white`:
 
 - For *Alita: Battle Angel*, the opening text over solid black.
 - For *The Avengers*, the opening "Marvel" text over solid red.
 - For *Avengers: Age of Ultron*, Captain America's star while outdoors near the end.
+
+Other movies adhere to documented standards:
+
 - For *Man of Steel*, the specified ST.2084 standard of 100 nits.
 - For *Iron Man* and *The Matrix*, the specified BT.2390 standard of 203 nits.
 
 Since we're dealing with *Alita: Battle Angel* in this example, we'll take the MaxCLL of the
-opening text. As this is text that fades in and out somewhat abruptly, we'll send in two full
-seconds to make sure we get the text during its brightest point.
+opening text. As this text fades in and out somewhat abruptly, we'll send in two full seconds to
+make sure we get the text at its brightest point.
 
 ```
 ffmpeg -ss 27 -i source.mkv -vframes 48 -f rawvideo -vf crop=3840:1600,scale=1920x800,format=rgb48le - | pqstat -w 1920 -h 800 -
@@ -165,18 +156,17 @@ ffmpeg -ss 27 -i source.mkv -vframes 48 -f rawvideo -vf crop=3840:1600,scale=192
 This will produce (in addition to `ffmpeg`'s output):
 
 ```
-MaxCLL....: 178.52157787560816
-MaxChannel: 0.017852157787560816
+MaxCLL: 179
 ```
 
-And so our `ref-white` value becomes `178.52157787560816`.
+And so our `ref-white` value becomes `179`.
 
 ## Generate the LUT
 
 Now we're ready to generate the 3D LUT using the values we determined in the previous steps:
 
 ```
-pq2hlg -m 0.09891422020140718 -r 178.52157787560816 -s 128 alita-battle-angel.cube
+pq2hlg -m 737 -r 179 -s 128 alita-battle-angel.cube
 ```
 
 This will generate a 128x128x128 3D LUT that we can now pass into `ffmpeg` (or something else,
