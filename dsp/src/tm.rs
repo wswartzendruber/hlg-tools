@@ -3,6 +3,9 @@
  * Licensed under the Open Software License version 3.0
  */
 
+#[cfg(test)]
+mod tests;
+
 use super::tf::{pq_eotf, pq_oetf};
 
 pub struct ToneMapper {

@@ -3,6 +3,9 @@
  * Licensed under the Open Software License version 3.0
  */
 
+#[cfg(test)]
+mod tests;
+
 use super::Pixel;
 
 pub fn pq_oetf(e: f64) -> f64 {
