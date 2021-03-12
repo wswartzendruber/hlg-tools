@@ -14,7 +14,7 @@ use std::{
     io::{stdin, BufReader, ErrorKind, Read},
 };
 use io::{read_frame, Pixel};
-use tf::pq_eotf;
+use dsp::pq_eotf;
 use clap::{app_from_crate, crate_authors, crate_description, crate_name, crate_version, Arg};
 
 struct FrameStats {

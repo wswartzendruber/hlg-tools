@@ -13,6 +13,6 @@ license = "OSL-3.0"
 repository = "https://github.com/wswartzendruber/hlg-tools"
 
 [dependencies]
-tf = { path = "../tf" }
+dsp = { path = "../dsp" }
 byteorder = "1"
 clap = "~2.27.0"

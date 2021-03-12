@@ -7,7 +7,7 @@ use std::{
     fs::File,
     io::{stdout, BufWriter, Write},
 };
-use tf::{Pixel, PqHlgMapper};
+use dsp::{Pixel, PqHlgMapper};
 use clap::{app_from_crate, crate_authors, crate_description, crate_name, crate_version, Arg};
 
 fn main() {
