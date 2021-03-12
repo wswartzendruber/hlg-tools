@@ -9,6 +9,8 @@ mod tests;
 pub mod tf;
 pub mod tm;
 
+use std::ops::{Mul, MulAssign};
+
 use tf::{hlg_oetf, pq_eotf, pq_hlg_iootf};
 use tm::ToneMapper;
 
@@ -19,6 +21,35 @@ pub struct Pixel {
     pub blue: f64,
 }
 
+impl Pixel {
+
+    pub fn y(&self) -> f64 {
+        0.2627 * self.red + 0.6780 * self.green + 0.0593 * self.blue
+    }
+}
+
+impl Mul<f64> for Pixel {
+
+    type Output = Self;
+
+    fn mul(self, rhs: f64) -> Self {
+        Pixel {
+            red: self.red * rhs,
+            green: self.green * rhs,
+            blue: self.blue * rhs,
+        }
+    }
+}
+
+impl MulAssign<f64> for Pixel {
+
+    fn mul_assign(&mut self, rhs: f64) {
+        self.red *= rhs;
+        self.green *= rhs;
+        self.blue *= rhs;
+    }
+}
+
 pub struct PqHlgMapper {
     factor: f64,
     peak: f64,
@@ -27,10 +58,10 @@ pub struct PqHlgMapper {
 
 impl PqHlgMapper {
 
-    pub fn new(ref_white: f64, max_channel: f64) -> Self {
+    pub fn new(ref_white: f64, max_cll: f64) -> Self {
 
         let factor = 203.0 / ref_white;
-        let peak = max_channel * factor;
+        let peak = max_cll / 10_000.0 * factor;
         let tone_mapper = ToneMapper::new(peak);
 
         Self { factor, peak, tone_mapper }
@@ -48,19 +79,16 @@ impl PqHlgMapper {
         };
 
         // REFERENCE WHITE ADJUSTMENT
-        pixel = Pixel {
-            red: pixel.red * self.factor,
-            green: pixel.green * self.factor,
-            blue: pixel.blue * self.factor,
-        };
+        pixel *= self.factor;
 
         // TONE MAPPING
         if self.peak > 0.1 {
-            pixel = Pixel {
-                red: self.tone_mapper.map(pixel.red),
-                green: self.tone_mapper.map(pixel.green),
-                blue: self.tone_mapper.map(pixel.blue),
-            }
+
+            let y1 = pixel.y();
+            let y2 = self.tone_mapper.map(y1);
+            let r = if y1 == 0.0 { 0.0 } else { y2 / y1 };
+
+            pixel *= r;
         }
 
         // PQ -> HLG CONVERSION
@@ -68,9 +96,9 @@ impl PqHlgMapper {
 
         // LINEAR -> GAMMA
         let hlg_gamma_pixel = Pixel {
-            red: hlg_oetf(pixel.red),
-            green: hlg_oetf(pixel.green),
-            blue: hlg_oetf(pixel.blue),
+            red: hlg_oetf(pixel.red).min(1.0),
+            green: hlg_oetf(pixel.green).min(1.0),
+            blue: hlg_oetf(pixel.blue).min(1.0),
         };
 
         hlg_gamma_pixel
