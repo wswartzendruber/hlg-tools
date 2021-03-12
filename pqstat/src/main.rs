@@ -9,16 +9,16 @@ mod tests;
 mod io;
 
 use std::{
+    cmp::max,
     fs::File,
     io::{stdin, BufReader, ErrorKind, Read},
 };
-use io::read_frame;
-use tf::{pq_eotf, Pixel};
+use io::{read_frame, Pixel};
+use tf::pq_eotf;
 use clap::{app_from_crate, crate_authors, crate_description, crate_name, crate_version, Arg};
 
 struct FrameStats {
-    max_cll: f64,
-    max_channel: f64,
+    max_cll: u16,
 }
 
 fn main() {
@@ -78,9 +78,8 @@ fn main() {
             &mut file_read
         }
     );
-    let mut max_cll = 0.0_f64;
-    let mut max_channel = 0.0_f64;
-    let mut frame = vec![Pixel { red: 0.0, green: 0.0, blue: 0.0 }; width * height];
+    let mut max_cll = 0_u16;
+    let mut frame = vec![Pixel { red: 0, green: 0, blue: 0 }; width * height];
 
     'frames: loop {
 
@@ -94,28 +93,30 @@ fn main() {
         let stats = frame_stats(&frame);
 
         max_cll = max_cll.max(stats.max_cll);
-        max_channel = max_channel.max(stats.max_channel);
     }
 
-    println!("MaxCLL....: {}", max_cll * 10_000.0);
-    println!("MaxChannel: {}", pq_eotf(max_channel));
+    println!("MaxCLL: {}", max_cll);
 }
 
 fn frame_stats(frame: &[Pixel]) -> FrameStats {
 
-    let mut max_cll = 0.0_f64;
-    let mut max_channel = 0.0_f64;
+    let mut rg = 0_u16;
+    let mut gg = 0_u16;
+    let mut bg = 0_u16;
 
     for pixel in frame.iter() {
-        max_cll = max_cll.max(
-            0.2627 * pq_eotf(pixel.red)
-            + 0.6780 * pq_eotf(pixel.green)
-            + 0.0593 * pq_eotf(pixel.blue)
-        );
-        max_channel = max_channel.max(pixel.red);
-        max_channel = max_channel.max(pixel.green);
-        max_channel = max_channel.max(pixel.blue);
+        rg = rg.max(pixel.red);
+        gg = gg.max(pixel.green);
+        bg = bg.max(pixel.blue);
     }
 
-    FrameStats { max_cll, max_channel }
+    let rl = pq_eotf(rg as f64 / 65_535.0);
+    let gl = pq_eotf(gg as f64 / 65_535.0);
+    let bl = pq_eotf(bg as f64 / 65_535.0);
+    let rw = (rl * 10_000.0).round() as u16;
+    let gw = (gl * 10_000.0).round() as u16;
+    let bw = (bl * 10_000.0).round() as u16;
+    let max_cll = max(max(rw, gw), bw);
+
+    FrameStats { max_cll }
 }

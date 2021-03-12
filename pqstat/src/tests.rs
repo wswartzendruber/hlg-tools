@@ -1,6 +1,6 @@
 /*
  * Any copyright is dedicated to the Public Domain.
- * https://creativecommons.org/publicdomain/zero/1.0/
+ * https://creativecommons.org/publicdomain/zero/0xFFFF/
  */
 
 use super::{Pixel, frame_stats};
@@ -9,83 +9,134 @@ use super::{Pixel, frame_stats};
 fn test_frame_stats_black() {
 
     let frame = vec![
-        Pixel { red: 0.0, green: 0.0, blue: 0.0},
-        Pixel { red: 0.0, green: 0.0, blue: 0.0},
-        Pixel { red: 0.0, green: 0.0, blue: 0.0},
-        Pixel { red: 0.0, green: 0.0, blue: 0.0},
-        Pixel { red: 0.0, green: 0.0, blue: 0.0},
-        Pixel { red: 0.0, green: 0.0, blue: 0.0},
+        Pixel { red: 0x0000, green: 0x0000, blue: 0x0000},
+        Pixel { red: 0x0000, green: 0x0000, blue: 0x0000},
+        Pixel { red: 0x0000, green: 0x0000, blue: 0x0000},
+        Pixel { red: 0x0000, green: 0x0000, blue: 0x0000},
+        Pixel { red: 0x0000, green: 0x0000, blue: 0x0000},
+        Pixel { red: 0x0000, green: 0x0000, blue: 0x0000},
     ];
     let frame_stats = frame_stats(&frame);
 
-    assert_eq!(frame_stats.max_cll, 0.0);
-    assert_eq!(frame_stats.max_channel, 0.0);
+    assert_eq!(frame_stats.max_cll, 0);
 }
 
 #[test]
-fn test_frame_stats_red() {
+fn test_frame_stats_red_rw() {
 
     let frame = vec![
-        Pixel { red: 0.0, green: 0.0, blue: 0.0 },
-        Pixel { red: 0.2, green: 0.0, blue: 0.0 },
-        Pixel { red: 0.4, green: 0.0, blue: 0.0 },
-        Pixel { red: 0.6, green: 0.0, blue: 0.0 },
-        Pixel { red: 0.8, green: 0.0, blue: 0.0 },
-        Pixel { red: 1.0, green: 0.0, blue: 0.0 },
+        Pixel { red: 0x0000, green: 0x0000, blue: 0x0000 },
+        Pixel { red: 0x4000, green: 0x0000, blue: 0x0000 },
+        Pixel { red: 0x8000, green: 0x0000, blue: 0x0000 },
+        Pixel { red: 0x94A7, green: 0x0000, blue: 0x0000 },
     ];
     let frame_stats = frame_stats(&frame);
 
-    assert_eq!(frame_stats.max_cll, 0.2627);
-    assert_eq!(frame_stats.max_channel, 1.0);
+    assert_eq!(frame_stats.max_cll, 203);
 }
 
 #[test]
-fn test_frame_stats_green() {
+fn test_frame_stats_green_rw() {
 
     let frame = vec![
-        Pixel { red: 0.0, green: 0.0, blue: 0.0 },
-        Pixel { red: 0.0, green: 0.2, blue: 0.0 },
-        Pixel { red: 0.0, green: 0.4, blue: 0.0 },
-        Pixel { red: 0.0, green: 0.6, blue: 0.0 },
-        Pixel { red: 0.0, green: 0.8, blue: 0.0 },
-        Pixel { red: 0.0, green: 1.0, blue: 0.0 },
+        Pixel { red: 0x0000, green: 0x0000, blue: 0x0000 },
+        Pixel { red: 0x0000, green: 0x4000, blue: 0x0000 },
+        Pixel { red: 0x0000, green: 0x8000, blue: 0x0000 },
+        Pixel { red: 0x0000, green: 0x94A7, blue: 0x0000 },
     ];
     let frame_stats = frame_stats(&frame);
 
-    assert_eq!(frame_stats.max_cll, 0.6780);
-    assert_eq!(frame_stats.max_channel, 1.0);
+    assert_eq!(frame_stats.max_cll, 203);
 }
 
 #[test]
-fn test_frame_stats_blue() {
+fn test_frame_stats_blue_rw() {
 
     let frame = vec![
-        Pixel { red: 0.0, green: 0.0, blue: 0.0 },
-        Pixel { red: 0.0, green: 0.0, blue: 0.2 },
-        Pixel { red: 0.0, green: 0.0, blue: 0.4 },
-        Pixel { red: 0.0, green: 0.0, blue: 0.6 },
-        Pixel { red: 0.0, green: 0.0, blue: 0.8 },
-        Pixel { red: 0.0, green: 0.0, blue: 1.0 },
+        Pixel { red: 0x0000, green: 0x0000, blue: 0x0000 },
+        Pixel { red: 0x0000, green: 0x0000, blue: 0x4000 },
+        Pixel { red: 0x0000, green: 0x0000, blue: 0x8000 },
+        Pixel { red: 0x0000, green: 0x0000, blue: 0x94A7 },
     ];
     let frame_stats = frame_stats(&frame);
 
-    assert_eq!(frame_stats.max_cll, 0.0593);
-    assert_eq!(frame_stats.max_channel, 1.0);
+    assert_eq!(frame_stats.max_cll, 203);
 }
 
 #[test]
-fn test_frame_stats_white() {
+fn test_frame_stats_white_rw() {
 
     let frame = vec![
-        Pixel { red: 0.0, green: 0.0, blue: 0.0 },
-        Pixel { red: 0.2, green: 0.2, blue: 0.2 },
-        Pixel { red: 0.4, green: 0.4, blue: 0.4 },
-        Pixel { red: 0.6, green: 0.6, blue: 0.6 },
-        Pixel { red: 0.8, green: 0.8, blue: 0.8 },
-        Pixel { red: 1.0, green: 1.0, blue: 1.0 },
+        Pixel { red: 0x0000, green: 0x0000, blue: 0x0000 },
+        Pixel { red: 0x4000, green: 0x4000, blue: 0x4000 },
+        Pixel { red: 0x8000, green: 0x8000, blue: 0x8000 },
+        Pixel { red: 0x94A7, green: 0x94A7, blue: 0x94A7 },
     ];
     let frame_stats = frame_stats(&frame);
 
-    assert_eq!(frame_stats.max_cll, 1.0);
-    assert_eq!(frame_stats.max_channel, 1.0);
+    assert_eq!(frame_stats.max_cll, 203);
+}
+
+#[test]
+fn test_frame_stats_red_mw() {
+
+    let frame = vec![
+        Pixel { red: 0x0000, green: 0x0000, blue: 0x0000 },
+        Pixel { red: 0x4000, green: 0x0000, blue: 0x0000 },
+        Pixel { red: 0x8000, green: 0x0000, blue: 0x0000 },
+        Pixel { red: 0xA000, green: 0x0000, blue: 0x0000 },
+        Pixel { red: 0xD000, green: 0x0000, blue: 0x0000 },
+        Pixel { red: 0xFFFF, green: 0x0000, blue: 0x0000 },
+    ];
+    let frame_stats = frame_stats(&frame);
+
+    assert_eq!(frame_stats.max_cll, 10_000);
+}
+
+#[test]
+fn test_frame_stats_green_mw() {
+
+    let frame = vec![
+        Pixel { red: 0x0000, green: 0x0000, blue: 0x0000 },
+        Pixel { red: 0x0000, green: 0x4000, blue: 0x0000 },
+        Pixel { red: 0x0000, green: 0x8000, blue: 0x0000 },
+        Pixel { red: 0x0000, green: 0xA000, blue: 0x0000 },
+        Pixel { red: 0x0000, green: 0xD000, blue: 0x0000 },
+        Pixel { red: 0x0000, green: 0xFFFF, blue: 0x0000 },
+    ];
+    let frame_stats = frame_stats(&frame);
+
+    assert_eq!(frame_stats.max_cll, 10_000);
+}
+
+#[test]
+fn test_frame_stats_blue_mw() {
+
+    let frame = vec![
+        Pixel { red: 0x0000, green: 0x0000, blue: 0x0000 },
+        Pixel { red: 0x0000, green: 0x0000, blue: 0x4000 },
+        Pixel { red: 0x0000, green: 0x0000, blue: 0x8000 },
+        Pixel { red: 0x0000, green: 0x0000, blue: 0xA000 },
+        Pixel { red: 0x0000, green: 0x0000, blue: 0xD000 },
+        Pixel { red: 0x0000, green: 0x0000, blue: 0xFFFF },
+    ];
+    let frame_stats = frame_stats(&frame);
+
+    assert_eq!(frame_stats.max_cll, 10_000);
+}
+
+#[test]
+fn test_frame_stats_white_mw() {
+
+    let frame = vec![
+        Pixel { red: 0x0000, green: 0x0000, blue: 0x0000 },
+        Pixel { red: 0x4000, green: 0x4000, blue: 0x4000 },
+        Pixel { red: 0x8000, green: 0x8000, blue: 0x8000 },
+        Pixel { red: 0xA000, green: 0xA000, blue: 0xA000 },
+        Pixel { red: 0xD000, green: 0xD000, blue: 0xD000 },
+        Pixel { red: 0xFFFF, green: 0xFFFF, blue: 0xFFFF },
+    ];
+    let frame_stats = frame_stats(&frame);
+
+    assert_eq!(frame_stats.max_cll, 10_000);
 }
