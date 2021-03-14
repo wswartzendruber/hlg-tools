@@ -11,7 +11,7 @@ pub mod tm;
 
 use std::ops::{Mul, MulAssign};
 
-use tf::{hlg_oetf, pq_eotf, pq_hlg_iootf};
+use tf::{hlg_oetf, pq_eotf, hlg_iootf};
 use tm::ToneMapper;
 
 #[derive(Debug, Clone, Copy, PartialEq)]
@@ -92,7 +92,7 @@ impl PqHlgMapper {
         }
 
         // PQ -> HLG CONVERSION
-        pixel = pq_hlg_iootf(pixel);
+        pixel = hlg_iootf(pixel);
 
         // LINEAR -> GAMMA
         let hlg_gamma_pixel = Pixel {

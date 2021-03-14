@@ -10,4 +10,5 @@ authors = ["William Swartzendruber <wswartzendruber@gmail.com>"]
 edition = "2018"
 license = "OSL-3.0"
 
-[dependencies]
+[dev-dependencies]
+assert_approx_eq = "1.1.0"

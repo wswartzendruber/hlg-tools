@@ -52,7 +52,7 @@ pub fn hlg_oetf(o: f64) -> f64 {
     }
 }
 
-pub fn pq_hlg_iootf(pixel: Pixel) -> Pixel {
+pub fn hlg_iootf(pixel: Pixel) -> Pixel {
 
     //
     // The BBC R&D Method of PQ to HLG Transcoding

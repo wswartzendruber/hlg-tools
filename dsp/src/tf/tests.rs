@@ -5,6 +5,12 @@
 
 use super::*;
 
+use assert_approx_eq::assert_approx_eq;
+
+const EOTF_DIFF: f64 = 0.0005;     // ±5 nits
+const OETF_DIFF: f64 = 0.005;      // +0.5%
+const OOTF_DIFF: f64 = 0.00000001; //
+
 #[test]
 fn test_pq_eotf() {
 
@@ -18,22 +24,22 @@ fn test_pq_eotf() {
     //
 
     // MINIMUM: A 0% signal level shall match 0 nits.
-    assert_eq!((pq_eotf(0.0000) * 10000.0).round() as u16, 0);
+    assert_approx_eq!(pq_eotf(0.0), 0.0, EOTF_DIFF);
 
     // 18% WHITE CARD: A 38% signal level shall match 26 nits.
-    assert_eq!((pq_eotf(0.3800) * 10000.0).round() as u16, 26);
+    assert_approx_eq!(pq_eotf(0.38), 0.0026, EOTF_DIFF);
 
     // 83% WHITE CARD: A 56% signal level shall match 162 nits.
-    assert_eq!((pq_eotf(0.5575) * 10000.0).round() as u16, 162);
+    assert_approx_eq!(pq_eotf(0.56), 0.0162, EOTF_DIFF);
 
     // 90% WHITE CARD: A 57% signal level shall match 179 nits.
-    assert_eq!((pq_eotf(0.5675) * 10000.0).round() as u16, 179);
+    assert_approx_eq!(pq_eotf(0.57), 0.0179, EOTF_DIFF);
 
     // 100% WHITE CARD: A 58% signal level shall match 203 nits.
-    assert_eq!((pq_eotf(0.5805) * 10000.0).round() as u16, 203);
+    assert_approx_eq!(pq_eotf(0.58), 0.0203, EOTF_DIFF);
 
     // MAXIMUM: A 100% signal level shall match 10,000 nits.
-    assert_eq!((pq_eotf(1.0000) * 10000.0).round() as u16, 10000);
+    assert_approx_eq!(pq_eotf(1.0), 1.0, EOTF_DIFF);
 }
 
 #[test]
@@ -48,23 +54,23 @@ fn test_pq_oetf() {
     // Slide #28
     //
 
-    // MINIMUM: A 0% signal level shall match 0 nits.
-    assert_eq!((pq_oetf(0.0 / 10_000.0) * 100.0).round() as u8, 0);
+    // MINIMUM: 0 nits shall match a 0% signal level.
+    assert_approx_eq!(pq_oetf(0.0), 0.0, OETF_DIFF);
 
-    // 18% WHITE CARD: A 38% signal level shall match 26 nits.
-    assert_eq!((pq_oetf(26.0 / 10_000.0) * 100.0).round() as u8, 38);
+    // 18% WHITE CARD: 26 nits shall match a 38% signal level.
+    assert_approx_eq!(pq_oetf(0.0026), 0.38, OETF_DIFF);
 
-    // 83% WHITE CARD: A 56% signal level shall match 162 nits.
-    assert_eq!((pq_oetf(162.0 / 10_000.0) * 100.0).round() as u8, 56);
+    // 83% WHITE CARD: 162 nits shall match a 56% signal level.
+    assert_approx_eq!(pq_oetf(0.0162), 0.56, OETF_DIFF);
 
-    // 90% WHITE CARD: A 57% signal level shall match 179 nits.
-    assert_eq!((pq_oetf(179.0 / 10_000.0) * 100.0).round() as u8, 57);
+    // 90% WHITE CARD: 179 nits shall match a 57% signal level.
+    assert_approx_eq!(pq_oetf(0.0179), 0.57, OETF_DIFF);
 
-    // 100% WHITE CARD: A 58% signal level shall match 203 nits.
-    assert_eq!((pq_oetf(203.0 / 10_000.0) * 100.0).round() as u8, 58);
+    // 100% WHITE CARD: 203 nits shall match a 58% signal level.
+    assert_approx_eq!(pq_oetf(0.0203), 0.58, OETF_DIFF);
 
-    // MAXIMUM: A 100% signal level shall match 10,000 nits.
-    assert_eq!((pq_oetf(10_000.0 / 10_000.0) * 100.0).round() as u8, 100);
+    // MAXIMUM: 10,000 nits shall match a 1000% signal level.
+    assert_approx_eq!(pq_oetf(1.0), 1.0, OETF_DIFF);
 }
 
 #[test]
@@ -74,64 +80,93 @@ fn test_hlg_oetf() {
     // LOWER CURVE
     //
 
-    assert_eq!((hlg_oetf(1.0 / 96.0) * 1000.0) as u16, 176);
-    assert_eq!((hlg_oetf(2.0 / 96.0) * 1000.0) as u16, 250);
-    assert_eq!((hlg_oetf(3.0 / 96.0) * 1000.0) as u16, 306);
-    assert_eq!((hlg_oetf(4.0 / 96.0) * 1000.0) as u16, 353);
-    assert_eq!((hlg_oetf(5.0 / 96.0) * 1000.0) as u16, 395);
-    assert_eq!((hlg_oetf(6.0 / 96.0) * 1000.0) as u16, 433);
-    assert_eq!((hlg_oetf(7.0 / 96.0) * 1000.0) as u16, 467);
+    assert_approx_eq!(hlg_oetf(1.0 / 96.0), 0.176, OETF_DIFF);
+    assert_approx_eq!(hlg_oetf(2.0 / 96.0), 0.250, OETF_DIFF);
+    assert_approx_eq!(hlg_oetf(3.0 / 96.0), 0.306, OETF_DIFF);
+    assert_approx_eq!(hlg_oetf(4.0 / 96.0), 0.353, OETF_DIFF);
+    assert_approx_eq!(hlg_oetf(5.0 / 96.0), 0.395, OETF_DIFF);
+    assert_approx_eq!(hlg_oetf(6.0 / 96.0), 0.433, OETF_DIFF);
+    assert_approx_eq!(hlg_oetf(7.0 / 96.0), 0.467, OETF_DIFF);
 
     //
     // INTERSECTION POINT
     //
 
-    assert_eq!((hlg_oetf(1.0 / 12.0) * 1000.0) as u16, 500);
+    assert_approx_eq!(hlg_oetf(1.0 / 12.0), 0.500, OETF_DIFF);
 
     //
     // UPPER CURVE
     //
 
-    assert_eq!((hlg_oetf(2.0 / 12.0) * 1000.0) as u16, 656);
-    assert_eq!((hlg_oetf(3.0 / 12.0) * 1000.0) as u16, 738);
-    assert_eq!((hlg_oetf(4.0 / 12.0) * 1000.0) as u16, 794);
-    assert_eq!((hlg_oetf(5.0 / 12.0) * 1000.0) as u16, 837);
-    assert_eq!((hlg_oetf(6.0 / 12.0) * 1000.0) as u16, 871);
-    assert_eq!((hlg_oetf(7.0 / 12.0) * 1000.0) as u16, 900);
-    assert_eq!((hlg_oetf(8.0 / 12.0) * 1000.0) as u16, 925);
-    assert_eq!((hlg_oetf(9.0 / 12.0) * 1000.0) as u16, 947);
-    assert_eq!((hlg_oetf(10.0 / 12.0) * 1000.0) as u16, 966);
-    assert_eq!((hlg_oetf(11.0 / 12.0) * 1000.0) as u16, 984);
-    assert_eq!((hlg_oetf(12.0 / 12.0) * 1000.0) as u16, 999);
+    assert_approx_eq!(hlg_oetf(2.0 / 12.0), 0.656, OETF_DIFF);
+    assert_approx_eq!(hlg_oetf(3.0 / 12.0), 0.738, OETF_DIFF);
+    assert_approx_eq!(hlg_oetf(4.0 / 12.0), 0.794, OETF_DIFF);
+    assert_approx_eq!(hlg_oetf(5.0 / 12.0), 0.837, OETF_DIFF);
+    assert_approx_eq!(hlg_oetf(6.0 / 12.0), 0.871, OETF_DIFF);
+    assert_approx_eq!(hlg_oetf(7.0 / 12.0), 0.900, OETF_DIFF);
+    assert_approx_eq!(hlg_oetf(8.0 / 12.0), 0.925, OETF_DIFF);
+    assert_approx_eq!(hlg_oetf(9.0 / 12.0), 0.947, OETF_DIFF);
+    assert_approx_eq!(hlg_oetf(10.0 / 12.0), 0.966, OETF_DIFF);
+    assert_approx_eq!(hlg_oetf(11.0 / 12.0), 0.984, OETF_DIFF);
+    assert_approx_eq!(hlg_oetf(12.0 / 12.0), 0.999, OETF_DIFF);
 }
 
 #[test]
-fn test_pq_hlg() {
+fn test_hlg_iootf() {
 
-    let mut pixel = Pixel { red: 0.58, green: 0.58, blue: 0.58 };
+    let pq_pixel_000 = Pixel { red: 0.0, green: 0.0, blue: 0.0 };
+    let hlg_pixel_000 = hlg_iootf(pq_pixel_000);
 
-    pixel = Pixel {
-        red: pq_eotf(pixel.red),
-        green: pq_eotf(pixel.green),
-        blue: pq_eotf(pixel.blue),
-    };
-    pixel = pq_hlg_iootf(pixel);
-    pixel = Pixel {
-        red: hlg_oetf(pixel.red),
-        green: hlg_oetf(pixel.green),
-        blue: hlg_oetf(pixel.blue),
-    };
+    assert_approx_eq!(hlg_pixel_000.red, 0.0, OOTF_DIFF);
+    assert_approx_eq!(hlg_pixel_000.green, 0.0, OOTF_DIFF);
+    assert_approx_eq!(hlg_pixel_000.blue, 0.0, OOTF_DIFF);
 
-    assert_eq!(
-        Pixel {
-            red: (pixel.red * 100.0).round(),
-            green: (pixel.green * 100.0).round(),
-            blue: (pixel.blue * 100.0).round(),
-        },
-        Pixel {
-            red: 75.0,
-            green: 75.0,
-            blue: 75.0,
-        }
-    );
+    let pq_pixel_001 = Pixel { red: 0.0, green: 0.0, blue: 0.1 };
+    let hlg_pixel_001 = hlg_iootf(pq_pixel_001);
+
+    assert_approx_eq!(hlg_pixel_001.red, 0.0, OOTF_DIFF);
+    assert_approx_eq!(hlg_pixel_001.green, 0.0, OOTF_DIFF);
+    assert_approx_eq!(hlg_pixel_001.blue, 1.60136703633, OOTF_DIFF);
+
+    let pq_pixel_010 = Pixel { red: 0.0, green: 0.1, blue: 0.0 };
+    let hlg_pixel_010 = hlg_iootf(pq_pixel_010);
+
+    assert_approx_eq!(hlg_pixel_010.red, 0.0, OOTF_DIFF);
+    assert_approx_eq!(hlg_pixel_010.green, 1.06691147061, OOTF_DIFF);
+    assert_approx_eq!(hlg_pixel_010.blue, 0.0, OOTF_DIFF);
+
+    let pq_pixel_011 = Pixel { red: 0.0, green: 0.1, blue: 0.1 };
+    let hlg_pixel_011 = hlg_iootf(pq_pixel_011);
+
+    assert_approx_eq!(hlg_pixel_011.red, 0.0, OOTF_DIFF);
+    assert_approx_eq!(hlg_pixel_011.green, 1.05210550828, OOTF_DIFF);
+    assert_approx_eq!(hlg_pixel_011.blue, 1.05210550828, OOTF_DIFF);
+
+    let pq_pixel_100 = Pixel { red: 0.1, green: 0.0, blue: 0.0 };
+    let hlg_pixel_100 = hlg_iootf(pq_pixel_100);
+
+    assert_approx_eq!(hlg_pixel_100.red, 1.24955867676, OOTF_DIFF);
+    assert_approx_eq!(hlg_pixel_100.green, 0.0, OOTF_DIFF);
+    assert_approx_eq!(hlg_pixel_100.blue, 0.0, OOTF_DIFF);
+
+    let pq_pixel_101 = Pixel { red: 0.1, green: 0.0, blue: 0.1 };
+    let hlg_pixel_101 = hlg_iootf(pq_pixel_101);
+
+    assert_approx_eq!(hlg_pixel_101.red, 1.20788064268, OOTF_DIFF);
+    assert_approx_eq!(hlg_pixel_101.green, 0.0, OOTF_DIFF);
+    assert_approx_eq!(hlg_pixel_101.blue, 1.20788064268, OOTF_DIFF);
+
+    let pq_pixel_110 = Pixel { red: 0.1, green: 0.1, blue: 0.0 };
+    let hlg_pixel_110 = hlg_iootf(pq_pixel_110);
+
+    assert_approx_eq!(hlg_pixel_110.red, 1.01024057949, OOTF_DIFF);
+    assert_approx_eq!(hlg_pixel_110.green, 1.01024057949, OOTF_DIFF);
+    assert_approx_eq!(hlg_pixel_110.blue, 0.0, OOTF_DIFF);
+
+    let pq_pixel_111 = Pixel { red: 0.1, green: 0.1, blue: 0.1 };
+    let hlg_pixel_111 = hlg_iootf(pq_pixel_111);
+
+    assert_approx_eq!(hlg_pixel_111.red, 1.0, OOTF_DIFF);
+    assert_approx_eq!(hlg_pixel_111.green, 1.0, OOTF_DIFF);
+    assert_approx_eq!(hlg_pixel_111.blue, 1.0, OOTF_DIFF);
 }
