@@ -25,29 +25,33 @@ impl ToneMapper {
         Self { lwp, ml, ks }
     }
 
-    pub fn map(&self, e: f64) -> f64 {
+    pub fn map(&self, o: f64) -> f64 {
+        pq_eotf(self.eetf(pq_oetf(o))).min(0.1)
+    }
 
-        let e1 = pq_oetf(e) / self.lwp;
+    fn eetf(&self, e: f64) -> f64 {
+
+        let e1 = e / self.lwp;
         let e2 =
             if e1 < self.ks {
                 e1
             } else {
-                p(self.ks, self.ml, e1)
+                self.p(e1)
             };
 
-        pq_eotf(e2 * self.lwp).min(0.1)
+        e2 * self.lwp
     }
-}
 
-fn p(ks: f64, ml: f64, b: f64) -> f64 {
+    fn p(&self, b: f64) -> f64 {
 
-    let t = (b - ks) / (1.0 - ks);
-    let t2 = t.powf(2.0);
-    let t3 = t.powf(3.0);
+        let t = (b - self.ks) / (1.0 - self.ks);
+        let t2 = t.powf(2.0);
+        let t3 = t.powf(3.0);
 
-    (2.0 * t3 - 3.0 * t2 + 1.0) * ks
-    +
-    (t3 - 2.0 * t2 + t) * (1.0 - ks)
-    +
-    (-2.0 * t3 + 3.0 * t2) * ml
+        (2.0 * t3 - 3.0 * t2 + 1.0) * self.ks
+        +
+        (t3 - 2.0 * t2 + t) * (1.0 - self.ks)
+        +
+        (-2.0 * t3 + 3.0 * t2) * self.ml
+    }
 }
