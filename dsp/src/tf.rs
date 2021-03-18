@@ -8,10 +8,11 @@ mod tests;
 
 use super::Pixel;
 
-pub fn pq_eotf(e: f64) -> f64 {
+pub fn pq_e_to_dl(e: f64) -> f64 {
 
     //
     // ITU-R BT.2100-2
+    // Page 5
     // Table 4
     //
 
@@ -23,10 +24,11 @@ pub fn pq_eotf(e: f64) -> f64 {
     .powf(6.277394636015326)
 }
 
-pub fn pq_oetf(e: f64) -> f64 {
+pub fn pq_dl_to_e(e: f64) -> f64 {
 
     //
     // ITU-R BT.2100-2
+    // Page 6
     // Table 4
     //
 
@@ -38,10 +40,11 @@ pub fn pq_oetf(e: f64) -> f64 {
     .powf(78.84375)
 }
 
-pub fn hlg_oetf(o: f64) -> f64 {
+pub fn hlg_sl_to_e(o: f64) -> f64 {
 
     //
     // ITU-R BT.2100-2
+    // Page 6
     // Table 5
     //
 
@@ -52,14 +55,15 @@ pub fn hlg_oetf(o: f64) -> f64 {
     }
 }
 
-pub fn hlg_iootf(pixel: Pixel) -> Pixel {
+pub fn hlg_dl_to_sl(pixel: Pixel) -> Pixel {
 
     //
-    // The BBC R&D Method of PQ to HLG Transcoding
+    // ITU-R BT.2100-2
+    // Page 8
+    // Note 5i
     //
 
-    let np = pixel * 10.0;
-    let yg = np.y().powf(-0.166666667).min(f64::MAX);
+    let dl = pixel * 10.0;
 
-    np * yg
+    dl * dl.y().powf(-0.16666666666666663).min(f64::MAX)
 }

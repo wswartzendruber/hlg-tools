@@ -7,7 +7,7 @@ use super::*;
 
 use assert_approx_eq::assert_approx_eq;
 
-const OOTF_DIFF: f64 = 0.0000000000005;
+const OOTF_DIFF: f64 = 0.0000000001;
 
 #[test]
 fn test_overrun_peak_1_000() {

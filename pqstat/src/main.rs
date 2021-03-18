@@ -14,7 +14,7 @@ use std::{
     io::{stdin, BufReader, ErrorKind, Read},
 };
 use io::{read_frame, Pixel};
-use dsp::tf::pq_eotf;
+use dsp::tf::pq_e_to_dl;
 use clap::{app_from_crate, crate_authors, crate_description, crate_name, crate_version, Arg};
 
 struct FrameStats {
@@ -110,9 +110,9 @@ fn frame_stats(frame: &[Pixel]) -> FrameStats {
         bg = bg.max(pixel.blue);
     }
 
-    let rl = pq_eotf(rg as f64 / 65_535.0);
-    let gl = pq_eotf(gg as f64 / 65_535.0);
-    let bl = pq_eotf(bg as f64 / 65_535.0);
+    let rl = pq_e_to_dl(rg as f64 / 65_535.0);
+    let gl = pq_e_to_dl(gg as f64 / 65_535.0);
+    let bl = pq_e_to_dl(bg as f64 / 65_535.0);
     let rw = (rl * 10_000.0).round() as u16;
     let gw = (gl * 10_000.0).round() as u16;
     let bw = (bl * 10_000.0).round() as u16;

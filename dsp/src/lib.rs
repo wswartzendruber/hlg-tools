@@ -11,7 +11,7 @@ pub mod tm;
 
 use std::ops::{Mul, MulAssign};
 
-use tf::{hlg_oetf, pq_eotf, hlg_iootf};
+use tf::{hlg_sl_to_e, pq_e_to_dl, hlg_dl_to_sl};
 use tm::ToneMapper;
 
 #[derive(Debug, Clone, Copy, PartialEq)]
@@ -71,11 +71,11 @@ impl PqHlgMapper {
 
         let mut pixel = input;
 
-        // GAMMA -> LINEAR
+        // PQ SIGNAL -> DISPLAY LINEAR
         pixel = Pixel {
-            red: pq_eotf(pixel.red),
-            green: pq_eotf(pixel.green),
-            blue: pq_eotf(pixel.blue),
+            red: pq_e_to_dl(pixel.red),
+            green: pq_e_to_dl(pixel.green),
+            blue: pq_e_to_dl(pixel.blue),
         };
 
         // REFERENCE WHITE ADJUSTMENT
@@ -91,14 +91,14 @@ impl PqHlgMapper {
             pixel *= r;
         }
 
-        // PQ -> HLG CONVERSION
-        pixel = hlg_iootf(pixel);
+        // PQ DISPLAY LINEAR -> HLG SCENE LINEAR
+        pixel = hlg_dl_to_sl(pixel);
 
-        // LINEAR -> GAMMA
+        // SCENE LINEAR -> HLG SIGNAL
         let hlg_gamma_pixel = Pixel {
-            red: hlg_oetf(pixel.red).min(1.0),
-            green: hlg_oetf(pixel.green).min(1.0),
-            blue: hlg_oetf(pixel.blue).min(1.0),
+            red: hlg_sl_to_e(pixel.red).min(1.0),
+            green: hlg_sl_to_e(pixel.green).min(1.0),
+            blue: hlg_sl_to_e(pixel.blue).min(1.0),
         };
 
         hlg_gamma_pixel
