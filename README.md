@@ -177,11 +177,10 @@ if we so desire).
 Now let's invoke `ffmpeg` with our new LUT:
 
 ```
-ffmpeg -i source.mkv -vf \
-    crop=3840:1600,scale=1920:800,format=rgb48le,lut3d=alita-battle-angel.cube,format=yuv420p10le \
-    -color_primaries 9 -color_trc 18 -colorspace 9 -color_range 1 \
-    -c:v libx265 -crf 20 -preset slower -tune grain -x265-params \
-    colorprim=bt2020:transfer=arib-std-b67:colormatrix=bt2020nc:range=limited \
+ffmpeg -i source.mkv \
+    -vf crop=3840:1600,scale=1920:800,format=rgb48le,alita-battle-angel.cube,format=yuv420p10le \
+    -color_primaries bt2020 -color_trc bt2020-10 -colorspace bt2020nc \
+    -c:v libx265 -crf 20 -preset slower -tune grain -x265-params atc-sei=18:pic_struct=0 \
     video.h265
 ```
 
