@@ -143,7 +143,7 @@ From personal experimentation, I have used the following objects for determining
 Other movies adhere to documented standards:
 
 - For *Man of Steel*, the specified ST.2084 standard of 100 nits.
-- For *Iron Man* and *The Matrix*, the specified BT.2390 standard of 203 nits.
+- For *Iron Man* and *The Matrix*, the specified BT.2408 standard of 203 nits.
 
 Since we're dealing with *Alita: Battle Angel* in this example, we'll take the MaxCLL of the
 opening text. As this text fades in and out somewhat abruptly, we'll send in two full seconds to
