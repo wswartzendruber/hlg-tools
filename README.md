@@ -47,12 +47,12 @@ viewed again with these new settings.
 
 Regarding the second point above, HLG is inherently easy here because its gamma curve was
 designed for it. That is, a HLG video signal can be naively displayed on a SDR device with more
-acceptable results. However, since HLG *does* define a fixed reference white level, HLG-aware
-players can modify the picture accordingly. The end result is that given the combination of a
-correctly mastered (or converted) HLG stream and a HLG-aware player, it can be extremely
-difficult to tell that the picture wasn't natively mastered for SDR. Some players are also good
-at downconverting BT.2020 color to BT.709 color as a part of this process. MPV is one such
-player.
+acceptable results. Additionally, since HLG *does* define a fixed reference white level,
+HLG-aware players can modify the picture accordingly. The end result is that given the
+combination of a correctly mastered (or converted) HLG stream and a HLG-aware player, it can be
+extremely difficult to tell that the picture wasn't natively mastered for SDR. Some players are
+also good at downconverting BT.2020 color to BT.709 color as a part of this process. MPV is one
+such player.
 
 # How It Works
 
@@ -109,7 +109,7 @@ important detail to be preserved while also permitting playback on most current 
 
 ## Determine MaxCLL
 
-The first thing we're after is the movie's MaxCLL properity. According to specification, each
+The first thing we're after is the movie's MaxCLL property. According to specification, each
 HDR10 video stream is supposed to have a single, fixed value for this. However, I have found
 that at least one movie has two different MaxCLL values, one for the 20th Century Fox intro and
 another for the rest of the stream. I am, of course, referring to our example movie.
