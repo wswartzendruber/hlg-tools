@@ -28,7 +28,7 @@ fn test_map_rw_100_peak_500() {
         Pixel { red: PQ_4000_NITS, green: PQ_4000_NITS, blue: PQ_4000_NITS },
         Pixel { red: PQ_10000_NITS, green: PQ_10000_NITS, blue: PQ_10000_NITS },
     ];
-    let pq_hlg_mapper = PqHlgMapper::new(100.0, 500.0);
+    let pq_hlg_mapper = PqHlgMapper::new_by_ref_white(100.0, 500.0);
 
     for pixel in frame.iter_mut() {
         *pixel = pq_hlg_mapper.map(*pixel);
@@ -65,7 +65,7 @@ fn test_map_rw_100_peak_492() {
         Pixel { red: PQ_4000_NITS, green: PQ_4000_NITS, blue: PQ_4000_NITS },
         Pixel { red: PQ_10000_NITS, green: PQ_10000_NITS, blue: PQ_10000_NITS },
     ];
-    let pq_hlg_mapper = PqHlgMapper::new(100.0, 492.0);
+    let pq_hlg_mapper = PqHlgMapper::new_by_ref_white(100.0, 492.0);
 
     for pixel in frame.iter_mut() {
         *pixel = pq_hlg_mapper.map(*pixel);
@@ -102,7 +102,7 @@ fn test_map_rw_100_peak_1_970() {
         Pixel { red: PQ_1970_NITS, green: PQ_1970_NITS, blue: PQ_1970_NITS },
         Pixel { red: PQ_10000_NITS, green: PQ_10000_NITS, blue: PQ_10000_NITS },
     ];
-    let pq_hlg_mapper = PqHlgMapper::new(100.0, 1_970.0);
+    let pq_hlg_mapper = PqHlgMapper::new_by_ref_white(100.0, 1_970.0);
 
     for pixel in frame.iter_mut() {
         *pixel = pq_hlg_mapper.map(*pixel);
@@ -139,7 +139,7 @@ fn test_map_rw_100_peak_4_926() {
         Pixel { red: PQ_1970_NITS, green: PQ_1970_NITS, blue: PQ_1970_NITS },
         Pixel { red: PQ_4926_NITS, green: PQ_4926_NITS, blue: PQ_4926_NITS },
     ];
-    let pq_hlg_mapper = PqHlgMapper::new(100.0, 4_926.0);
+    let pq_hlg_mapper = PqHlgMapper::new_by_ref_white(100.0, 4_926.0);
 
     for pixel in frame.iter_mut() {
         *pixel = pq_hlg_mapper.map(*pixel);
@@ -176,7 +176,7 @@ fn test_map_rw_203_peak_500() {
         Pixel { red: PQ_4000_NITS, green: PQ_4000_NITS, blue: PQ_4000_NITS },
         Pixel { red: PQ_10000_NITS, green: PQ_10000_NITS, blue: PQ_10000_NITS },
     ];
-    let pq_hlg_mapper = PqHlgMapper::new(203.0, 500.0);
+    let pq_hlg_mapper = PqHlgMapper::new_by_ref_white(203.0, 500.0);
 
     for pixel in frame.iter_mut() {
         *pixel = pq_hlg_mapper.map(*pixel);
@@ -213,7 +213,7 @@ fn test_map_rw_203_peak_1_000() {
         Pixel { red: PQ_4000_NITS, green: PQ_4000_NITS, blue: PQ_4000_NITS },
         Pixel { red: PQ_10000_NITS, green: PQ_10000_NITS, blue: PQ_10000_NITS },
     ];
-    let pq_hlg_mapper = PqHlgMapper::new(203.0, 1_000.0);
+    let pq_hlg_mapper = PqHlgMapper::new_by_ref_white(203.0, 1_000.0);
 
     for pixel in frame.iter_mut() {
         *pixel = pq_hlg_mapper.map(*pixel);
@@ -250,7 +250,7 @@ fn test_map_rw_203_peak_4_000() {
         Pixel { red: PQ_4000_NITS, green: PQ_4000_NITS, blue: PQ_4000_NITS },
         Pixel { red: PQ_10000_NITS, green: PQ_10000_NITS, blue: PQ_10000_NITS },
     ];
-    let pq_hlg_mapper = PqHlgMapper::new(203.0, 4_000.0);
+    let pq_hlg_mapper = PqHlgMapper::new_by_ref_white(203.0, 4_000.0);
 
     for pixel in frame.iter_mut() {
         *pixel = pq_hlg_mapper.map(*pixel);
@@ -287,7 +287,7 @@ fn test_map_rw_203_peak_10_000() {
         Pixel { red: PQ_4000_NITS, green: PQ_4000_NITS, blue: PQ_4000_NITS },
         Pixel { red: PQ_10000_NITS, green: PQ_10000_NITS, blue: PQ_10000_NITS },
     ];
-    let pq_hlg_mapper = PqHlgMapper::new(203.0, 10_000.0);
+    let pq_hlg_mapper = PqHlgMapper::new_by_ref_white(203.0, 10_000.0);
 
     for pixel in frame.iter_mut() {
         *pixel = pq_hlg_mapper.map(*pixel);

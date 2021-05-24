@@ -58,9 +58,16 @@ pub struct PqHlgMapper {
 
 impl PqHlgMapper {
 
-    pub fn new(ref_white: f64, max_cll: f64) -> Self {
+    pub fn new(max_cll: f64) -> Self {
+        Self::new_by_factor(1.0, max_cll)
+    }
 
-        let factor = 203.0 / ref_white;
+    pub fn new_by_ref_white(ref_white: f64, max_cll: f64) -> Self {
+        Self::new_by_factor(203.0 / ref_white, max_cll)
+    }
+
+    pub fn new_by_factor(factor: f64, max_cll: f64) -> Self {
+
         let peak = max_cll / 10_000.0 * factor;
         let tone_mapper = ToneMapper::new(peak);
 
