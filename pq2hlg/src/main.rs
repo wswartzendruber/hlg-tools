@@ -7,7 +7,7 @@ use std::{
     fs::File,
     io::{stdout, BufWriter, Write},
 };
-use dsp::{Pixel, PqHlgMapper};
+use dsp::{Pixel, Mapper, PqHlgMapper, PqSdrMapper};
 use clap::{app_from_crate, crate_authors, crate_description, crate_name, crate_version, Arg};
 
 fn main() {
@@ -29,6 +29,12 @@ fn main() {
                 }
                 Ok(())
             })
+        )
+        .arg(Arg::with_name("preview")
+            .long("preview")
+            .short("p")
+            .help("Generates a black and white SDR preview LUT instead of a HLG one")
+            .takes_value(false)
         )
         .arg(Arg::with_name("lum-scale")
             .long("lum-scale")
@@ -136,25 +142,49 @@ fn main() {
             applied to compress the input to 1,000 nits. From there, the signal will be \
             converted to HLG. The generated LUTs are completely full range with 0.0 \
             representing minimum brightness and 1.0 representing maximum brightness.\n\n\
+            Optionally, a preview LUT can be generated to convert the input to black and white \
+            SDR. This can be used to compare the converted output to available BT.709 frames \
+            once they are also converted to black and white.\n\n\
             Copyright © 2021 William Swartzendruber\n\
             Licensed under the Open Software License version 3.0\n\
             <{}>", env!("CARGO_PKG_REPOSITORY")).as_str())
         .get_matches();
     let title = matches.value_of("title");
     let max_cll = matches.value_of("max-cll").unwrap().parse::<f64>().unwrap();
-    let pq_hlg_mapper = match (matches.value_of("lum-scale"), matches.value_of("ref-white")) {
-        (None, None) => {
-            PqHlgMapper::new(max_cll)
-        }
-        (Some(lum_scale), None) => {
-            PqHlgMapper::new_by_factor(lum_scale.parse::<f64>().unwrap(), max_cll)
-        }
-        (None, Some(ref_white)) => {
-            PqHlgMapper::new_by_ref_white(ref_white.parse::<f64>().unwrap(), max_cll)
-        }
-        (Some(_), Some(_)) => {
-            panic!("--lum-scale and --ref-white were somehow both defined; THIS IS A BUG!")
-        }
+    let mapper: Box<dyn Mapper> = if matches.is_present("preview") {
+        Box::new(
+            match (matches.value_of("lum-scale"), matches.value_of("ref-white")) {
+                (None, None) => {
+                    PqSdrMapper::new(max_cll)
+                }
+                (Some(lum_scale), None) => {
+                    PqSdrMapper::new_by_factor(lum_scale.parse::<f64>().unwrap(), max_cll)
+                }
+                (None, Some(ref_white)) => {
+                    PqSdrMapper::new_by_ref_white(ref_white.parse::<f64>().unwrap(), max_cll)
+                }
+                (Some(_), Some(_)) => {
+                    panic!("--lum-scale and --ref-white were somehow both defined")
+                }
+            }
+        )
+    } else {
+        Box::new(
+            match (matches.value_of("lum-scale"), matches.value_of("ref-white")) {
+                (None, None) => {
+                    PqHlgMapper::new(max_cll)
+                }
+                (Some(lum_scale), None) => {
+                    PqHlgMapper::new_by_factor(lum_scale.parse::<f64>().unwrap(), max_cll)
+                }
+                (None, Some(ref_white)) => {
+                    PqHlgMapper::new_by_ref_white(ref_white.parse::<f64>().unwrap(), max_cll)
+                }
+                (Some(_), Some(_)) => {
+                    panic!("--lum-scale and --ref-white were somehow both defined")
+                }
+            }
+        )
     };
     let size = matches.value_of("size").unwrap().parse::<usize>().unwrap();
     let output_value = matches.value_of("output").unwrap();
@@ -180,7 +210,7 @@ fn main() {
         for g in 0..size {
             for r in 0..size {
 
-                let pixel = pq_hlg_mapper.map(Pixel {
+                let pixel = mapper.map(Pixel {
                     red: r as f64 / (size - 1) as f64,
                     green: g as f64 / (size - 1) as f64,
                     blue: b as f64 / (size - 1) as f64,

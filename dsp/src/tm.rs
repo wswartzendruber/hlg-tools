@@ -9,6 +9,7 @@ mod tests;
 use super::tf::{pq_e_to_dl, pq_dl_to_e};
 
 pub struct ToneMapper {
+    target: f64,
     lwp: f64,
     ml: f64,
     ks: f64,
@@ -16,17 +17,17 @@ pub struct ToneMapper {
 
 impl ToneMapper {
 
-    pub fn new(peak: f64) -> Self {
+    pub fn new(peak: f64, target: f64) -> Self {
 
         let lwp = pq_dl_to_e(peak);
-        let ml = pq_dl_to_e(0.10) / lwp;
+        let ml = pq_dl_to_e(target) / lwp;
         let ks = 1.5 * ml - 0.5;
 
-        Self { lwp, ml, ks }
+        Self { target, lwp, ml, ks }
     }
 
     pub fn map(&self, o: f64) -> f64 {
-        pq_e_to_dl(self.eetf(pq_dl_to_e(o))).min(0.1)
+        pq_e_to_dl(self.eetf(pq_dl_to_e(o))).min(self.target)
     }
 
     fn eetf(&self, e: f64) -> f64 {

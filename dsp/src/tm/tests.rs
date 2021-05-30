@@ -12,7 +12,7 @@ const OOTF_DIFF: f64 = 0.0000000001;
 #[test]
 fn test_overrun_peak_1_000() {
 
-    let pq_ootf = ToneMapper::new(0.1);
+    let pq_ootf = ToneMapper::new(0.1, 0.1);
 
     for i in 0..1_000 {
         assert!(pq_ootf.map(i as f64 / 10_000.0) < 0.1);
@@ -26,7 +26,7 @@ fn test_overrun_peak_1_000() {
 #[test]
 fn test_overrun_peak_4_000() {
 
-    let pq_ootf = ToneMapper::new(0.4);
+    let pq_ootf = ToneMapper::new(0.4, 0.1);
 
     for i in 0..4_000 {
         assert!(pq_ootf.map(i as f64 / 10_000.0) < 0.1);
@@ -40,7 +40,7 @@ fn test_overrun_peak_4_000() {
 #[test]
 fn test_overrun_peak_10_000() {
 
-    let pq_ootf = ToneMapper::new(1.0);
+    let pq_ootf = ToneMapper::new(1.0, 0.1);
 
     for i in 0..9_999 {
         assert!(pq_ootf.map(i as f64 / 10_000.0) < 0.1);
@@ -50,7 +50,7 @@ fn test_overrun_peak_10_000() {
 #[test]
 fn test_ootf_peak_1000() {
 
-    let pq_ootf = ToneMapper::new(0.1);
+    let pq_ootf = ToneMapper::new(0.1, 0.1);
 
     assert_approx_eq!(pq_ootf.map(0.00), 0.0, OOTF_DIFF);
     assert_approx_eq!(pq_ootf.map(0.01), 0.01, OOTF_DIFF);
@@ -68,7 +68,7 @@ fn test_ootf_peak_1000() {
 #[test]
 fn test_ootf_peak_2000() {
 
-    let pq_ootf = ToneMapper::new(0.2);
+    let pq_ootf = ToneMapper::new(0.2, 0.1);
 
     assert_approx_eq!(pq_ootf.map(0.00), 0.0, OOTF_DIFF);
     assert_approx_eq!(pq_ootf.map(0.02), 0.02, OOTF_DIFF);
@@ -86,7 +86,7 @@ fn test_ootf_peak_2000() {
 #[test]
 fn test_ootf_peak_4000() {
 
-    let pq_ootf = ToneMapper::new(0.4);
+    let pq_ootf = ToneMapper::new(0.4, 0.1);
 
     assert_approx_eq!(pq_ootf.map(0.0), 0.0, OOTF_DIFF);
     assert_approx_eq!(pq_ootf.map(0.04), 0.04, OOTF_DIFF);
@@ -104,7 +104,7 @@ fn test_ootf_peak_4000() {
 #[test]
 fn test_ootf_peak_8000() {
 
-    let pq_ootf = ToneMapper::new(0.8);
+    let pq_ootf = ToneMapper::new(0.8, 0.1);
 
     assert_approx_eq!(pq_ootf.map(0.0), 0.0, OOTF_DIFF);
     assert_approx_eq!(pq_ootf.map(0.08), 0.0659387923192, OOTF_DIFF);
@@ -122,7 +122,7 @@ fn test_ootf_peak_8000() {
 #[test]
 fn test_ootf_peak_10000() {
 
-    let pq_ootf = ToneMapper::new(1.0);
+    let pq_ootf = ToneMapper::new(1.0, 0.1);
 
     assert_approx_eq!(pq_ootf.map(0.0), 0.0, OOTF_DIFF);
     assert_approx_eq!(pq_ootf.map(0.1), 0.0713332140595, OOTF_DIFF);
