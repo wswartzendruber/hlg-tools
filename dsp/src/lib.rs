@@ -12,7 +12,7 @@ pub mod tm;
 use std::ops::{Mul, MulAssign};
 
 use tf::{hlg_sl_to_e, pq_e_to_dl, hlg_dl_to_sl, sdr_o_to_e};
-use tm::ToneMapper;
+use tm::{sdn_tone_map, Bt2390ToneMapper};
 
 //
 // PIXEL
@@ -69,7 +69,7 @@ pub trait Mapper {
 pub struct PqHlgMapper {
     factor: f64,
     peak: f64,
-    tone_mapper: ToneMapper,
+    tone_mapper: Bt2390ToneMapper,
 }
 
 impl PqHlgMapper {
@@ -85,7 +85,7 @@ impl PqHlgMapper {
     pub fn new_by_factor(factor: f64, max_cll: f64) -> Self {
 
         let peak = max_cll / 10_000.0 * factor;
-        let tone_mapper = ToneMapper::new(peak, 0.1);
+        let tone_mapper = Bt2390ToneMapper::new(peak);
 
         Self { factor, peak, tone_mapper }
     }
@@ -142,8 +142,7 @@ impl Mapper for PqHlgMapper {
 pub struct PqSdrMapper {
     factor: f64,
     peak: f64,
-    pq_tone_mapper: ToneMapper,
-    hlg_tone_mapper: ToneMapper,
+    tone_mapper: Bt2390ToneMapper,
 }
 
 impl PqSdrMapper {
@@ -159,10 +158,9 @@ impl PqSdrMapper {
     pub fn new_by_factor(factor: f64, max_cll: f64) -> Self {
 
         let peak = max_cll / 10_000.0 * factor;
-        let pq_tone_mapper = ToneMapper::new(peak, 0.1);
-        let hlg_tone_mapper = ToneMapper::new(0.1, 0.0203);
+        let tone_mapper = Bt2390ToneMapper::new(peak);
 
-        Self { factor, peak, pq_tone_mapper, hlg_tone_mapper }
+        Self { factor, peak, tone_mapper }
     }
 
     pub fn map(&self, input: Pixel) -> Pixel {
@@ -183,7 +181,7 @@ impl PqSdrMapper {
         if self.peak > 0.1 {
 
             let y1 = pixel.y();
-            let y2 = self.pq_tone_mapper.map(y1);
+            let y2 = self.tone_mapper.map(y1);
             let r = if y1 == 0.0 { 0.0 } else { y2 / y1 };
 
             pixel *= r;
@@ -192,11 +190,8 @@ impl PqSdrMapper {
         // MONOCHROME
         let mut y = pixel.y();
 
-        // TONE MAPPING (TO 203 NITS)
-        y = self.hlg_tone_mapper.map(y);
-
-        // PQ DISPLAY LINEAR -> SDR LINEAR
-        y *= 49.261083744;
+        // TONE MAPPING (FROM 1,000 NITS TO 100 NITS)
+        y = sdn_tone_map(y * 10.0);
 
         // SDR LINEAR -> SDR GAMMA
         let sdr_gamma_pixel = Pixel {

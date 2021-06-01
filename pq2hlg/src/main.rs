@@ -144,7 +144,8 @@ fn main() {
             representing minimum brightness and 1.0 representing maximum brightness.\n\n\
             Optionally, a preview LUT can be generated to convert the input to black and white \
             SDR. This can be used to compare the converted output to available BT.709 frames \
-            once they are also converted to black and white.\n\n\
+            once they are also converted to black and white. In this way, --lum-scale can be \
+            adjusted until the two sets of screenshots match as much as possible.\n\n\
             Copyright © 2021 William Swartzendruber\n\
             Licensed under the Open Software License version 3.0\n\
             <{}>", env!("CARGO_PKG_REPOSITORY")).as_str())
