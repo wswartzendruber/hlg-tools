@@ -1,3 +1,9 @@
+<!--
+    SPDX-FileCopyrightText: 2021 William Swartzendruber <wswartzendruber@gmail.com>
+
+    SPDX-License-Identifier: CC-BY-SA-4.0
+-->
+
 # Introduction
 
 This tool suite consists of the basics needed to generate 3D LUTs that will convert video
@@ -186,32 +192,6 @@ ffmpeg -i source.mkv \
 
 Note that this example handles only the video and not any other assets such as audio or
 subtitles.
-
-## The End Result
-
-While the resulting HLG output is genuine HDR, we can also measure its usefulness by how it
-appears when played back on a SDR display. I have gathered some screenshots from the above
-example. Here, MPV is being used to convert BT.2020 HLG into BT.709 SDR.
-
-![](img/alita-0.jpg)
-
-![](img/alita-1.jpg)
-
-![](img/alita-2.jpg)
-
-![](img/alita-3.jpg)
-
-![](img/alita-4.jpg)
-
-![](img/alita-5.jpg)
-
-![](img/alita-6.jpg)
-
-![](img/alita-7.jpg)
-
-![](img/alita-8.jpg)
-
-![](img/alita-9.jpg)
 
 # Conclusion
 
