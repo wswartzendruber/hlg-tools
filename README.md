@@ -236,6 +236,8 @@ factor.
 The redistributable portions of this work are licensed under the terms of the Open Software
 License version 3.0 (SPDX: `OSL-3.0`).
 
+Documentation is placed under the Creative Commons (SPDX: `CC-BY-SA-4.0`).
+
 Buildscripts and unit tests are placed in the Public Domain to the highest degree allowed by law
 (SPDX: `CC0-1.0`).
 
