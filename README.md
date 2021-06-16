@@ -168,6 +168,10 @@ than the highlights. With this approach, the optimal luminance scaling factor fo
 Angel* happens to be very near `4.75`. For most movies, SDR screenshots can be sourced from
 [Blu-ray.com](http://blu-ray.com).
 
+Regardless, do not be overly concerned with preserving detail in the highlights. While the whole
+point of HDR is to retain such detail, it can be lost during SDR preview while still being
+correct.
+
 ## Generate the LUT
 
 Now we're ready to generate the 3D LUT using the values we've determined in the previous steps:
