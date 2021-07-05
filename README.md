@@ -117,9 +117,11 @@ In the case of *Alita: Battle Angel*, this value is 737 nits.
 
 ## Determine the Luminosity Scaling Factor
 
-The second thing we're after is the movie's luminosity scaling factor. The unfortunate truth of
-the matter is that this requires a brief bit of trial and error. If it's not correctly
-set, the picture will appear either too bright or too dark when played back on SDR.
+The second thing we're after is the movie's luminosity scaling factor. We need this because
+while UHD discs follow no clear standard for brightness levels, HLG does. And so, the brightness
+of the input video needs to be adjusted to match HLG's expectations. The unfortunate truth of
+the matter is that this requires a brief bit of trial and error. If it's not correctly set, the
+picture will appear either too bright or too dark when played back on SDR.
 
 The purpose of the `hlgprev.sh` script is to output a single black and white frame of the video
 being converted in order to preview its SDR appearance. The reason the preview output is
