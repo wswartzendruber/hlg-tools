@@ -1,7 +1,7 @@
 <!--
     SPDX-FileCopyrightText: 2021 William Swartzendruber <wswartzendruber@gmail.com>
 
-    SPDX-License-Identifier: CC-BY-SA-4.0
+    SPDX-License-Identifier: OSL-3.0
 -->
 
 # Introduction
@@ -237,12 +237,12 @@ factor.
 
 Different portions of this project are placed under different licenses:
 
-| Component     | License                                     | SPDX ID                                     |
-|---------------|---------------------------------------------|---------------------------------------------|
-| Application   | Open Software License 3.0                   | [`OSL-3.0`](LICENSES/OSL-3.0.txt)           |
-| Documentation | Creative Commons (Attribution, Share Alike) | [`CC-BY-SA-4.0`](LICENSES/CC-BY-SA-4.0.txt) |
-| Build scripts | Public Domain                               | [`CC0-1.0`](LICENSES/CC0-1.0.txt)           |
-| Unit tests    | Public Domain                               | [`CC0-1.0`](LICENSES/CC0-1.0.txt)           |
+| Component     | License                   | SPDX ID                           |
+|---------------|---------------------------|-----------------------------------|
+| Application   | Open Software License 3.0 | [`OSL-3.0`](LICENSES/OSL-3.0.txt) |
+| Documentation | Open Software License 3.0 | [`OSL-3.0`](LICENSES/OSL-3.0.txt) |
+| Build scripts | Public Domain             | [`CC0-1.0`](LICENSES/CC0-1.0.txt) |
+| Unit tests    | Public Domain             | [`CC0-1.0`](LICENSES/CC0-1.0.txt) |
 
 All screenshots of *Alita: Battle Angel* are copyrighted by 20th Century Fox with all rights
 reserved. They are included here under fair use guidelines.
