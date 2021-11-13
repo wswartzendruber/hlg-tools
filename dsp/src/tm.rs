@@ -7,7 +7,10 @@
 #[cfg(test)]
 mod tests;
 
-use super::tf::{pq_e_to_dl, pq_dl_to_e};
+use super::{
+    Pixel,
+    tf::{pq_e_to_dl, pq_dl_to_e},
+};
 
 pub struct Bt2390ToneMapper {
     lwp: f64,
@@ -57,24 +60,59 @@ impl Bt2390ToneMapper {
     }
 }
 
-pub fn sdn_tone_map(o: f64) -> f64 {
+/// Maps from a HLG linear light [Pixel] to a BT.2020 SDR linear light [Pixel] in accordance
+/// with ITU-R BT.2446-0 Section 5.
+///
+/// * `o` - The HLG linear light [Pixel] to be tone mapped, ranging from 0 to 1.
+pub fn bt2446_c_tone_map(o: Pixel) -> Pixel {
 
     //
-    // SDN = Stupid Desmos Naivety
+    // ITU-R BT.2446-0 Section 5
     //
-    // I just sat in front of Desmos trying random equations until I got a curve that looked the
-    // way I wanted it to. Basically, HLG has reference white at 203 nits and max white at 1,000
-    // nits. SDR has reference white at 80 nits and max white at 100 nits. So 0-203 nits should
-    // linearly map to 0-80 nits with a sharp knee for 203-1,000 nits mapping to 80-100 nits.
+    // Map from HLG to SDR.
     //
 
-    if o < 0.0 {
-        0.0
-    } else if 0.0 <= o && o <= 0.203 {
-        o / 0.2537
-    } else if 0.203 < o && o <= 1.0 {
-        (o - 0.19).ln() / 21.0 + 1.007
+    // CONSTANTS
+    let a0 = 0.165;
+    let a1 = 1.0 - 2.0 * a0;
+    let a2 = 1.0 - a0;
+    let ac = 1.0 / (1.0 - 3.0 * a0);
+    let k1 = 0.83802;
+    let k2 = 15.09968;
+    let k3 = 0.74204;
+    let k4 = 78.99439;
+    let y_hdr_ip = 58.5 / k1;
+
+    // 5.1.2 CROSSTALK MATRIX
+    let r_x_hdr = a1 * o.red + a0 * o.green + a0 * o.blue;
+    let g_x_hdr = a0 * o.red + a1 * o.green + a0 * o.blue;
+    let b_x_hdr = a0 * o.red + a0 * o.green + a1 * o.blue;
+
+    // 5.1.3 CONVERSION TO YXY
+    let x_hdr = 0.6370 * r_x_hdr + 0.1446 * g_x_hdr + 0.1689 * b_x_hdr;
+    let y_hdr = 0.2627 * r_x_hdr + 0.6780 * g_x_hdr + 0.0593 * b_x_hdr;
+    let z_hdr = 0.0000 * r_x_hdr + 0.0281 * g_x_hdr + 1.0610 * b_x_hdr;
+    let x = x_hdr / (x_hdr + y_hdr + z_hdr);
+    let y = y_hdr / (x_hdr + y_hdr + z_hdr);
+
+    // 5.1.4 TONE MAPPING
+    let y_sdr = if y_hdr < y_hdr_ip {
+        k1 * y_hdr
     } else {
-        1.0
+        k2 * (y_hdr / y_hdr_ip - k3).ln() + k4
+    };
+
+    // 5.1.5 CONVERSION TO RGB LINEAR SIGNAL
+    let x_sdr = (x / y) * y_sdr;
+    let z_sdr = ((1.0 - x - y) / y) * y_sdr;
+    let r_x_sdr = 1.7167 * x_sdr - 0.3557 * y_sdr - 0.2534 * z_sdr;
+    let g_x_sdr = -0.6667 * x_sdr + 1.6165 * y_sdr + 0.0158 * z_sdr;
+    let b_x_sdr = 0.0176 * x_sdr - 0.0428 * y_sdr + 0.9421 * z_sdr;
+
+    // 5.1.6 INVERSE CROSSTALK MATRIX
+    Pixel {
+        red: (a2 * r_x_sdr - a0 * g_x_sdr - a0 * b_x_sdr) * ac,
+        green: (-a0 * r_x_sdr + a2 * g_x_sdr - a0 * b_x_sdr) * ac,
+        blue: (-a0 * r_x_sdr - a0 * g_x_sdr + a2 * b_x_sdr) * ac,
     }
 }

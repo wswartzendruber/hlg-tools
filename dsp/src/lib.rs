@@ -13,7 +13,7 @@ pub mod tm;
 use std::ops::{Mul, MulAssign};
 
 use tf::{hlg_sl_to_e, pq_e_to_dl, hlg_dl_to_sl, sdr_o_to_e};
-use tm::{sdn_tone_map, Bt2390ToneMapper};
+use tm::{bt2446_c_tone_map, Bt2390ToneMapper};
 
 //
 // PIXEL
@@ -188,17 +188,22 @@ impl PqSdrMapper {
             pixel *= r;
         }
 
-        // MONOCHROME
-        let mut y = pixel.y();
+        // TONE MAPPING TO SDR
+        pixel = bt2446_c_tone_map(pixel * 10.0);
 
-        // TONE MAPPING (FROM 1,000 NITS TO 100 NITS)
-        y = sdn_tone_map(y * 10.0);
+        // MONOCHROME
+        //let y = pixel.y();
 
         // SDR LINEAR -> SDR GAMMA
+        // let sdr_gamma_pixel = Pixel {
+        //     red: sdr_o_to_e(y).min(1.0),
+        //     green: sdr_o_to_e(y).min(1.0),
+        //     blue: sdr_o_to_e(y).min(1.0),
+        // };
         let sdr_gamma_pixel = Pixel {
-            red: sdr_o_to_e(y).min(1.0),
-            green: sdr_o_to_e(y).min(1.0),
-            blue: sdr_o_to_e(y).min(1.0),
+            red: sdr_o_to_e(pixel.red).min(1.0),
+            green: sdr_o_to_e(pixel.green).min(1.0),
+            blue: sdr_o_to_e(pixel.blue).min(1.0),
         };
 
         sdr_gamma_pixel
