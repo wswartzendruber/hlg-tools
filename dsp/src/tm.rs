@@ -13,13 +13,13 @@ use super::{
     tf::{pq_e_to_dl, pq_dl_to_e},
 };
 
-pub struct Bt2390ToneMapper {
+pub struct Bt2408ToneMapper {
     lwp: f64,
     ml: f64,
     ks: f64,
 }
 
-impl Bt2390ToneMapper {
+impl Bt2408ToneMapper {
 
     pub fn new(peak: f64) -> Self {
 

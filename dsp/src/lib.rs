@@ -13,7 +13,7 @@ pub mod tm;
 use std::ops::{Mul, MulAssign};
 
 use tf::{hlg_sl_to_e, pq_e_to_dl, hlg_dl_to_sl, sdr_o_to_e};
-use tm::{bt2446_c_tone_map, Bt2390ToneMapper};
+use tm::{bt2446_c_tone_map, Bt2408ToneMapper};
 
 pub fn if_nan(value: f64, fallback: f64) -> f64 {
     if !value.is_nan() {
@@ -78,7 +78,7 @@ pub trait Mapper {
 pub struct PqHlgMapper {
     factor: f64,
     peak: f64,
-    tone_mapper: Bt2390ToneMapper,
+    tone_mapper: Bt2408ToneMapper,
 }
 
 impl PqHlgMapper {
@@ -94,7 +94,7 @@ impl PqHlgMapper {
     pub fn new_by_factor(factor: f64, max_cll: f64) -> Self {
 
         let peak = max_cll / 10_000.0 * factor;
-        let tone_mapper = Bt2390ToneMapper::new(peak);
+        let tone_mapper = Bt2408ToneMapper::new(peak);
 
         Self { factor, peak, tone_mapper }
     }
@@ -151,7 +151,7 @@ impl Mapper for PqHlgMapper {
 pub struct PqSdrMapper {
     factor: f64,
     peak: f64,
-    tone_mapper: Bt2390ToneMapper,
+    tone_mapper: Bt2408ToneMapper,
 }
 
 impl PqSdrMapper {
@@ -167,7 +167,7 @@ impl PqSdrMapper {
     pub fn new_by_factor(factor: f64, max_cll: f64) -> Self {
 
         let peak = max_cll / 10_000.0 * factor;
-        let tone_mapper = Bt2390ToneMapper::new(peak);
+        let tone_mapper = Bt2408ToneMapper::new(peak);
 
         Self { factor, peak, tone_mapper }
     }

@@ -11,7 +11,12 @@ streams from Perceptual Quantizer (PQ) HDR into Hybrid-Log Gamma (HLG) HDR. This
 to facilitate individuals in converting their physical HDR10 video libraries into HLG, thereby
 allowing more universal viewing on devices including SDR displays.
 
-Most of the work here is based on ITU-R BT.2390.
+The work here is based on:
+
+- ITU-R BT.2100
+- ITU-R BT.2390
+- ITU-R BT.2408
+- ITU-R BT.2446
 
 Note that nothing here addresses the topic of decrypting physical media.
 

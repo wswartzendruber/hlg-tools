@@ -134,12 +134,12 @@ fn main() {
             .help("Output Cube LUT file; use - for STDOUT")
             .required(true)
         )
-        .after_help(format!("This utility follows the BT.2390 method for generating a \
+        .after_help(format!("This utility follows the BT.2408 method for generating a \
             PQ-to-HLG conversion LUT. If either --lum-scale or --ref-white are provided, \
             the linear input brightness will either be scaled by the provided factor, or \
             scaled to bring the provided reference white level to 203 nits, respectively. This \
             will cause the --max-cll value to be internally adjusted as well. If the internal \
-            MaxCLL value then exceeds 1,000 nits, BT.2390 luminosity tone mapping will be \
+            MaxCLL value then exceeds 1,000 nits, BT.2408 luminosity tone mapping will be \
             applied to compress the input to 1,000 nits. From there, the signal will be \
             converted to HLG. The generated LUTs are completely full range with 0.0 \
             representing minimum brightness and 1.0 representing maximum brightness.\n\n\
