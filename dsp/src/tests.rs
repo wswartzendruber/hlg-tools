@@ -17,16 +17,7 @@ const PQ_4000_NITS: f64 = 0.9025723933109373;
 const PQ_4926_NITS: f64 = 0.9249513575268592;
 const PQ_10000_NITS: f64 = 1.0;
 const PQ_BLACK: f64 = 0.0;
-const PQ_GREY_18: f64 = 0.3800322743334056;
-const PQ_GREY_83: f64 = 0.557238560697735;
-const PQ_GREY_90: f64 = 0.5675779119928026;
 const PQ_REF_WHITE: f64 = 0.5806888810416109;
-const SDR_DIFF: f64 = 0.0001;
-const SDR_BLACK: f64 = 0.0;
-const SDR_GREY_18: f64 = 0.3870226424119708;
-const SDR_GREY_83: f64 = 0.8294599123812822;
-const SDR_GREY_90: f64 = 0.8646750115119883;
-const SDR_REF_WHITE: f64 = 0.9112149320796772;
 
 #[test]
 fn test_map_rw_100_peak_500() {
@@ -322,41 +313,4 @@ fn test_map_rw_203_peak_10_000() {
     assert_approx_eq!(frame[4].red, 1.0, HDR_DIFF);
     assert_approx_eq!(frame[4].green, 1.0, HDR_DIFF);
     assert_approx_eq!(frame[4].blue, 1.0, HDR_DIFF);
-}
-
-#[test]
-fn test_preview_map() {
-
-    let mut frame = vec![
-        Pixel { red: PQ_BLACK, green: PQ_BLACK, blue: PQ_BLACK },
-        Pixel { red: PQ_GREY_18, green: PQ_GREY_18, blue: PQ_GREY_18 },
-        Pixel { red: PQ_GREY_83, green: PQ_GREY_83, blue: PQ_GREY_83 },
-        Pixel { red: PQ_GREY_90, green: PQ_GREY_90, blue: PQ_GREY_90 },
-        Pixel { red: PQ_REF_WHITE, green: PQ_REF_WHITE, blue: PQ_REF_WHITE },
-    ];
-    let pq_hlg_mapper = PqSdrMapper::new_by_factor(1.0, 10_000.0);
-
-    for pixel in frame.iter_mut() {
-        *pixel = pq_hlg_mapper.map(*pixel);
-    }
-
-    assert_approx_eq!(frame[0].red, SDR_BLACK, SDR_DIFF);
-    assert_approx_eq!(frame[0].green, SDR_BLACK, SDR_DIFF);
-    assert_approx_eq!(frame[0].blue, SDR_BLACK, SDR_DIFF);
-
-    assert_approx_eq!(frame[1].red, SDR_GREY_18, SDR_DIFF);
-    assert_approx_eq!(frame[1].green, SDR_GREY_18, SDR_DIFF);
-    assert_approx_eq!(frame[1].blue, SDR_GREY_18, SDR_DIFF);
-
-    assert_approx_eq!(frame[2].red, SDR_GREY_83, SDR_DIFF);
-    assert_approx_eq!(frame[2].green, SDR_GREY_83, SDR_DIFF);
-    assert_approx_eq!(frame[2].blue, SDR_GREY_83, SDR_DIFF);
-
-    assert_approx_eq!(frame[3].red, SDR_GREY_90, SDR_DIFF);
-    assert_approx_eq!(frame[3].green, SDR_GREY_90, SDR_DIFF);
-    assert_approx_eq!(frame[3].blue, SDR_GREY_90, SDR_DIFF);
-
-    assert_approx_eq!(frame[4].red, SDR_REF_WHITE, SDR_DIFF);
-    assert_approx_eq!(frame[4].green, SDR_REF_WHITE, SDR_DIFF);
-    assert_approx_eq!(frame[4].blue, SDR_REF_WHITE, SDR_DIFF);
 }

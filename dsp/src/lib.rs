@@ -15,6 +15,14 @@ use std::ops::{Mul, MulAssign};
 use tf::{hlg_sl_to_e, pq_e_to_dl, hlg_dl_to_sl, sdr_o_to_e};
 use tm::{bt2446_c_tone_map, Bt2390ToneMapper};
 
+pub fn if_nan(value: f64, fallback: f64) -> f64 {
+    if !value.is_nan() {
+        value
+    } else {
+        fallback
+    }
+}
+
 //
 // PIXEL
 //
@@ -188,18 +196,18 @@ impl PqSdrMapper {
             pixel *= r;
         }
 
+        // MONOCHROME
+        let y = pixel.y();
+        pixel = Pixel {
+            red: y,
+            green: y,
+            blue: y,
+        };
+
         // TONE MAPPING TO SDR
         pixel = bt2446_c_tone_map(pixel * 10.0);
 
-        // MONOCHROME
-        //let y = pixel.y();
-
         // SDR LINEAR -> SDR GAMMA
-        // let sdr_gamma_pixel = Pixel {
-        //     red: sdr_o_to_e(y).min(1.0),
-        //     green: sdr_o_to_e(y).min(1.0),
-        //     blue: sdr_o_to_e(y).min(1.0),
-        // };
         let sdr_gamma_pixel = Pixel {
             red: sdr_o_to_e(pixel.red).min(1.0),
             green: sdr_o_to_e(pixel.green).min(1.0),
