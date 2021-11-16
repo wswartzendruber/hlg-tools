@@ -39,6 +39,14 @@ impl Pixel {
     pub fn y(&self) -> f64 {
         0.2627 * self.red + 0.6780 * self.green + 0.0593 * self.blue
     }
+
+    pub fn powf(&self, n: f64) -> Pixel {
+        Pixel {
+            red: self.red.powf(n),
+            green: self.green.powf(n),
+            blue: self.blue.powf(n),
+        }
+    }
 }
 
 impl Mul<f64> for Pixel {
@@ -76,64 +84,28 @@ pub trait Mapper {
 //
 
 pub struct PqHlgMapper {
-    factor: f64,
-    peak: f64,
-    tone_mapper: Bt2408ToneMapper,
+    prepper: PqPrepper,
 }
 
 impl PqHlgMapper {
 
-    pub fn new(max_cll: f64) -> Self {
-        Self::new_by_factor(1.0, max_cll)
-    }
-
-    pub fn new_by_ref_white(ref_white: f64, max_cll: f64) -> Self {
-        Self::new_by_factor(203.0 / ref_white, max_cll)
-    }
-
-    pub fn new_by_factor(factor: f64, max_cll: f64) -> Self {
-
-        let peak = max_cll / 10_000.0 * factor;
-        let tone_mapper = Bt2408ToneMapper::new(peak);
-
-        Self { factor, peak, tone_mapper }
+    pub fn new(max_cll: f64, factor: f64) -> Self {
+        Self { prepper: PqPrepper::new(max_cll, factor) }
     }
 
     pub fn map(&self, input: Pixel) -> Pixel {
 
-        let mut pixel = input;
-
-        // PQ SIGNAL -> DISPLAY LINEAR
-        pixel = Pixel {
-            red: pq_e_to_dl(pixel.red),
-            green: pq_e_to_dl(pixel.green),
-            blue: pq_e_to_dl(pixel.blue),
-        };
-
-        // REFERENCE WHITE ADJUSTMENT
-        pixel *= self.factor;
-
-        // TONE MAPPING
-        if self.peak > 0.1 {
-
-            let y1 = pixel.y();
-            let y2 = self.tone_mapper.map(y1);
-            let r = if y1 == 0.0 { 0.0 } else { y2 / y1 };
-
-            pixel *= r;
-        }
+        let mut pixel = self.prepper.prep(input);
 
         // PQ DISPLAY LINEAR -> HLG SCENE LINEAR
         pixel = hlg_dl_to_sl(pixel);
 
         // SCENE LINEAR -> HLG SIGNAL
-        let hlg_gamma_pixel = Pixel {
+        Pixel {
             red: hlg_sl_to_e(pixel.red).min(1.0),
             green: hlg_sl_to_e(pixel.green).min(1.0),
             blue: hlg_sl_to_e(pixel.blue).min(1.0),
-        };
-
-        hlg_gamma_pixel
+        }
     }
 }
 
@@ -149,52 +121,18 @@ impl Mapper for PqHlgMapper {
 //
 
 pub struct PqSdrMapper {
-    factor: f64,
-    peak: f64,
-    tone_mapper: Bt2408ToneMapper,
+    prepper: PqPrepper,
 }
 
 impl PqSdrMapper {
 
-    pub fn new(max_cll: f64) -> Self {
-        Self::new_by_factor(1.0, max_cll)
-    }
-
-    pub fn new_by_ref_white(ref_white: f64, max_cll: f64) -> Self {
-        Self::new_by_factor(203.0 / ref_white, max_cll)
-    }
-
-    pub fn new_by_factor(factor: f64, max_cll: f64) -> Self {
-
-        let peak = max_cll / 10_000.0 * factor;
-        let tone_mapper = Bt2408ToneMapper::new(peak);
-
-        Self { factor, peak, tone_mapper }
+    pub fn new(max_cll: f64, factor: f64) -> Self {
+        Self { prepper: PqPrepper::new(max_cll, factor) }
     }
 
     pub fn map(&self, input: Pixel) -> Pixel {
 
-        let mut pixel = input;
-
-        // PQ SIGNAL -> DISPLAY LINEAR
-        pixel = Pixel {
-            red: pq_e_to_dl(pixel.red),
-            green: pq_e_to_dl(pixel.green),
-            blue: pq_e_to_dl(pixel.blue),
-        };
-
-        // REFERENCE WHITE ADJUSTMENT
-        pixel *= self.factor;
-
-        // TONE MAPPING (TO 1,000 NITS)
-        if self.peak > 0.1 {
-
-            let y1 = pixel.y();
-            let y2 = self.tone_mapper.map(y1);
-            let r = if y1 == 0.0 { 0.0 } else { y2 / y1 };
-
-            pixel *= r;
-        }
+        let mut pixel = self.prepper.prep(input);
 
         // MONOCHROME
         let y = pixel.y();
@@ -208,13 +146,11 @@ impl PqSdrMapper {
         pixel = bt2446_c_tone_map(pixel * 10.0);
 
         // SDR LINEAR -> SDR GAMMA
-        let sdr_gamma_pixel = Pixel {
+        Pixel {
             red: sdr_o_to_e(pixel.red).min(1.0),
             green: sdr_o_to_e(pixel.green).min(1.0),
             blue: sdr_o_to_e(pixel.blue).min(1.0),
-        };
-
-        sdr_gamma_pixel
+        }
     }
 }
 
@@ -222,5 +158,56 @@ impl Mapper for PqSdrMapper {
 
     fn map(&self, input: Pixel) -> Pixel {
         self.map(input)
+    }
+}
+
+//
+// PQ Prepper
+//
+
+struct PqPrepper {
+    factor: f64,
+    gamma: f64,
+    peak: f64,
+    tone_mapper: Bt2408ToneMapper,
+}
+
+impl PqPrepper {
+
+    fn new(max_cll: f64, factor: f64) -> Self {
+
+        let gamma = 1.111_f64.powf(factor.log2());
+        let peak = (max_cll / 10_000.0 * factor).powf(1.0 / gamma);
+        let tone_mapper = Bt2408ToneMapper::new(peak);
+
+        Self { factor, gamma, peak, tone_mapper }
+    }
+
+    fn prep(&self, input: Pixel) -> Pixel {
+
+        let mut pixel = input;
+
+        // PQ SIGNAL -> DISPLAY LINEAR
+        pixel = Pixel {
+            red: pq_e_to_dl(pixel.red),
+            green: pq_e_to_dl(pixel.green),
+            blue: pq_e_to_dl(pixel.blue),
+        };
+
+        // REFERENCE WHITE ADJUSTMENT
+        pixel *= self.factor;
+        pixel = pixel.powf(1.0 / self.gamma);
+
+        // TONE MAPPING
+        if self.peak > 0.1 {
+
+            let y1 = pixel.y();
+            let y2 = self.tone_mapper.map(y1);
+            let r = if y1 == 0.0 { 0.0 } else { y2 / y1 };
+
+            pixel *= r;
+        }
+
+        pixel
     }
 }

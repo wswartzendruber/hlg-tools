@@ -44,39 +44,17 @@ fn main() {
             .help("Scales the linear brightness of the input video by the specified factor")
             .takes_value(true)
             .required(false)
-            .conflicts_with("ref-white")
+            .default_value("1")
             .validator(|value| {
-                let ref_white = value.parse::<f64>();
-                if ref_white.is_err() {
+                let lum_scale = value.parse::<f64>();
+                if lum_scale.is_err() {
                     return Err("Must be a floating point value".to_string())
                 }
-                let ref_white_value = ref_white.unwrap();
-                if !ref_white_value.is_normal() {
+                let lum_scale_value = lum_scale.unwrap();
+                if !lum_scale_value.is_normal() {
                     return Err("Must be a normal number".to_string())
                 }
-                if !ref_white_value.is_sign_positive() {
-                    return Err("Must be a positive number".to_string())
-                }
-                Ok(())
-            })
-        )
-        .arg(Arg::with_name("ref-white")
-            .long("ref-white")
-            .short("r")
-            .value_name("NITS")
-            .help("Brightness of the input video stream's reference white level")
-            .takes_value(true)
-            .required(false)
-            .validator(|value| {
-                let ref_white = value.parse::<f64>();
-                if ref_white.is_err() {
-                    return Err("Must be a floating point value".to_string())
-                }
-                let ref_white_value = ref_white.unwrap();
-                if !ref_white_value.is_normal() {
-                    return Err("Must be a normal number".to_string())
-                }
-                if !ref_white_value.is_sign_positive() {
+                if !lum_scale_value.is_sign_positive() {
                     return Err("Must be a positive number".to_string())
                 }
                 Ok(())
@@ -135,58 +113,28 @@ fn main() {
             .required(true)
         )
         .after_help(format!("This utility follows the BT.2408 method for generating a \
-            PQ-to-HLG conversion LUT. If either --lum-scale or --ref-white are provided, \
-            the linear input brightness will either be scaled by the provided factor, or \
-            scaled to bring the provided reference white level to 203 nits, respectively. This \
-            will cause the --max-cll value to be internally adjusted as well. If the internal \
+            PQ-to-HLG conversion LUT. If --lum-scale is provided, the linear input brightness \
+            will be scaled by the provided factor while performing gamma correction. This will \
+            cause the --max-cll value to be internally adjusted as well. If the internal \
             MaxCLL value then exceeds 1,000 nits, BT.2408 luminosity tone mapping will be \
             applied to compress the input to 1,000 nits. From there, the signal will be \
             converted to HLG. The generated LUTs are completely full range with 0.0 \
             representing minimum brightness and 1.0 representing maximum brightness.\n\n\
-            Optionally, a preview LUT can be generated to convert the input to black and white \
-            SDR. This can be used to compare the converted output to available BT.709 frames \
-            once they are also converted to black and white. In this way, --lum-scale can be \
-            adjusted until the two sets of screenshots match as much as possible.\n\n\
+            Optionally, a preview LUT can be generated to convert the input to black and \
+            white SDR. This can be used to compare the converted output to available BT.709 \
+            frames once they are also converted to black and white. In this way, --lum-scale \
+            can be adjusted until the two sets of screenshots match as much as possible.\n\n\
             Copyright © 2021 William Swartzendruber\n\
             Licensed under the Open Software License version 3.0\n\
             <{}>", env!("CARGO_PKG_REPOSITORY")).as_str())
         .get_matches();
     let title = matches.value_of("title");
+    let lum_scale = matches.value_of("lum-scale").unwrap().parse::<f64>().unwrap();
     let max_cll = matches.value_of("max-cll").unwrap().parse::<f64>().unwrap();
     let mapper: Box<dyn Mapper> = if matches.is_present("preview") {
-        Box::new(
-            match (matches.value_of("lum-scale"), matches.value_of("ref-white")) {
-                (None, None) => {
-                    PqSdrMapper::new(max_cll)
-                }
-                (Some(lum_scale), None) => {
-                    PqSdrMapper::new_by_factor(lum_scale.parse::<f64>().unwrap(), max_cll)
-                }
-                (None, Some(ref_white)) => {
-                    PqSdrMapper::new_by_ref_white(ref_white.parse::<f64>().unwrap(), max_cll)
-                }
-                (Some(_), Some(_)) => {
-                    panic!("--lum-scale and --ref-white were somehow both defined")
-                }
-            }
-        )
+        Box::new(PqSdrMapper::new(max_cll, lum_scale))
     } else {
-        Box::new(
-            match (matches.value_of("lum-scale"), matches.value_of("ref-white")) {
-                (None, None) => {
-                    PqHlgMapper::new(max_cll)
-                }
-                (Some(lum_scale), None) => {
-                    PqHlgMapper::new_by_factor(lum_scale.parse::<f64>().unwrap(), max_cll)
-                }
-                (None, Some(ref_white)) => {
-                    PqHlgMapper::new_by_ref_white(ref_white.parse::<f64>().unwrap(), max_cll)
-                }
-                (Some(_), Some(_)) => {
-                    panic!("--lum-scale and --ref-white were somehow both defined")
-                }
-            }
-        )
+        Box::new(PqHlgMapper::new(max_cll, lum_scale))
     };
     let size = matches.value_of("size").unwrap().parse::<usize>().unwrap();
     let output_value = matches.value_of("output").unwrap();
