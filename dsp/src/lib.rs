@@ -200,12 +200,9 @@ impl PqPrepper {
 
         // TONE MAPPING
         if self.peak > 0.1 {
-
-            let y1 = pixel.y();
-            let y2 = self.tone_mapper.map(y1);
-            let r = if y1 == 0.0 { 0.0 } else { y2 / y1 };
-
-            pixel *= r;
+            pixel.red = self.tone_mapper.map(pixel.red);
+            pixel.green = self.tone_mapper.map(pixel.green);
+            pixel.blue = self.tone_mapper.map(pixel.blue);
         }
 
         pixel
