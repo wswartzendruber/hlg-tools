@@ -7,7 +7,7 @@
 #[cfg(test)]
 mod tests;
 
-use super::Pixel;
+use super::pixel::RgbPixel;
 
 pub fn pq_e_to_dl(e: f64) -> f64 {
 
@@ -56,7 +56,7 @@ pub fn hlg_sl_to_e(o: f64) -> f64 {
     }
 }
 
-pub fn hlg_dl_to_sl(pixel: Pixel) -> Pixel {
+pub fn hlg_dl_to_sl(pixel: RgbPixel) -> RgbPixel {
 
     //
     // ITU-R BT.2100-2
@@ -66,7 +66,7 @@ pub fn hlg_dl_to_sl(pixel: Pixel) -> Pixel {
 
     let dl = pixel * 10.0;
 
-    dl * dl.y().powf(-0.16666666666666663).min(f64::MAX)
+    dl * dl.to_ycbcr().y.powf(-0.16666666666666663).min(f64::MAX)
 }
 
 pub fn sdr_o_to_e(o: f64) -> f64 {

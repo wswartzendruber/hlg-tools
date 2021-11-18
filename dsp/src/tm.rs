@@ -9,7 +9,7 @@ mod tests;
 
 use super::{
     if_nan,
-    Pixel,
+    pixel::RgbPixel,
     tf::{pq_e_to_dl, pq_dl_to_e},
 };
 
@@ -65,7 +65,7 @@ impl Bt2408ToneMapper {
 /// with ITU-R BT.2446-0 Section 5.
 ///
 /// * `o` - The HLG linear light [Pixel] to be tone mapped, ranging from 0 to 1.
-pub fn bt2446_c_tone_map(o: Pixel) -> Pixel {
+pub fn bt2446_c_tone_map(o: RgbPixel) -> RgbPixel {
 
     //
     // ITU-R BT.2446-0 Section 5 (Method C)
@@ -115,7 +115,7 @@ pub fn bt2446_c_tone_map(o: Pixel) -> Pixel {
     let b_x_sdr = 0.0176 * x_sdr - 0.0428 * y_sdr + 0.9421 * z_sdr;
 
     // 5.1.6 INVERSE CROSSTALK MATRIX
-    let return_value = Pixel {
+    let return_value = RgbPixel {
         red:   if_nan(ac * (a3 * r_x_sdr + a2 * g_x_sdr + a2 * b_x_sdr), 0.0),
         green: if_nan(ac * (a2 * r_x_sdr + a3 * g_x_sdr + a2 * b_x_sdr), 0.0),
         blue:  if_nan(ac * (a2 * r_x_sdr + a2 * g_x_sdr + a3 * b_x_sdr), 0.0),

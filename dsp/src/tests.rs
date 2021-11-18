@@ -23,11 +23,11 @@ const PQ_REF_WHITE: f64 = 0.5806888810416109;
 fn test_map_rw_100_peak_500() {
 
     let mut frame = vec![
-        Pixel { red: PQ_BLACK, green: PQ_BLACK, blue: PQ_BLACK },
-        Pixel { red: PQ_100_NITS, green: PQ_100_NITS, blue: PQ_100_NITS },
-        Pixel { red: PQ_1000_NITS, green: PQ_1000_NITS, blue: PQ_1000_NITS },
-        Pixel { red: PQ_4000_NITS, green: PQ_4000_NITS, blue: PQ_4000_NITS },
-        Pixel { red: PQ_10000_NITS, green: PQ_10000_NITS, blue: PQ_10000_NITS },
+        RgbPixel { red: PQ_BLACK, green: PQ_BLACK, blue: PQ_BLACK },
+        RgbPixel { red: PQ_100_NITS, green: PQ_100_NITS, blue: PQ_100_NITS },
+        RgbPixel { red: PQ_1000_NITS, green: PQ_1000_NITS, blue: PQ_1000_NITS },
+        RgbPixel { red: PQ_4000_NITS, green: PQ_4000_NITS, blue: PQ_4000_NITS },
+        RgbPixel { red: PQ_10000_NITS, green: PQ_10000_NITS, blue: PQ_10000_NITS },
     ];
     let pq_hlg_mapper = PqHlgMapper::new(500.0, 2.03);
 
@@ -60,11 +60,11 @@ fn test_map_rw_100_peak_500() {
 fn test_map_rw_100_peak_492() {
 
     let mut frame = vec![
-        Pixel { red: PQ_BLACK, green: PQ_BLACK, blue: PQ_BLACK },
-        Pixel { red: PQ_100_NITS, green: PQ_100_NITS, blue: PQ_100_NITS },
-        Pixel { red: PQ_492_NITS, green: PQ_492_NITS, blue: PQ_492_NITS },
-        Pixel { red: PQ_4000_NITS, green: PQ_4000_NITS, blue: PQ_4000_NITS },
-        Pixel { red: PQ_10000_NITS, green: PQ_10000_NITS, blue: PQ_10000_NITS },
+        RgbPixel { red: PQ_BLACK, green: PQ_BLACK, blue: PQ_BLACK },
+        RgbPixel { red: PQ_100_NITS, green: PQ_100_NITS, blue: PQ_100_NITS },
+        RgbPixel { red: PQ_492_NITS, green: PQ_492_NITS, blue: PQ_492_NITS },
+        RgbPixel { red: PQ_4000_NITS, green: PQ_4000_NITS, blue: PQ_4000_NITS },
+        RgbPixel { red: PQ_10000_NITS, green: PQ_10000_NITS, blue: PQ_10000_NITS },
     ];
     let pq_hlg_mapper = PqHlgMapper::new(492.0, 2.03);
 
@@ -97,11 +97,11 @@ fn test_map_rw_100_peak_492() {
 fn test_map_rw_100_peak_1_970() {
 
     let mut frame = vec![
-        Pixel { red: PQ_BLACK, green: PQ_BLACK, blue: PQ_BLACK },
-        Pixel { red: PQ_100_NITS, green: PQ_100_NITS, blue: PQ_100_NITS },
-        Pixel { red: PQ_492_NITS, green: PQ_492_NITS, blue: PQ_492_NITS },
-        Pixel { red: PQ_1970_NITS, green: PQ_1970_NITS, blue: PQ_1970_NITS },
-        Pixel { red: PQ_10000_NITS, green: PQ_10000_NITS, blue: PQ_10000_NITS },
+        RgbPixel { red: PQ_BLACK, green: PQ_BLACK, blue: PQ_BLACK },
+        RgbPixel { red: PQ_100_NITS, green: PQ_100_NITS, blue: PQ_100_NITS },
+        RgbPixel { red: PQ_492_NITS, green: PQ_492_NITS, blue: PQ_492_NITS },
+        RgbPixel { red: PQ_1970_NITS, green: PQ_1970_NITS, blue: PQ_1970_NITS },
+        RgbPixel { red: PQ_10000_NITS, green: PQ_10000_NITS, blue: PQ_10000_NITS },
     ];
     let pq_hlg_mapper = PqHlgMapper::new(1_970.0, 2.03);
 
@@ -134,11 +134,11 @@ fn test_map_rw_100_peak_1_970() {
 fn test_map_rw_100_peak_4_926() {
 
     let mut frame = vec![
-        Pixel { red: PQ_BLACK, green: PQ_BLACK, blue: PQ_BLACK },
-        Pixel { red: PQ_100_NITS, green: PQ_100_NITS, blue: PQ_100_NITS },
-        Pixel { red: PQ_492_NITS, green: PQ_492_NITS, blue: PQ_492_NITS },
-        Pixel { red: PQ_1970_NITS, green: PQ_1970_NITS, blue: PQ_1970_NITS },
-        Pixel { red: PQ_4926_NITS, green: PQ_4926_NITS, blue: PQ_4926_NITS },
+        RgbPixel { red: PQ_BLACK, green: PQ_BLACK, blue: PQ_BLACK },
+        RgbPixel { red: PQ_100_NITS, green: PQ_100_NITS, blue: PQ_100_NITS },
+        RgbPixel { red: PQ_492_NITS, green: PQ_492_NITS, blue: PQ_492_NITS },
+        RgbPixel { red: PQ_1970_NITS, green: PQ_1970_NITS, blue: PQ_1970_NITS },
+        RgbPixel { red: PQ_4926_NITS, green: PQ_4926_NITS, blue: PQ_4926_NITS },
     ];
     let pq_hlg_mapper = PqHlgMapper::new(4_926.0, 2.03);
 
@@ -171,11 +171,11 @@ fn test_map_rw_100_peak_4_926() {
 fn test_map_rw_203_peak_500() {
 
     let mut frame = vec![
-        Pixel { red: PQ_BLACK, green: PQ_BLACK, blue: PQ_BLACK },
-        Pixel { red: PQ_REF_WHITE, green: PQ_REF_WHITE, blue: PQ_REF_WHITE },
-        Pixel { red: PQ_1000_NITS, green: PQ_1000_NITS, blue: PQ_1000_NITS },
-        Pixel { red: PQ_4000_NITS, green: PQ_4000_NITS, blue: PQ_4000_NITS },
-        Pixel { red: PQ_10000_NITS, green: PQ_10000_NITS, blue: PQ_10000_NITS },
+        RgbPixel { red: PQ_BLACK, green: PQ_BLACK, blue: PQ_BLACK },
+        RgbPixel { red: PQ_REF_WHITE, green: PQ_REF_WHITE, blue: PQ_REF_WHITE },
+        RgbPixel { red: PQ_1000_NITS, green: PQ_1000_NITS, blue: PQ_1000_NITS },
+        RgbPixel { red: PQ_4000_NITS, green: PQ_4000_NITS, blue: PQ_4000_NITS },
+        RgbPixel { red: PQ_10000_NITS, green: PQ_10000_NITS, blue: PQ_10000_NITS },
     ];
     let pq_hlg_mapper = PqHlgMapper::new(500.0, 1.0);
 
@@ -208,11 +208,11 @@ fn test_map_rw_203_peak_500() {
 fn test_map_rw_203_peak_1_000() {
 
     let mut frame = vec![
-        Pixel { red: PQ_BLACK, green: PQ_BLACK, blue: PQ_BLACK },
-        Pixel { red: PQ_REF_WHITE, green: PQ_REF_WHITE, blue: PQ_REF_WHITE },
-        Pixel { red: PQ_1000_NITS, green: PQ_1000_NITS, blue: PQ_1000_NITS },
-        Pixel { red: PQ_4000_NITS, green: PQ_4000_NITS, blue: PQ_4000_NITS },
-        Pixel { red: PQ_10000_NITS, green: PQ_10000_NITS, blue: PQ_10000_NITS },
+        RgbPixel { red: PQ_BLACK, green: PQ_BLACK, blue: PQ_BLACK },
+        RgbPixel { red: PQ_REF_WHITE, green: PQ_REF_WHITE, blue: PQ_REF_WHITE },
+        RgbPixel { red: PQ_1000_NITS, green: PQ_1000_NITS, blue: PQ_1000_NITS },
+        RgbPixel { red: PQ_4000_NITS, green: PQ_4000_NITS, blue: PQ_4000_NITS },
+        RgbPixel { red: PQ_10000_NITS, green: PQ_10000_NITS, blue: PQ_10000_NITS },
     ];
     let pq_hlg_mapper = PqHlgMapper::new(1_000.0, 1.0);
 
@@ -245,11 +245,11 @@ fn test_map_rw_203_peak_1_000() {
 fn test_map_rw_203_peak_4_000() {
 
     let mut frame = vec![
-        Pixel { red: PQ_BLACK, green: PQ_BLACK, blue: PQ_BLACK },
-        Pixel { red: PQ_REF_WHITE, green: PQ_REF_WHITE, blue: PQ_REF_WHITE },
-        Pixel { red: PQ_1000_NITS, green: PQ_1000_NITS, blue: PQ_1000_NITS },
-        Pixel { red: PQ_4000_NITS, green: PQ_4000_NITS, blue: PQ_4000_NITS },
-        Pixel { red: PQ_10000_NITS, green: PQ_10000_NITS, blue: PQ_10000_NITS },
+        RgbPixel { red: PQ_BLACK, green: PQ_BLACK, blue: PQ_BLACK },
+        RgbPixel { red: PQ_REF_WHITE, green: PQ_REF_WHITE, blue: PQ_REF_WHITE },
+        RgbPixel { red: PQ_1000_NITS, green: PQ_1000_NITS, blue: PQ_1000_NITS },
+        RgbPixel { red: PQ_4000_NITS, green: PQ_4000_NITS, blue: PQ_4000_NITS },
+        RgbPixel { red: PQ_10000_NITS, green: PQ_10000_NITS, blue: PQ_10000_NITS },
     ];
     let pq_hlg_mapper = PqHlgMapper::new(4_000.0, 1.0);
 
@@ -282,11 +282,11 @@ fn test_map_rw_203_peak_4_000() {
 fn test_map_rw_203_peak_10_000() {
 
     let mut frame = vec![
-        Pixel { red: PQ_BLACK, green: PQ_BLACK, blue: PQ_BLACK },
-        Pixel { red: PQ_REF_WHITE, green: PQ_REF_WHITE, blue: PQ_REF_WHITE },
-        Pixel { red: PQ_1000_NITS, green: PQ_1000_NITS, blue: PQ_1000_NITS },
-        Pixel { red: PQ_4000_NITS, green: PQ_4000_NITS, blue: PQ_4000_NITS },
-        Pixel { red: PQ_10000_NITS, green: PQ_10000_NITS, blue: PQ_10000_NITS },
+        RgbPixel { red: PQ_BLACK, green: PQ_BLACK, blue: PQ_BLACK },
+        RgbPixel { red: PQ_REF_WHITE, green: PQ_REF_WHITE, blue: PQ_REF_WHITE },
+        RgbPixel { red: PQ_1000_NITS, green: PQ_1000_NITS, blue: PQ_1000_NITS },
+        RgbPixel { red: PQ_4000_NITS, green: PQ_4000_NITS, blue: PQ_4000_NITS },
+        RgbPixel { red: PQ_10000_NITS, green: PQ_10000_NITS, blue: PQ_10000_NITS },
     ];
     let pq_hlg_mapper = PqHlgMapper::new(10_000.0, 1.0);
 

@@ -7,11 +7,11 @@
 #[cfg(test)]
 mod tests;
 
+pub mod pixel;
 pub mod tf;
 pub mod tm;
 
-use std::ops::{Mul, MulAssign};
-
+use pixel::RgbPixel;
 use tf::{hlg_sl_to_e, pq_e_to_dl, hlg_dl_to_sl, sdr_o_to_e};
 use tm::{bt2446_c_tone_map, Bt2408ToneMapper};
 
@@ -24,59 +24,11 @@ pub fn if_nan(value: f64, fallback: f64) -> f64 {
 }
 
 //
-// PIXEL
-//
-
-#[derive(Debug, Clone, Copy, PartialEq)]
-pub struct Pixel {
-    pub red: f64,
-    pub green: f64,
-    pub blue: f64,
-}
-
-impl Pixel {
-
-    pub fn y(&self) -> f64 {
-        0.2627 * self.red + 0.6780 * self.green + 0.0593 * self.blue
-    }
-
-    pub fn powf(&self, n: f64) -> Pixel {
-        Pixel {
-            red: self.red.powf(n),
-            green: self.green.powf(n),
-            blue: self.blue.powf(n),
-        }
-    }
-}
-
-impl Mul<f64> for Pixel {
-
-    type Output = Self;
-
-    fn mul(self, rhs: f64) -> Self {
-        Pixel {
-            red: self.red * rhs,
-            green: self.green * rhs,
-            blue: self.blue * rhs,
-        }
-    }
-}
-
-impl MulAssign<f64> for Pixel {
-
-    fn mul_assign(&mut self, rhs: f64) {
-        self.red *= rhs;
-        self.green *= rhs;
-        self.blue *= rhs;
-    }
-}
-
-//
 // Mapper
 //
 
 pub trait Mapper {
-    fn map(&self, input: Pixel) -> Pixel;
+    fn map(&self, input: RgbPixel) -> RgbPixel;
 }
 
 //
@@ -93,7 +45,7 @@ impl PqHlgMapper {
         Self { prepper: PqPrepper::new(max_cll, factor) }
     }
 
-    pub fn map(&self, input: Pixel) -> Pixel {
+    pub fn map(&self, input: RgbPixel) -> RgbPixel {
 
         let mut pixel = self.prepper.prep(input);
 
@@ -101,7 +53,7 @@ impl PqHlgMapper {
         pixel = hlg_dl_to_sl(pixel);
 
         // SCENE LINEAR -> HLG SIGNAL
-        Pixel {
+        RgbPixel {
             red: hlg_sl_to_e(pixel.red).min(1.0),
             green: hlg_sl_to_e(pixel.green).min(1.0),
             blue: hlg_sl_to_e(pixel.blue).min(1.0),
@@ -111,7 +63,7 @@ impl PqHlgMapper {
 
 impl Mapper for PqHlgMapper {
 
-    fn map(&self, input: Pixel) -> Pixel {
+    fn map(&self, input: RgbPixel) -> RgbPixel {
         self.map(input)
     }
 }
@@ -130,13 +82,13 @@ impl PqSdrMapper {
         Self { prepper: PqPrepper::new(max_cll, factor) }
     }
 
-    pub fn map(&self, input: Pixel) -> Pixel {
+    pub fn map(&self, input: RgbPixel) -> RgbPixel {
 
         let mut pixel = self.prepper.prep(input);
 
         // MONOCHROME
-        let y = pixel.y();
-        pixel = Pixel {
+        let y = pixel.to_ycbcr().y;
+        pixel = RgbPixel {
             red: y,
             green: y,
             blue: y,
@@ -146,7 +98,7 @@ impl PqSdrMapper {
         pixel = bt2446_c_tone_map(pixel * 10.0);
 
         // SDR LINEAR -> SDR GAMMA
-        Pixel {
+        RgbPixel {
             red: sdr_o_to_e(pixel.red).min(1.0),
             green: sdr_o_to_e(pixel.green).min(1.0),
             blue: sdr_o_to_e(pixel.blue).min(1.0),
@@ -156,7 +108,7 @@ impl PqSdrMapper {
 
 impl Mapper for PqSdrMapper {
 
-    fn map(&self, input: Pixel) -> Pixel {
+    fn map(&self, input: RgbPixel) -> RgbPixel {
         self.map(input)
     }
 }
@@ -183,28 +135,32 @@ impl PqPrepper {
         Self { factor, gamma, peak, tone_mapper }
     }
 
-    fn prep(&self, input: Pixel) -> Pixel {
+    fn prep(&self, input: RgbPixel) -> RgbPixel {
 
-        let mut pixel = input;
+        let mut rgb_pixel = input;
 
         // PQ SIGNAL -> DISPLAY LINEAR
-        pixel = Pixel {
-            red: pq_e_to_dl(pixel.red),
-            green: pq_e_to_dl(pixel.green),
-            blue: pq_e_to_dl(pixel.blue),
+        rgb_pixel = RgbPixel {
+            red: pq_e_to_dl(rgb_pixel.red),
+            green: pq_e_to_dl(rgb_pixel.green),
+            blue: pq_e_to_dl(rgb_pixel.blue),
         };
 
-        // REFERENCE WHITE ADJUSTMENT
-        pixel *= self.factor;
-        pixel = pixel.powf(1.0 / self.gamma);
+        // SCALING
+        rgb_pixel *= self.factor;
+
+        // GAMMA CORRECTION
+        let mut ycbcr_pixel = rgb_pixel.to_ycbcr();
+        ycbcr_pixel.y = ycbcr_pixel.y.powf(1.0 / self.gamma);
+        rgb_pixel = ycbcr_pixel.to_rgb();
 
         // TONE MAPPING
         if self.peak > 0.1 {
-            pixel.red = self.tone_mapper.map(pixel.red);
-            pixel.green = self.tone_mapper.map(pixel.green);
-            pixel.blue = self.tone_mapper.map(pixel.blue);
+            rgb_pixel.red = self.tone_mapper.map(rgb_pixel.red);
+            rgb_pixel.green = self.tone_mapper.map(rgb_pixel.green);
+            rgb_pixel.blue = self.tone_mapper.map(rgb_pixel.blue);
         }
 
-        pixel
+        rgb_pixel
     }
 }
