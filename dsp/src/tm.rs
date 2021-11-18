@@ -61,10 +61,6 @@ impl Bt2408ToneMapper {
     }
 }
 
-/// Maps from a HLG linear light [Pixel] to a BT.2020 SDR linear light [Pixel] in accordance
-/// with ITU-R BT.2446-0 Section 5.
-///
-/// * `o` - The HLG linear light [Pixel] to be tone mapped, ranging from 0 to 1.
 pub fn bt2446_c_tone_map(o: RgbPixel) -> RgbPixel {
 
     //
