@@ -87,7 +87,7 @@ impl PqSdrMapper {
         let mut pixel = self.prepper.prep(input);
 
         // MONOCHROME
-        let y = pixel.to_ycbcr().y;
+        let y = pixel.to_xyz().y;
         pixel = RgbPixel {
             red: y,
             green: y,
@@ -147,12 +147,12 @@ impl PqPrepper {
         };
 
         // SCALING
-        rgb_pixel *= self.factor;
+        // rgb_pixel *= self.factor;
 
         // GAMMA CORRECTION
-        let mut ycbcr_pixel = rgb_pixel.to_ycbcr();
-        ycbcr_pixel.y = ycbcr_pixel.y.powf(1.0 / self.gamma);
-        rgb_pixel = ycbcr_pixel.to_rgb();
+        // let mut ycbcr_pixel = rgb_pixel.to_ycbcr();
+        // ycbcr_pixel.y = ycbcr_pixel.y.powf(1.0 / self.gamma);
+        // rgb_pixel = ycbcr_pixel.to_rgb();
 
         // TONE MAPPING
         if self.peak > 0.1 {

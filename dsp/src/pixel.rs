@@ -4,16 +4,13 @@
  * SPDX-License-Identifier: OSL-3.0
  */
 
-// #[cfg(test)]
-// mod tests;
+#[cfg(test)]
+mod tests;
 
 use std::ops::{Mul, MulAssign};
 
-const A: f64 = 0.2627;
-const B: f64 = 0.6780;
-const C: f64 = 0.0593;
-const D: f64 = 1.8814;
-const E: f64 = 1.4747;
+const XN: f64 = 0.312713;
+const YN: f64 = 0.329016;
 
 //
 // RGB
@@ -28,14 +25,11 @@ pub struct RgbPixel {
 
 impl RgbPixel {
 
-    pub fn to_ycbcr(&self) -> YcbcrPixel {
-
-        let y = A * self.red + B * self.green + C * self.blue;
-
-        YcbcrPixel {
-            y,
-            cb: (self.blue - y) / D,
-            cr: (self.red - y) / E,
+    pub fn to_xyz(&self) -> XyzPixel {
+        XyzPixel {
+            x: 0.6370 * self.red + 0.1446 * self.green + 0.1689 * self.blue,
+            y: 0.2627 * self.red + 0.6780 * self.green + 0.0593 * self.blue,
+            z: 0.0000 * self.red + 0.0281 * self.green + 1.0610 * self.blue,
         }
     }
 }
@@ -63,23 +57,60 @@ impl MulAssign<f64> for RgbPixel {
 }
 
 //
-// YCBCR
+// XYZ
 //
 
 #[derive(Debug, Clone, Copy, PartialEq)]
-pub struct YcbcrPixel {
+pub struct XyzPixel {
+    pub x: f64,
     pub y: f64,
-    pub cb: f64,
-    pub cr: f64,
+    pub z: f64,
 }
 
-impl YcbcrPixel {
+impl XyzPixel {
 
     pub fn to_rgb(&self) -> RgbPixel {
         RgbPixel {
-            red: self.y + E * self.cr,
-            green: self.y - (A * E / B) * self.cr - (C * D / B) * self.cb,
-            blue: self.y + D * self.cb,
+            red: 1.7167 * self.x - 0.3557 * self.y - 0.2534 * self.z,
+            green: -0.6667 * self.x + 1.6165 * self.y + 0.0158 * self.z,
+            blue: 0.0176 * self.x - 0.0428 * self.y + 0.9421 * self.z,
+        }
+    }
+
+    pub fn to_luv(&self) -> LuvPixel {
+
+        let un = 4.0 * XN / (-2.0 * XN + 12.0 * YN + 3.0);
+        let vn = 9.0 * YN / (-2.0 * XN + 12.0 * YN + 3.0);
+        let u = 4.0 * self.x / (self.x + 15.0 * self.y + 3.0 * self.z);
+        let v = 9.0 * self.y / (self.x + 15.0 * self.y + 3.0 * self.z);
+        let l = 116.0 * (self.y / YN).powf(1.0 / 3.0) - 16.0;
+
+        LuvPixel {
+            l,
+            u: 13.0 * l * (u - un),
+            v: 13.0 * l * (v - vn),
+        }
+    }
+}
+
+//
+// LUV
+//
+
+#[derive(Debug, Clone, Copy, PartialEq)]
+pub struct LuvPixel {
+    pub l: f64,
+    pub u: f64,
+    pub v: f64,
+}
+
+impl LuvPixel {
+
+    pub fn to_xyz(&self) -> XyzPixel {
+        XyzPixel {
+            x: 0.0,
+            y: 0.0,
+            z: 0.0,
         }
     }
 }
