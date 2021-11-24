@@ -7,7 +7,7 @@
 #[cfg(test)]
 mod tests;
 
-use std::ops::{Mul, MulAssign};
+use std::ops::Mul;
 
 //
 // RGB
@@ -54,15 +54,6 @@ impl Mul<f64> for RgbPixel {
             green: self.green * rhs,
             blue: self.blue * rhs,
         }
-    }
-}
-
-impl MulAssign<f64> for RgbPixel {
-
-    fn mul_assign(&mut self, rhs: f64) {
-        self.red *= rhs;
-        self.green *= rhs;
-        self.blue *= rhs;
     }
 }
 
