@@ -8,7 +8,6 @@
 mod tests;
 
 use super::{
-    if_nan,
     pixel::RgbPixel,
     tf::{pq_e_to_dl, pq_dl_to_e},
 };
@@ -70,7 +69,7 @@ pub fn bt2446_c_tone_map(o: RgbPixel) -> RgbPixel {
     //
 
     // PRE-SCALING
-    let pixel = o * 1_000.0;
+    let mut rgb = o * 1_000.0;
 
     // CONSTANTS
     let a0 = 0.165;
@@ -85,38 +84,32 @@ pub fn bt2446_c_tone_map(o: RgbPixel) -> RgbPixel {
     let y_hdr_ip = 58.5 / k1;
 
     // 5.1.2 CROSSTALK MATRIX
-    let r_x_hdr = a1 * pixel.red + a0 * pixel.green + a0 * pixel.blue;
-    let g_x_hdr = a0 * pixel.red + a1 * pixel.green + a0 * pixel.blue;
-    let b_x_hdr = a0 * pixel.red + a0 * pixel.green + a1 * pixel.blue;
+    rgb = RgbPixel {
+        red: a1 * rgb.red + a0 * rgb.green + a0 * rgb.blue,
+        green: a0 * rgb.red + a1 * rgb.green + a0 * rgb.blue,
+        blue: a0 * rgb.red + a0 * rgb.green + a1 * rgb.blue,
+    };
 
     // 5.1.3 CONVERSION TO YXY
-    let x_hdr = 0.6370 * r_x_hdr + 0.1446 * g_x_hdr + 0.1689 * b_x_hdr;
-    let y_hdr = 0.2627 * r_x_hdr + 0.6780 * g_x_hdr + 0.0593 * b_x_hdr;
-    let z_hdr = 0.0000 * r_x_hdr + 0.0281 * g_x_hdr + 1.0610 * b_x_hdr;
-    let x = x_hdr / (x_hdr + y_hdr + z_hdr);
-    let y = y_hdr / (x_hdr + y_hdr + z_hdr);
+    let mut yxy = rgb.to_yxy();
 
     // 5.1.4 TONE MAPPING
-    let y_sdr = if y_hdr < y_hdr_ip {
-        k1 * y_hdr
+    yxy.y = if yxy.y < y_hdr_ip {
+        k1 * yxy.y
     } else {
-        k2 * (y_hdr / y_hdr_ip - k3).ln() + k4
+        k2 * (yxy.y / y_hdr_ip - k3).ln() + k4
     };
 
     // 5.1.5 CONVERSION TO RGB LINEAR SIGNAL
-    let x_sdr = (x / y) * y_sdr;
-    let z_sdr = ((1.0 - x - y) / y) * y_sdr;
-    let r_x_sdr = 1.7167 * x_sdr - 0.3557 * y_sdr - 0.2534 * z_sdr;
-    let g_x_sdr = -0.6667 * x_sdr + 1.6165 * y_sdr + 0.0158 * z_sdr;
-    let b_x_sdr = 0.0176 * x_sdr - 0.0428 * y_sdr + 0.9421 * z_sdr;
+    rgb = yxy.to_rgb();
 
     // 5.1.6 INVERSE CROSSTALK MATRIX
-    let return_value = RgbPixel {
-        red:   if_nan(ac * (a3 * r_x_sdr + a2 * g_x_sdr + a2 * b_x_sdr), 0.0),
-        green: if_nan(ac * (a2 * r_x_sdr + a3 * g_x_sdr + a2 * b_x_sdr), 0.0),
-        blue:  if_nan(ac * (a2 * r_x_sdr + a2 * g_x_sdr + a3 * b_x_sdr), 0.0),
+    rgb = RgbPixel {
+        red: ac * (a3 * rgb.red + a2 * rgb.green + a2 * rgb.blue),
+        green: ac * (a2 * rgb.red + a3 * rgb.green + a2 * rgb.blue),
+        blue: ac * (a2 * rgb.red + a2 * rgb.green + a3 * rgb.blue),
     };
 
     // POST-SCALING
-    return_value * 0.01
+    rgb * 0.01
 }
