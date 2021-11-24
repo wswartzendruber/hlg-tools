@@ -15,14 +15,6 @@ use pixel::RgbPixel;
 use tf::{hlg_sl_to_e, pq_e_to_dl, hlg_dl_to_sl, sdr_o_to_e};
 use tm::{bt2446_c_tone_map, Bt2408ToneMapper};
 
-pub fn if_nan(value: f64, fallback: f64) -> f64 {
-    if !value.is_nan() {
-        value
-    } else {
-        fallback
-    }
-}
-
 //
 // Mapper
 //
