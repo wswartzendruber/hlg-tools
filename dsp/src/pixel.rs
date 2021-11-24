@@ -9,9 +9,6 @@ mod tests;
 
 use std::ops::{Mul, MulAssign};
 
-const XN: f64 = 0.312713;
-const YN: f64 = 0.329016;
-
 //
 // RGB
 //
@@ -25,11 +22,24 @@ pub struct RgbPixel {
 
 impl RgbPixel {
 
-    pub fn to_xyz(&self) -> XyzPixel {
-        XyzPixel {
-            x: 0.6370 * self.red + 0.1446 * self.green + 0.1689 * self.blue,
-            y: 0.2627 * self.red + 0.6780 * self.green + 0.0593 * self.blue,
-            z: 0.0000 * self.red + 0.0281 * self.green + 1.0610 * self.blue,
+    pub fn to_yxy(&self) -> YxyPixel {
+
+        let x = 0.6370 * self.red + 0.1446 * self.green + 0.1689 * self.blue;
+        let y = 0.2627 * self.red + 0.6780 * self.green + 0.0593 * self.blue;
+        let z = 0.0000 * self.red + 0.0281 * self.green + 1.0610 * self.blue;
+
+        if self.red == self.green && self.green == self.blue {
+            YxyPixel {
+                y,
+                xc: 0.31270561916041584,
+                yc: 0.3289906566653507,
+            }
+        } else {
+            YxyPixel {
+                y,
+                xc: x / (x + y + z),
+                yc: y / (x + y + z),
+            }
         }
     }
 }
@@ -57,60 +67,51 @@ impl MulAssign<f64> for RgbPixel {
 }
 
 //
-// XYZ
+// YXY
 //
 
 #[derive(Debug, Clone, Copy, PartialEq)]
-pub struct XyzPixel {
-    pub x: f64,
+pub struct YxyPixel {
     pub y: f64,
-    pub z: f64,
+    pub xc: f64,
+    pub yc: f64,
 }
 
-impl XyzPixel {
+impl YxyPixel {
 
     pub fn to_rgb(&self) -> RgbPixel {
+
+        let x = self.xc / self.yc * self.y;
+        let z = (1.0 - self.xc - self.yc) / self.yc * self.y;
+
         RgbPixel {
-            red: 1.7167 * self.x - 0.3557 * self.y - 0.2534 * self.z,
-            green: -0.6667 * self.x + 1.6165 * self.y + 0.0158 * self.z,
-            blue: 0.0176 * self.x - 0.0428 * self.y + 0.9421 * self.z,
+            // BT.2446-0 has coefficients defined to five significant digits. I found them to
+            // produce unsatisfactory results. I therefore calculated the inverse coefficients
+            // using the forward ones.
+            red: 1.716502508360627 * x - 0.355584689096763 * self.y - 0.253375213570850 * z,
+            green: -0.666625609145029 * x + 1.616446566522206 * self.y + 0.015775479726511 * z,
+            blue: 0.017655211703087 * x - 0.042810696059636 * self.y + 0.942089263920532 * z,
         }
     }
 
-    pub fn to_luv(&self) -> LuvPixel {
-
-        let un = 4.0 * XN / (-2.0 * XN + 12.0 * YN + 3.0);
-        let vn = 9.0 * YN / (-2.0 * XN + 12.0 * YN + 3.0);
-        let u = 4.0 * self.x / (self.x + 15.0 * self.y + 3.0 * self.z);
-        let v = 9.0 * self.y / (self.x + 15.0 * self.y + 3.0 * self.z);
-        let l = 116.0 * (self.y / YN).powf(1.0 / 3.0) - 16.0;
-
-        LuvPixel {
-            l,
-            u: 13.0 * l * (u - un),
-            v: 13.0 * l * (v - vn),
+    pub fn powf(&self, n: f64) -> YxyPixel {
+        YxyPixel {
+            y: self.y.powf(n),
+            xc: self.xc,
+            yc: self.yc,
         }
     }
 }
 
-//
-// LUV
-//
+impl Mul<f64> for YxyPixel {
 
-#[derive(Debug, Clone, Copy, PartialEq)]
-pub struct LuvPixel {
-    pub l: f64,
-    pub u: f64,
-    pub v: f64,
-}
+    type Output = Self;
 
-impl LuvPixel {
-
-    pub fn to_xyz(&self) -> XyzPixel {
-        XyzPixel {
-            x: 0.0,
-            y: 0.0,
-            z: 0.0,
+    fn mul(self, rhs: f64) -> Self {
+        YxyPixel {
+            y: self.y * rhs,
+            xc: self.xc,
+            yc: self.yc,
         }
     }
 }

@@ -8,10 +8,10 @@ use super::*;
 
 use assert_approx_eq::assert_approx_eq;
 
-const DIFF: f64 = 0.0001;
+const DIFF: f64 = 0.0000000001;
 
 #[test]
-fn test_rgb_xyz_round_trip() {
+fn test_rgb_yxy_round_trip() {
 
     let in_rgb_pixels = vec![
         RgbPixel {
@@ -43,7 +43,7 @@ fn test_rgb_xyz_round_trip() {
 
     for in_rgb_pixel in in_rgb_pixels.iter() {
 
-        let out_rgb_pixel = in_rgb_pixel.to_xyz().to_rgb();
+        let out_rgb_pixel = in_rgb_pixel.to_yxy().to_rgb();
 
         assert_approx_eq!(in_rgb_pixel.red, out_rgb_pixel.red, DIFF);
         assert_approx_eq!(in_rgb_pixel.green, out_rgb_pixel.green, DIFF);

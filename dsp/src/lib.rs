@@ -86,16 +86,16 @@ impl PqSdrMapper {
 
         let mut pixel = self.prepper.prep(input);
 
+        // TONE MAPPING TO SDR
+        pixel = bt2446_c_tone_map(pixel * 10.0);
+
         // MONOCHROME
-        let y = pixel.to_xyz().y;
+        let y = pixel.to_yxy().y;
         pixel = RgbPixel {
             red: y,
             green: y,
             blue: y,
         };
-
-        // TONE MAPPING TO SDR
-        pixel = bt2446_c_tone_map(pixel * 10.0);
 
         // SDR LINEAR -> SDR GAMMA
         RgbPixel {
@@ -147,12 +147,7 @@ impl PqPrepper {
         };
 
         // SCALING
-        // rgb_pixel *= self.factor;
-
-        // GAMMA CORRECTION
-        // let mut ycbcr_pixel = rgb_pixel.to_ycbcr();
-        // ycbcr_pixel.y = ycbcr_pixel.y.powf(1.0 / self.gamma);
-        // rgb_pixel = ycbcr_pixel.to_rgb();
+        rgb_pixel = (rgb_pixel.to_yxy() * self.factor).powf(1.0 / self.gamma).to_rgb();
 
         // TONE MAPPING
         if self.peak > 0.1 {
