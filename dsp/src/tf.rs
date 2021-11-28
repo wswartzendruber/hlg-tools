@@ -95,7 +95,3 @@ pub fn hlg_dl_to_sl(pixel: RgbPixel) -> RgbPixel {
 
     pixel * pixel.to_yxy().y.powf(-0.16666666666666663).min(f64::MAX)
 }
-
-pub fn sdr_o_to_e(o: f64) -> f64 {
-    o.powf(0.4166666666666667).max(0.0).min(1.0)
-}
