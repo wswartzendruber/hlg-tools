@@ -135,7 +135,7 @@ impl PqPrepper {
 
         let mut rgb_pixel = input;
 
-        // PQ SIGNAL -> DISPLAY LINEAR
+        // PQ SIGNAL -> PQ DISPLAY LINEAR
         rgb_pixel = RgbPixel {
             red: pq_e_to_dl(rgb_pixel.red),
             green: pq_e_to_dl(rgb_pixel.green),
