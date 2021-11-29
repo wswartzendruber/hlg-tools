@@ -95,9 +95,9 @@ impl PqSdrMapper {
 
         // SDR LINEAR -> SDR GAMMA
         RgbPixel {
-            red: self.bt1886.ieotf(pixel.red * 120.0).clamp(0.0, 1.0),
-            green: self.bt1886.ieotf(pixel.green * 120.0).clamp(0.0, 1.0),
-            blue: self.bt1886.ieotf(pixel.blue * 120.0).clamp(0.0, 1.0),
+            red: self.bt1886.ieotf(pixel.red * 100.0).clamp(0.0, 1.0),
+            green: self.bt1886.ieotf(pixel.green * 100.0).clamp(0.0, 1.0),
+            blue: self.bt1886.ieotf(pixel.blue * 100.0).clamp(0.0, 1.0),
         }
     }
 }
