@@ -85,11 +85,14 @@ impl PqSdrMapper {
         // TONE MAPPING TO SDR
         pixel = bt2446_c_tone_map(pixel).clamp();
 
+        // GRAYSCALE GAMMA
+        let y = self.bt1886.ieotf(pixel.to_yxy().y * 120.0);
+
         // SDR DISPLAY LINEAR -> SDR GAMMA
         RgbPixel {
-            red: self.bt1886.ieotf(pixel.red * 120.0),
-            green: self.bt1886.ieotf(pixel.green * 120.0),
-            blue: self.bt1886.ieotf(pixel.blue * 120.0),
+            red: y,
+            green: y,
+            blue: y,
         }.clamp()
     }
 }

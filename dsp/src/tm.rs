@@ -13,6 +13,7 @@ use super::{
 };
 
 pub struct Bt2408ToneMapper {
+    peak: f64,
     lwp: f64,
     ml: f64,
     ks: f64,
@@ -26,11 +27,15 @@ impl Bt2408ToneMapper {
         let ml = pq_dl_to_e(0.10) / lwp;
         let ks = 1.5 * ml - 0.5;
 
-        Self { lwp, ml, ks }
+        Self { peak, lwp, ml, ks }
     }
 
     pub fn map(&self, o: f64) -> f64 {
-        pq_e_to_dl(self.eetf(pq_dl_to_e(o)))
+        if o < self.peak {
+            pq_e_to_dl(self.eetf(pq_dl_to_e(o)))
+        } else {
+            0.1
+        }
     }
 
     fn eetf(&self, e: f64) -> f64 {
