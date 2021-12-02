@@ -39,17 +39,17 @@ impl PqHlgMapper {
 
     pub fn map(&self, input: RgbPixel) -> RgbPixel {
 
-        let mut pixel = self.prepper.prep(input);
+        let mut pixel = self.prepper.prep(input).clamp();
 
         // HLG DISPLAY LINEAR -> HLG SCENE LINEAR
-        pixel = hlg_dl_to_sl(pixel);
+        pixel = hlg_dl_to_sl(pixel).clamp();
 
-        // SCENE LINEAR -> HLG SIGNAL
+        // HLG SCENE LINEAR -> HLG SIGNAL
         RgbPixel {
-            red: hlg_sl_to_e(pixel.red).clamp(0.0, 1.0),
-            green: hlg_sl_to_e(pixel.green).clamp(0.0, 1.0),
-            blue: hlg_sl_to_e(pixel.blue).clamp(0.0, 1.0),
-        }
+            red: hlg_sl_to_e(pixel.red),
+            green: hlg_sl_to_e(pixel.green),
+            blue: hlg_sl_to_e(pixel.blue),
+        }.clamp()
     }
 }
 
@@ -80,25 +80,17 @@ impl PqSdrMapper {
 
     pub fn map(&self, input: RgbPixel) -> RgbPixel {
 
-        let mut pixel = self.prepper.prep(input);
+        let mut pixel = self.prepper.prep(input).clamp();
 
         // TONE MAPPING TO SDR
-        pixel = bt2446_c_tone_map(pixel);
+        pixel = bt2446_c_tone_map(pixel).clamp();
 
-        // MONOCHROME
-        let y = pixel.to_yxy().y.clamp(0.0, 1.0);
-        pixel = RgbPixel {
-            red: y,
-            green: y,
-            blue: y,
-        };
-
-        // SDR LINEAR -> SDR GAMMA
+        // SDR DISPLAY LINEAR -> SDR GAMMA
         RgbPixel {
-            red: self.bt1886.ieotf(pixel.red * 120.0).clamp(0.0, 1.0),
-            green: self.bt1886.ieotf(pixel.green * 120.0).clamp(0.0, 1.0),
-            blue: self.bt1886.ieotf(pixel.blue * 120.0).clamp(0.0, 1.0),
-        }
+            red: self.bt1886.ieotf(pixel.red * 120.0),
+            green: self.bt1886.ieotf(pixel.green * 120.0),
+            blue: self.bt1886.ieotf(pixel.blue * 120.0),
+        }.clamp()
     }
 }
 
@@ -115,7 +107,6 @@ impl Mapper for PqSdrMapper {
 
 struct PqPrepper {
     factor: f64,
-    gamma: f64,
     peak: f64,
     tone_mapper: Bt2408ToneMapper,
 }
@@ -124,26 +115,25 @@ impl PqPrepper {
 
     fn new(max_cll: f64, factor: f64) -> Self {
 
-        let gamma = 1.111_f64.powf(factor.log2());
         let peak = max_cll / 10_000.0 * factor;
         let tone_mapper = Bt2408ToneMapper::new(peak);
 
-        Self { factor, gamma, peak, tone_mapper }
+        Self { factor, peak, tone_mapper }
     }
 
     fn prep(&self, input: RgbPixel) -> RgbPixel {
 
-        let mut rgb_pixel = input;
+        let mut rgb_pixel = input.clamp();
 
         // PQ SIGNAL -> PQ DISPLAY LINEAR
         rgb_pixel = RgbPixel {
             red: pq_e_to_dl(rgb_pixel.red),
             green: pq_e_to_dl(rgb_pixel.green),
             blue: pq_e_to_dl(rgb_pixel.blue),
-        };
+        }.clamp();
 
         // SCALING
-        rgb_pixel = (rgb_pixel.to_yxy() * self.factor).to_rgb();
+        rgb_pixel = (rgb_pixel.to_yxy() * self.factor).to_rgb().clamp();
 
         // TONE MAPPING
         if self.peak > 0.1 {
@@ -153,11 +143,6 @@ impl PqPrepper {
         }
 
         // PQ DISPLAY LINEAR -> HLG DISPLAY LINEAR
-        rgb_pixel *= 10.0;
-
-        // GAMMA CORRECTION
-        rgb_pixel = rgb_pixel.to_yxy().powf(1.0 / self.gamma).to_rgb();
-
-        rgb_pixel
+        (rgb_pixel * 10.0).clamp()
     }
 }

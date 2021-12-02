@@ -22,6 +22,14 @@ pub struct RgbPixel {
 
 impl RgbPixel {
 
+    pub fn clamp(&self) -> Self {
+        Self {
+            red: self.red.clamp(0.0, 1.0),
+            green: self.green.clamp(0.0, 1.0),
+            blue: self.blue.clamp(0.0, 1.0),
+        }
+    }
+
     pub fn to_yxy(&self) -> YxyPixel {
 
         let x = 0.6370 * self.red + 0.1446 * self.green + 0.1689 * self.blue;

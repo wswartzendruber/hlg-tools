@@ -30,7 +30,7 @@ impl Bt2408ToneMapper {
     }
 
     pub fn map(&self, o: f64) -> f64 {
-        pq_e_to_dl(self.eetf(pq_dl_to_e(o.clamp(0.0, 1.0)))).clamp(0.0, 0.1)
+        pq_e_to_dl(self.eetf(pq_dl_to_e(o)))
     }
 
     fn eetf(&self, e: f64) -> f64 {
