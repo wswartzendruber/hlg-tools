@@ -8,7 +8,7 @@ use std::{
     fs::File,
     io::{stdout, BufWriter, Write},
 };
-use dsp::{Mapper, PqHlgMapper, PqSdrMapper, pixel::RgbPixel};
+use dsp::{PqHlgMapper, pixel::RgbPixel};
 use clap::{app_from_crate, crate_authors, crate_description, crate_name, crate_version, Arg};
 
 fn main() {
@@ -30,12 +30,6 @@ fn main() {
                 }
                 Ok(())
             })
-        )
-        .arg(Arg::with_name("preview")
-            .long("preview")
-            .short("p")
-            .help("Generates a black and white SDR preview LUT instead of a HLG one")
-            .takes_value(false)
         )
         .arg(Arg::with_name("lum-scale")
             .long("lum-scale")
@@ -120,10 +114,6 @@ fn main() {
             applied to compress the input to 1,000 nits. From there, the signal will be \
             converted to HLG. The generated LUTs are completely full range with 0.0 \
             representing minimum brightness and 1.0 representing maximum brightness.\n\n\
-            Optionally, a preview LUT can be generated to convert the input to black and \
-            white SDR. This can be used to compare the converted output to available BT.709 \
-            frames once they are also converted to black and white. In this way, --lum-scale \
-            can be adjusted until the two sets of screenshots match as much as possible.\n\n\
             Copyright © 2021 William Swartzendruber\n\
             Licensed under the Open Software License version 3.0\n\
             <{}>", env!("CARGO_PKG_REPOSITORY")).as_str())
@@ -131,11 +121,7 @@ fn main() {
     let title = matches.value_of("title");
     let lum_scale = matches.value_of("lum-scale").unwrap().parse::<f64>().unwrap();
     let max_cll = matches.value_of("max-cll").unwrap().parse::<f64>().unwrap();
-    let mapper: Box<dyn Mapper> = if matches.is_present("preview") {
-        Box::new(PqSdrMapper::new(max_cll, lum_scale))
-    } else {
-        Box::new(PqHlgMapper::new(max_cll, lum_scale))
-    };
+    let mapper = PqHlgMapper::new(max_cll, lum_scale);
     let size = matches.value_of("size").unwrap().parse::<usize>().unwrap();
     let output_value = matches.value_of("output").unwrap();
     let (mut stdout_write, mut file_write);

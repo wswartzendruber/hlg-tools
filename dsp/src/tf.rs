@@ -9,35 +9,6 @@ mod tests;
 
 use super::pixel::RgbPixel;
 
-const G: f64 = 2.4;
-
-//
-// BT.1886
-//
-
-pub struct Bt1886 {
-    pub a: f64,
-    pub b: f64,
-}
-
-impl Bt1886 {
-
-    pub fn new(lw: f64, lb: f64) -> Self {
-        Self {
-            a: (lw.powf(1.0 / G) - lb.powf(1.0 / G)).powf(G),
-            b: lb.powf(1.0 / G) / (lw.powf(1.0 / G) - lb.powf(1.0 / G)),
-        }
-    }
-
-    pub fn eotf(&self, v: f64) -> f64 {
-        self.a * (v + self.b).max(0.0).powf(G)
-    }
-
-    pub fn ieotf(&self, l: f64) -> f64 {
-        (l / self.a).powf(1.0 / G) - self.b
-    }
-}
-
 pub fn pq_e_to_dl(e: f64) -> f64 {
 
     //
