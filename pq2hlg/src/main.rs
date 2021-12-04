@@ -108,12 +108,12 @@ fn main() {
         )
         .after_help(format!("This utility follows the BT.2408 method for generating a \
             PQ-to-HLG conversion LUT. If --lum-scale is provided, the linear input brightness \
-            will be scaled by the provided factor while performing gamma correction. This will \
-            cause the --max-cll value to be internally adjusted as well. If the internal \
-            MaxCLL value then exceeds 1,000 nits, BT.2408 luminosity tone mapping will be \
-            applied to compress the input to 1,000 nits. From there, the signal will be \
-            converted to HLG. The generated LUTs are completely full range with 0.0 \
-            representing minimum brightness and 1.0 representing maximum brightness.\n\n\
+            will be scaled by the provided factor using the yxY color space. This will cause \
+            the --max-cll value to be internally adjusted as well. If the internal MaxCLL \
+            value then exceeds 1,000 nits, BT.2408 R'G'B' tone mapping will be applied to \
+            compress the input to 1,000 nits. From there, the signal will be converted to HLG. \
+            The generated LUTs are completely full range with 0.0 representing minimum \
+            brightness and 1.0 representing maximum brightness.\n\n\
             Copyright © 2021 William Swartzendruber\n\
             Licensed under the Open Software License version 3.0\n\
             <{}>", env!("CARGO_PKG_REPOSITORY")).as_str())
