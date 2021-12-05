@@ -129,7 +129,7 @@ ffmpeg -i alita-hdr10.mkv -vf crop=3840:1600,scale=1920:800,format=rgb48le,lut3d
     video.h265
 ```
 
-The generated video HLG video file will be called `video.h265`.
+The generated HDR-HLG video file will be called `video.h265`.
 
 # Licensing
 
