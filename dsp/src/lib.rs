@@ -43,7 +43,7 @@ impl PqHlgMapper {
         }.clamp();
 
         // SCALING
-        pixel = (pixel.to_yxy() * self.factor).to_rgb().clamp();
+        pixel *= self.factor;
 
         // TONE MAPPING
         if self.peak > 0.1 {

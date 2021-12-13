@@ -64,5 +64,5 @@ pub fn hlg_dl_to_sl(pixel: RgbPixel) -> RgbPixel {
     // Note 5i
     //
 
-    pixel * pixel.to_yxy().y.powf(-0.16666666666666663).min(f64::MAX)
+    pixel * pixel.y().powf(-0.16666666666666663).min(f64::MAX)
 }
