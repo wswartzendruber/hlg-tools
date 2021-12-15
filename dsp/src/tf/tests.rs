@@ -11,6 +11,17 @@ use assert_approx_eq::assert_approx_eq;
 const DIFF: f64 = 0.0000000001;
 
 #[test]
+fn test_bt1886_round_trip() {
+
+    let bt1886 = Bt1886::new(0.0005, 100.0);
+
+    for i in 0..1_000 {
+        let l = i as f64 / 1_000.0;
+        assert_approx_eq!(l, bt1886.ieotf(bt1886.eotf(l)), DIFF);
+    }
+}
+
+#[test]
 fn test_pq_e_to_dl() {
 
     //

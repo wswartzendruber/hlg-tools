@@ -60,49 +60,64 @@ luminance** should be used as a substitute.
 
 Remember this value.
 
-## Determine Reference White
+## Determine Brightness Adjustment
 
-The next thing we need is the movie's reference white level. This is essentially how bright a
-well-lit piece of white paper will appear in the picture. While this part can be rather annoying
-to deal with, it is critical that it be done carefully. Otherwise, the resulting HLG image will
-appear either too bright or too dark when viewed on a standard, non-HDR display. Unfortunately,
-4K UltraHD discs are not even remotely consistent here while HDR-HLG is pretty strict about it.
+The next thing we need to determine is the necessary brightness adjustment. While this can be
+rather annoying to deal with, it is critical that it be done correctly. Otherwise, the resulting
+HLG image will appear either too bright or too dim when viewed on a standard, non-HDR display.
+Unfortunately, 4K UltraHD discs are not even remotely consistent with their brightness levels
+while HDR-HLG is pretty strict about it.
 
-Now we'll open the `alita-sdr.mkv` file in VLC. Again, we need a well-lit piece of white paper,
-or, perhaps something similar. The frame at 40:44 has something interesting:
+To handle this, we'll open the `alita-sdr.mkv` file in VLC. We need to find an object on the
+screen that matches the following criteria as closely as possible:
 
-![](img/determine-ref-white-vlc.jpg)
+* Is roughly 50% gray
+* Has minimal saturation
+* Does not have direct lighting on it
+* Has a uniform pixel area of at least 25x25
 
-Chiren's white shirt that's under her lab coat isn't a piece of white paper, but it does reflect
-a similar level of light. Remembering the 40:44 position, enter this command:
+The frame at 38:45 has what we need with the location of interest being marked by the red dot
+below:
 
-`sdrprev.sh alita-sdr.mkv 40:44 alita-sdr-preview.png`
+![](img/determine-brightness-vlc.jpg)
 
-That's going to generate a black and white image of that frame. Open it with The GIMP. Now our
-goal is to find a pixel in that area with a brightness level of near 90%. At pixel (1134,912),
-we can find just that:
+Remembering the 38:45 position, enter this command:
 
-![](img/determine-ref-white-sdr.jpg)
+`sdrprev.sh alita-sdr.mkv 38:45 alita-sdr-preview.png`
 
-Remember that pixel location.
+That's going to generate a black and white image of that frame named `alita-sdr-preview.png`.
+
+* Open the newly generated image with The GIMP.
+* Apply a Gaussian Blur with Size X and Size Y values of 2 pixels.
+* Using the Color Picker Tool, select the pixel at (1747, 296).
+
+![](img/determine-brightness-sdr.jpg)
+
+Remember that pixel location and the brightness level of 60.0% that's there.
 
 Now enter this command:
 
-`pqprev.sh alita-hdr10.mkv 40:44 alita-pq-preview.png`
+`pqprev.sh alita-hdr10.mkv 38:45 alita-pq-preview.png`
 
-Open the newly created file with The GIMP and take the brightness level of that same, exact
-location:
+Open this most recent file with The GIMP and perform the same procedure as earlier:
 
-![](img/determine-ref-white-pq.jpg)
+* Open the newly generated image with The GIMP.
+* Apply a Gaussian Blur with Size X and Size Y values of 2 pixels.
+* Using the Color Picker Tool, select the pixel at (1747, 296), which is roughly where the red
+  dot was.
 
-It comes out to 48.2. With that value in hand, enter this command:
+![](img/determine-brightness-pq.jpg)
 
-`lcalc 0.482`
+This time, the measured brightness level is 34.9%.
 
-Notice that we have simply taken the value given to us by The GIMP and divided it by 100. In our
-case, `lcalc` returns:
+With the two brightness levels in hand, enter:
 
-`2.6386792184044956`
+`lcalc 0.600 0.349`
+
+Notice that we have simply taken the values given to us by The GIMP and divided them by 100. In
+our case, `lcalc` returns:
+
+`4.087328864938747`
 
 Remember this value as well.
 
@@ -113,7 +128,7 @@ specific movie from HDR10 into HDR-HLG.
 
 Do so with the following command:
 
-`pq2hlg --size 128 --max-cll 737 --lum-scale 2.6386792184044956 pq2hlg.cube`
+`pq2hlg --size 128 --max-cll 737 --lum-scale 4.087328864938747 pq2hlg.cube`
 
 ## Encoding the Video Stream
 
