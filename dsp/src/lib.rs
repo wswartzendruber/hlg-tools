@@ -60,32 +60,30 @@ impl PqHlgMapper {
             red: pq_e_to_dl(pixel.red),
             green: pq_e_to_dl(pixel.green),
             blue: pq_e_to_dl(pixel.blue),
-        };
+        }.clamp();
 
         // REFERENCE WHITE ADJUSTMENT
         pixel *= self.factor;
 
         // TONE MAPPING
         if self.peak > 0.1 {
-
-            let y1 = pixel.y();
-            let y2 = self.tone_mapper.map(y1);
-            let r = if y1 == 0.0 { 0.0 } else { y2 / y1 };
-
-            pixel *= r;
+            pixel.red = self.tone_mapper.map(pixel.red);
+            pixel.green = self.tone_mapper.map(pixel.green);
+            pixel.blue = self.tone_mapper.map(pixel.blue);
         }
 
-        // PQ DISPLAY LINEAR -> HLG SCENE LINEAR
-        pixel = hlg_dl_to_sl(pixel);
+        // PQ DISPLAY LINEAR -> HLG DISPLAY LINEAR
+        pixel = (pixel * 10.0).clamp();
+
+        // HLG DISPLAY LINEAR -> HLG SCENE LINEAR
+        pixel = hlg_dl_to_sl(pixel).clamp();
 
         // SCENE LINEAR -> HLG SIGNAL
-        let hlg_gamma_pixel = Pixel {
-            red: hlg_sl_to_e(pixel.red).min(1.0),
-            green: hlg_sl_to_e(pixel.green).min(1.0),
-            blue: hlg_sl_to_e(pixel.blue).min(1.0),
-        };
-
-        hlg_gamma_pixel
+        Pixel {
+            red: hlg_sl_to_e(pixel.red),
+            green: hlg_sl_to_e(pixel.green),
+            blue: hlg_sl_to_e(pixel.blue),
+        }.clamp()
     }
 }
 

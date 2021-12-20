@@ -64,11 +64,9 @@ pub fn hlg_dl_to_sl(pixel: Pixel) -> Pixel {
     // Note 5i
     //
 
-    let dl = pixel * 10.0;
-
-    dl * dl.y().powf(-0.16666666666666663).min(f64::MAX)
+    pixel * pixel.y().powf(-0.16666666666666663).min(f64::MAX)
 }
 
 pub fn sdr_o_to_e(o: f64) -> f64 {
-    o.powf(0.4166666666666667).max(0.0).min(1.0)
+    o.powf(0.4166666666666667).clamp(0.0, 1.0)
 }

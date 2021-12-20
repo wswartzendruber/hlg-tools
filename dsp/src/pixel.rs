@@ -15,6 +15,14 @@ pub struct Pixel {
 
 impl Pixel {
 
+    pub fn clamp(&self) -> Self {
+        Self {
+            red: self.red.clamp(0.0, 1.0),
+            green: self.green.clamp(0.0, 1.0),
+            blue: self.blue.clamp(0.0, 1.0),
+        }
+    }
+
     pub fn y(&self) -> f64 {
         0.2627 * self.red + 0.6780 * self.green + 0.0593 * self.blue
     }
