@@ -16,10 +16,15 @@ pub struct Pixel {
 impl Pixel {
 
     pub fn clamp(&self) -> Self {
+        self.with_each_channel(|x| x.clamp(0.0, 1.0))
+    }
+
+    pub fn with_each_channel<F>(&self, f: F) -> Self
+        where F: Fn(f64) -> f64 {
         Self {
-            red: self.red.clamp(0.0, 1.0),
-            green: self.green.clamp(0.0, 1.0),
-            blue: self.blue.clamp(0.0, 1.0),
+            red: f(self.red),
+            green: f(self.green),
+            blue: f(self.blue),
         }
     }
 
@@ -33,19 +38,13 @@ impl Mul<f64> for Pixel {
     type Output = Self;
 
     fn mul(self, rhs: f64) -> Self {
-        Pixel {
-            red: self.red * rhs,
-            green: self.green * rhs,
-            blue: self.blue * rhs,
-        }
+        self.with_each_channel(|x| x * rhs)
     }
 }
 
 impl MulAssign<f64> for Pixel {
 
     fn mul_assign(&mut self, rhs: f64) {
-        self.red *= rhs;
-        self.green *= rhs;
-        self.blue *= rhs;
+        *self = self.with_each_channel(|x| x * rhs);
     }
 }

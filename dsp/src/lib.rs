@@ -56,20 +56,14 @@ impl PqHlgMapper {
         let mut pixel = input;
 
         // PQ SIGNAL -> DISPLAY LINEAR
-        pixel = Pixel {
-            red: pq_e_to_dl(pixel.red),
-            green: pq_e_to_dl(pixel.green),
-            blue: pq_e_to_dl(pixel.blue),
-        }.clamp();
+        pixel = pixel.with_each_channel(|x| pq_e_to_dl(x)).clamp();
 
         // REFERENCE WHITE ADJUSTMENT
         pixel *= self.factor;
 
         // TONE MAPPING
         if self.peak > 0.1 {
-            pixel.red = self.tone_mapper.map(pixel.red);
-            pixel.green = self.tone_mapper.map(pixel.green);
-            pixel.blue = self.tone_mapper.map(pixel.blue);
+            pixel = pixel.with_each_channel(|x| self.tone_mapper.map(x));
         }
 
         // PQ DISPLAY LINEAR -> HLG DISPLAY LINEAR
@@ -79,11 +73,7 @@ impl PqHlgMapper {
         pixel = hlg_dl_to_sl(pixel).clamp();
 
         // SCENE LINEAR -> HLG SIGNAL
-        Pixel {
-            red: hlg_sl_to_e(pixel.red),
-            green: hlg_sl_to_e(pixel.green),
-            blue: hlg_sl_to_e(pixel.blue),
-        }.clamp()
+        pixel.with_each_channel(|x| hlg_sl_to_e(x)).clamp()
     }
 }
 
@@ -127,20 +117,14 @@ impl PqSdrMapper {
         let mut pixel = input;
 
         // PQ SIGNAL -> DISPLAY LINEAR
-        pixel = Pixel {
-            red: pq_e_to_dl(pixel.red),
-            green: pq_e_to_dl(pixel.green),
-            blue: pq_e_to_dl(pixel.blue),
-        }.clamp();
+        pixel = pixel.with_each_channel(|x| pq_e_to_dl(x)).clamp();
 
         // REFERENCE WHITE ADJUSTMENT
         pixel *= self.factor;
 
-        // TONE MAPPING (TO 1,000 NITS)
+        // TONE MAPPING
         if self.peak > 0.1 {
-            pixel.red = self.tone_mapper.map(pixel.red);
-            pixel.green = self.tone_mapper.map(pixel.green);
-            pixel.blue = self.tone_mapper.map(pixel.blue);
+            pixel = pixel.with_each_channel(|x| self.tone_mapper.map(x));
         }
 
         // MONOCHROME
