@@ -9,6 +9,5 @@
 members = [
     "pq2hlg",
     "pqstat",
-    "lcalc",
     "dsp",
 ]

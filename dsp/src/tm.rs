@@ -7,18 +7,15 @@
 #[cfg(test)]
 mod tests;
 
-use super::{
-    tf::{pq_e_to_dl, pq_dl_to_e},
-};
+use super::tf::{pq_e_to_dl, pq_dl_to_e};
 
-pub struct Bt2408ToneMapper {
-    peak: f64,
+pub struct Bt2390ToneMapper {
     lwp: f64,
     ml: f64,
     ks: f64,
 }
 
-impl Bt2408ToneMapper {
+impl Bt2390ToneMapper {
 
     pub fn new(peak: f64) -> Self {
 
@@ -26,15 +23,11 @@ impl Bt2408ToneMapper {
         let ml = pq_dl_to_e(0.10) / lwp;
         let ks = 1.5 * ml - 0.5;
 
-        Self { peak, lwp, ml, ks }
+        Self { lwp, ml, ks }
     }
 
     pub fn map(&self, o: f64) -> f64 {
-        if o < self.peak {
-            pq_e_to_dl(self.eetf(pq_dl_to_e(o)))
-        } else {
-            0.1
-        }
+        pq_e_to_dl(self.eetf(pq_dl_to_e(o))).min(0.1)
     }
 
     fn eetf(&self, e: f64) -> f64 {
@@ -61,5 +54,27 @@ impl Bt2408ToneMapper {
         (t3 - 2.0 * t2 + t) * (1.0 - self.ks)
         +
         (-2.0 * t3 + 3.0 * t2) * self.ml
+    }
+}
+
+pub fn sdn_tone_map(o: f64) -> f64 {
+
+    //
+    // SDN = Stupid Desmos Naivety
+    //
+    // I just sat in front of Desmos trying random equations until I got a curve that looked the
+    // way I wanted it to. Basically, HLG has reference white at 203 nits and max white at 1,000
+    // nits. SDR has reference white at 80 nits and max white at 100 nits. So 0-203 nits should
+    // linearly map to 0-80 nits with a sharp knee for 203-1,000 nits mapping to 80-100 nits.
+    //
+
+    if o < 0.0 {
+        0.0
+    } else if 0.0 <= o && o <= 0.203 {
+        o / 0.2537
+    } else if 0.203 < o && o <= 1.0 {
+        (o - 0.19).ln() / 21.0 + 1.007
+    } else {
+        1.0
     }
 }

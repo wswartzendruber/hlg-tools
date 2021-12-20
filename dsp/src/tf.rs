@@ -7,40 +7,7 @@
 #[cfg(test)]
 mod tests;
 
-use super::pixel::RgbPixel;
-
-const G: f64 = 2.4;
-
-//
-// BT.1886
-//
-
-pub struct Bt1886 {
-    a: f64,
-    b: f64,
-}
-
-impl Bt1886 {
-
-    pub fn new(lb: f64, lw: f64) -> Self {
-        Self {
-            a: (lw.powf(1.0 / G) - lb.powf(1.0 / G)).powf(G),
-            b: lb.powf(1.0 / G) / (lw.powf(1.0 / G) - lb.powf(1.0 / G)),
-        }
-    }
-
-    pub fn eotf(&self, v: f64) -> f64 {
-        self.a * (v + self.b).max(0.0).powf(G)
-    }
-
-    pub fn ieotf(&self, l: f64) -> f64 {
-        (l / self.a).powf(1.0 / G) - self.b
-    }
-}
-
-//
-// BT.2100 PQ
-//
+use super::Pixel;
 
 pub fn pq_e_to_dl(e: f64) -> f64 {
 
@@ -74,10 +41,6 @@ pub fn pq_dl_to_e(e: f64) -> f64 {
     .powf(78.84375)
 }
 
-//
-// BT.2100 HLG
-//
-
 pub fn hlg_sl_to_e(o: f64) -> f64 {
 
     //
@@ -93,7 +56,7 @@ pub fn hlg_sl_to_e(o: f64) -> f64 {
     }
 }
 
-pub fn hlg_dl_to_sl(pixel: RgbPixel) -> RgbPixel {
+pub fn hlg_dl_to_sl(pixel: Pixel) -> Pixel {
 
     //
     // ITU-R BT.2100-2
@@ -101,5 +64,11 @@ pub fn hlg_dl_to_sl(pixel: RgbPixel) -> RgbPixel {
     // Note 5i
     //
 
-    pixel * pixel.y().powf(-0.16666666666666663).min(f64::MAX)
+    let dl = pixel * 10.0;
+
+    dl * dl.y().powf(-0.16666666666666663).min(f64::MAX)
+}
+
+pub fn sdr_o_to_e(o: f64) -> f64 {
+    o.powf(0.4166666666666667).max(0.0).min(1.0)
 }
