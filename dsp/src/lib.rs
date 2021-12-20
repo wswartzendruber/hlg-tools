@@ -7,53 +7,13 @@
 #[cfg(test)]
 mod tests;
 
+pub mod pixel;
 pub mod tf;
 pub mod tm;
 
-use std::ops::{Mul, MulAssign};
-
+use pixel::Pixel;
 use tf::{hlg_sl_to_e, pq_e_to_dl, hlg_dl_to_sl, sdr_o_to_e};
 use tm::{sdn_tone_map, Bt2390ToneMapper};
-
-//
-// PIXEL
-//
-
-#[derive(Debug, Clone, Copy, PartialEq)]
-pub struct Pixel {
-    pub red: f64,
-    pub green: f64,
-    pub blue: f64,
-}
-
-impl Pixel {
-
-    pub fn y(&self) -> f64 {
-        0.2627 * self.red + 0.6780 * self.green + 0.0593 * self.blue
-    }
-}
-
-impl Mul<f64> for Pixel {
-
-    type Output = Self;
-
-    fn mul(self, rhs: f64) -> Self {
-        Pixel {
-            red: self.red * rhs,
-            green: self.green * rhs,
-            blue: self.blue * rhs,
-        }
-    }
-}
-
-impl MulAssign<f64> for Pixel {
-
-    fn mul_assign(&mut self, rhs: f64) {
-        self.red *= rhs;
-        self.green *= rhs;
-        self.blue *= rhs;
-    }
-}
 
 //
 // Mapper

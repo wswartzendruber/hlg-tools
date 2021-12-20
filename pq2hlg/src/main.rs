@@ -8,7 +8,7 @@ use std::{
     fs::File,
     io::{stdout, BufWriter, Write},
 };
-use dsp::{Pixel, Mapper, PqHlgMapper, PqSdrMapper};
+use dsp::{Mapper, PqHlgMapper, PqSdrMapper, pixel::Pixel};
 use clap::{app_from_crate, crate_authors, crate_description, crate_name, crate_version, Arg};
 
 fn main() {
