@@ -131,35 +131,30 @@ impl PqSdrMapper {
             red: pq_e_to_dl(pixel.red),
             green: pq_e_to_dl(pixel.green),
             blue: pq_e_to_dl(pixel.blue),
-        };
+        }.clamp();
 
         // REFERENCE WHITE ADJUSTMENT
         pixel *= self.factor;
 
         // TONE MAPPING (TO 1,000 NITS)
         if self.peak > 0.1 {
-
-            let y1 = pixel.y();
-            let y2 = self.tone_mapper.map(y1);
-            let r = if y1 == 0.0 { 0.0 } else { y2 / y1 };
-
-            pixel *= r;
+            pixel.red = self.tone_mapper.map(pixel.red);
+            pixel.green = self.tone_mapper.map(pixel.green);
+            pixel.blue = self.tone_mapper.map(pixel.blue);
         }
 
         // MONOCHROME
-        let mut y = pixel.y();
+        let mut y = pixel.y().clamp(0.0, 0.1);
 
         // TONE MAPPING (FROM 1,000 NITS TO 100 NITS)
         y = sdn_tone_map(y * 10.0);
 
         // SDR LINEAR -> SDR GAMMA
-        let sdr_gamma_pixel = Pixel {
-            red: sdr_o_to_e(y).min(1.0),
-            green: sdr_o_to_e(y).min(1.0),
-            blue: sdr_o_to_e(y).min(1.0),
-        };
-
-        sdr_gamma_pixel
+        Pixel {
+            red: sdr_o_to_e(y),
+            green: sdr_o_to_e(y),
+            blue: sdr_o_to_e(y),
+        }.clamp()
     }
 }
 

@@ -219,9 +219,9 @@ fn main() {
                 });
 
                 writeln!(output, "{} {} {}",
-                    pixel.red.min(1.0) as f32,
-                    pixel.green.min(1.0) as f32,
-                    pixel.blue.min(1.0) as f32,
+                    pixel.red.clamp(0.0, 1.0) as f32,
+                    pixel.green.clamp(0.0, 1.0) as f32,
+                    pixel.blue.clamp(0.0, 1.0) as f32,
                 ).unwrap();
             }
         }
