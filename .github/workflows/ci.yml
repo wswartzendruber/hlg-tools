@@ -11,9 +11,9 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v2
       - name: Build Binaries
-        run: cargo build --release --verbose
+        run: cargo build --release
       - name: Run Tests
-        run: cargo test --release --verbose
+        run: cargo test --release
   build_windows:
     name: Build (Windows)
     runs-on: windows-latest
@@ -21,9 +21,9 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v2
       - name: Build Binaries
-        run: cargo build --release --verbose
+        run: cargo build --release
       - name: Run Tests
-        run: cargo test --release --verbose
+        run: cargo test --release
   # create_release:
   #   name: Create Release
   #   runs-on: ubuntu-linux
