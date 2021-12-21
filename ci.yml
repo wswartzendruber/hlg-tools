@@ -1,0 +1,43 @@
+name: Create Release
+on:
+  push:
+    tags:
+      - 'release/*'
+jobs:
+  build_linux:
+    name: Build (Linux)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v2
+      - name: Build Binaries
+        run: cargo build --release --verbose
+      - name: Run Tests
+        run: cargo test --release --verbose
+  build_windows:
+    name: Build (Windows)
+    runs-on: windows-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v2
+      - name: Build Binaries
+        run: cargo build --release --verbose
+      - name: Run Tests
+        run: cargo test --release --verbose
+  # create_release:
+  #   name: Create Release
+  #   runs-on: ubuntu-linux
+  #   steps:
+  #     - name: Create Release
+  #       uses: actions/create-release@v1
+  #       env:
+  #         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  #       with:
+  #         tag_name: ${{ github.ref }}
+  #         release_name: ${{ github.ref }}
+  #         body: |
+  #           Changes in this Release
+  #           - First Change
+  #           - Second Change
+  #         draft: true
+  #         prerelease: true
