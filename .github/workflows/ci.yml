@@ -15,6 +15,7 @@ jobs:
       - name: Run tests
         run: cargo test --release
       - name: Create archive
+        uses: papeloto/action-zip@v1
         with:
           files: target/release/pq2hlg target/release/pqstat
           dest: hlg-tools-{{ GITHUB_REF_NAME }}-linux-amd64.zip
