@@ -29,12 +29,12 @@ jobs:
         uses: papeloto/action-zip@v1
         with:
           files: target/release/pq2hlg target/release/pqstat
-          dest: hlg-tools-${{ VERSION }}-linux-amd64.zip
+          dest: hlg-tools-${{ env.VERSION }}-linux-amd64.zip
       - name: Upload binaries
         uses: actions/upload-artifact@v2
         with:
           name: linux-amd64
-          path: hlg-tools-${{ VERSION }}-linux-amd64.zip
+          path: hlg-tools-${{ env.VERSION }}-linux-amd64.zip
   # create_release:
   #   name: Create Release
   #   runs-on: ubuntu-linux
