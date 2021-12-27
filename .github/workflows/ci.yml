@@ -37,7 +37,7 @@ jobs:
           path: hlg-tools-${{ env.VERSION }}-linux-amd64.zip
   create_release:
     name: Create Release
-    runs-on: ubuntu-linux
+    runs-on: ubuntu-latest
     steps:
       - name: Create release
         id: create_release
