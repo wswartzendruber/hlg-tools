@@ -1,7 +1,11 @@
 /*
- * SPDX-FileCopyrightText: 2021 William Swartzendruber <wswartzendruber@gmail.com>
+ * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a
+ * copy of the MPL was not distributed with this file, You can obtain one at
+ * https://mozilla.org/MPL/2.0/.
  *
- * SPDX-License-Identifier: OSL-3.0
+ * Copyright 2021 William Swartzendruber
+ *
+ * SPDX-License-Identifier: MPL-2.0
  */
 
 use std::{
@@ -148,7 +152,7 @@ fn main() {
             once they are also converted to black and white. In this way, --lum-scale can be \
             adjusted until the two sets of screenshots match as much as possible.\n\n\
             Copyright © 2021 William Swartzendruber\n\
-            Licensed under the Open Software License version 3.0\n\
+            Licensed under the Mozilla Public License 2.0\n\
             <{}>", env!("CARGO_PKG_REPOSITORY")).as_str())
         .get_matches();
     let title = matches.value_of("title");

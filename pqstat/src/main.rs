@@ -1,7 +1,11 @@
 /*
- * SPDX-FileCopyrightText: 2021 William Swartzendruber <wswartzendruber@gmail.com>
+ * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a
+ * copy of the MPL was not distributed with this file, You can obtain one at
+ * https://mozilla.org/MPL/2.0/.
  *
- * SPDX-License-Identifier: OSL-3.0
+ * Copyright 2021 William Swartzendruber
+ *
+ * SPDX-License-Identifier: MPL-2.0
  */
 
 #[cfg(test)]
@@ -62,7 +66,7 @@ fn main() {
             .required(true)
         )
         .after_help(format!("Copyright © 2021 William Swartzendruber\n\
-            Licensed under the Open Software License version 3.0\n\
+            Licensed under the Mozilla Public License 2.0\n\
             <{}>", env!("CARGO_PKG_REPOSITORY")).as_str())
         .get_matches();
     let width = matches.value_of("width").unwrap().parse::<usize>().unwrap();

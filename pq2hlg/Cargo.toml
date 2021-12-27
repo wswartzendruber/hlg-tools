@@ -1,5 +1,7 @@
 #
-# SPDX-FileCopyrightText: 2021 William Swartzendruber <wswartzendruber@gmail.com>
+# Any copyright is dedicated to the Public Domain.
+#
+# Copyright 2021 William Swartzendruber
 #
 # SPDX-License-Identifier: CC0-1.0
 #
@@ -10,7 +12,7 @@ description = "Generates a Cube LUT for Converting from PQ to HLG"
 version = "0.3.0"
 authors = ["William Swartzendruber <wswartzendruber@gmail.com>"]
 edition = "2018"
-license = "OSL-3.0"
+license = "MPL-2.0"
 repository = "https://github.com/wswartzendruber/hlg-tools"
 
 [dependencies]

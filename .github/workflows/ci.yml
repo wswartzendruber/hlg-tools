@@ -1,3 +1,11 @@
+#
+# Any copyright is dedicated to the Public Domain.
+#
+# Copyright 2021 William Swartzendruber
+#
+# SPDX-License-Identifier: CC0-1.0
+#
+
 name: Create Release
 on:
   push:
