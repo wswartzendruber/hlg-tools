@@ -16,6 +16,9 @@ jobs:
     name: Build (Linux)
     runs-on: ubuntu-latest
     steps:
+      - name: Extract release text
+        run: echo "VERSION=$(echo "$GITHUB_REF_NAME" | sed -e 's/^release\///')" >> $GITHUB_ENV
+        shell: bash
       - name: Checkout code
         uses: actions/checkout@v2
       - name: Build binaries
@@ -23,39 +26,39 @@ jobs:
       - name: Run tests
         run: cargo test --release
       - name: Create archive
-        uses: papeloto/action-zip@v1
+        run: papeloto/action-zip@v1
         with:
           files: target/release/pq2hlg target/release/pqstat
-          dest: hlg-tools-{{ GITHUB_REF_NAME }}-linux-amd64.zip
+          dest: hlg-tools-{{ VERSION }}-linux-amd64.zip
       - name: Upload binaries
         uses: actions/upload-artifact@v2
         with:
           name: linux-amd64
-          path: hlg-tools-{{ GITHUB_REF_NAME }}-linux-amd64.zip
-  create_release:
-    name: Create Release
-    runs-on: ubuntu-linux
-    steps:
-      - name: Create release
-        id: create_release
-        uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          tag_name: ${{ github.ref }}
-          release_name: ${{ github.ref }}
-          draft: true
-          prerelease: true
-      - name: Download linux-amd64
-        uses: actions/download-artifact@v2
-        with:
-          name: linux-amd64
-      - name: Upload linux-amd64
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps
-          asset_path: hlg-tools-{{ GITHUB_REF_NAME }}-linux-amd64.zip
-          asset_name: hlg-tools-{{ GITHUB_REF_NAME }}-linux-amd64.zip
-          asset_content_type: application/zip
+          path: hlg-tools-{{ VERSION }}-linux-amd64.zip
+  # create_release:
+  #   name: Create Release
+  #   runs-on: ubuntu-linux
+  #   steps:
+  #     - name: Create release
+  #       id: create_release
+  #       uses: actions/create-release@v1
+  #       env:
+  #         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  #       with:
+  #         tag_name: ${{ github.ref }}
+  #         release_name: ${{ github.ref }}
+  #         draft: true
+  #         prerelease: true
+  #     - name: Download linux-amd64
+  #       uses: actions/download-artifact@v2
+  #       with:
+  #         name: linux-amd64
+  #     - name: Upload linux-amd64
+  #       uses: actions/upload-release-asset@v1
+  #       env:
+  #         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  #       with:
+  #         upload_url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps
+  #         asset_path: hlg-tools-{{ GITHUB_REF_NAME }}-linux-amd64.zip
+  #         asset_name: hlg-tools-{{ GITHUB_REF_NAME }}-linux-amd64.zip
+  #         asset_content_type: application/zip
