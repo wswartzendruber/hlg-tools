@@ -37,7 +37,7 @@ jobs:
       - name: Upload binaries
         uses: actions/upload-artifact@v2
         with:
-          name: Linux (AMD64)
+          name: linux-amd64
           path: hlg-tools-${{ env.VERSION }}-linux-amd64.zip
     outputs:
       version: ${{ env.VERSION }}
@@ -67,5 +67,5 @@ jobs:
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
           asset_path: hlg-tools-${{ needs.build_linux.outputs.version }}-linux-amd64.zip
-          asset_name: linux-amd64
+          asset_name: Linux AMD64
           asset_content_type: application/zip
