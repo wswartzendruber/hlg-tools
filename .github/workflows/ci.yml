@@ -36,7 +36,7 @@ jobs:
           name: linux-amd64
           path: hlg-tools-${{ env.VERSION }}-linux-amd64.zip
     outputs:
-      version: $${ env.VERSION }}
+      version: ${{ env.VERSION }}
   create_release:
     needs: build_linux
     name: Create Release
