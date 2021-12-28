@@ -64,7 +64,7 @@ jobs:
       - name: Create archive
         uses: papeloto/action-zip@v1
         with:
-          files: licenses.html target\release\pq2hlg target\release\pqstat
+          files: licenses.html target\release\pq2hlg.exe target\release\pqstat.exe
           dest: hlg-tools-${{ needs.extract_version.outputs.version }}-windows-amd64.zip
       - name: Upload binaries
         uses: actions/upload-artifact@v2
@@ -72,7 +72,7 @@ jobs:
           name: windows-amd64
           path: hlg-tools-${{ needs.extract_version.outputs.version }}-windows-amd64.zip
   create_release:
-    needs: [build_linux, build_windows]
+    needs: [extract_version, build_linux, build_windows]
     name: Create Release
     runs-on: ubuntu-latest
     steps:
