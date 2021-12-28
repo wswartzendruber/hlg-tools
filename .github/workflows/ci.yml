@@ -37,7 +37,7 @@ jobs:
       - name: Upload binaries
         uses: actions/upload-artifact@v2
         with:
-          name: GNU/Linux (AMD64)
+          name: Linux (AMD64)
           path: hlg-tools-${{ env.VERSION }}-linux-amd64.zip
     outputs:
       version: ${{ env.VERSION }}
