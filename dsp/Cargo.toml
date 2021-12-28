@@ -8,10 +8,12 @@
 
 [package]
 name = "dsp"
-version = "0.3.0"
+description = "DSP routines for hlg-tools"
+version = "0.4.0"
 authors = ["William Swartzendruber <wswartzendruber@gmail.com>"]
-edition = "2018"
+edition = "2021"
 license = "MPL-2.0"
+repository = "https://github.com/wswartzendruber/hlg-tools"
 
 [dev-dependencies]
 assert_approx_eq = "1.1.0"
