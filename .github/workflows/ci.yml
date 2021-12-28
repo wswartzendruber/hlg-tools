@@ -25,15 +25,19 @@ jobs:
         run: cargo build --release
       - name: Run tests
         run: cargo test --release
+      - name: Install cargo-about
+        run: cargo install --locked cargo-about
+      - name: Generate licensing information
+        run: cargo about generate about.hbs > licenses.html
       - name: Create archive
         uses: papeloto/action-zip@v1
         with:
-          files: target/release/pq2hlg target/release/pqstat
+          files: licenses.html target/release/pq2hlg target/release/pqstat
           dest: hlg-tools-${{ env.VERSION }}-linux-amd64.zip
       - name: Upload binaries
         uses: actions/upload-artifact@v2
         with:
-          name: linux-amd64
+          name: GNU/Linux (AMD64)
           path: hlg-tools-${{ env.VERSION }}-linux-amd64.zip
     outputs:
       version: ${{ env.VERSION }}
@@ -49,7 +53,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           tag_name: ${{ github.ref }}
-          release_name: ${{ github.ref }}
+          release_name: ${{ needs.build_linux.outputs.version }}
           draft: true
           prerelease: true
       - name: Download linux-amd64
@@ -61,7 +65,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
           asset_path: hlg-tools-${{ needs.build_linux.outputs.version }}-linux-amd64.zip
           asset_name: linux-amd64
           asset_content_type: application/zip
