@@ -66,42 +66,25 @@ such player.
 
 # Procedure
 
+While `hlg-tools` supports both Linux and Windows, this guide will assume the use of Linux. If
+using Windows:
+
+1. Add `.exe` to executable file names.
+2. Change any `.sh` extension to `.ps1`.
+
 ## Prerequisites
 
 Now let's walk through converting a 4K UltraHD Blu-ray to HLG. For this scenario, we'll be using
-`pq2hlg` along with `ffmpeg`, VLC, and a concise script that's provided below. In particular,
-we'll be assuming that the following binaries are in the `PATH`:
+`hlg-tools` along with `ffmpeg` and VLC. In particular, we'll be assuming that the following
+binaries and scripts are in the active `PATH`:
 
-- `hlgprev.sh` (defined below)
 - `pq2hlg` (part of the `hlg-tools` package)
+- `hlgprev.sh` (part of the `hlg-tools` package)
 - `ffmpeg` (provided by distribution or third party)
-
-`hlgprev.sh` consists of:
-
-```bash
-#!/usr/bin/env bash
-
-set -e
-
-if [ "$#" -ne 5 ]; then
-	echo "hlgprev.sh [pq-input] [max-cll] [lum-scale] [timestamp] [name]"
-	exit
-fi
-
-LUT="$(mktemp --suffix=.cube)"
-
-pq2hlg --preview --max-cll "$2" --lum-scale "$3" --size 64 "$LUT"
-
-ffmpeg -ss "$4" -i "$1" -vf scale=1920:1080,format=rgb48le,lut3d="$LUT",format=yuv420p \
-	-color_primaries bt709 -color_trc bt709 -colorspace bt709 \
-	-vframes 1 "$5-$3-$(echo $4 | sed 's/:/_/g').png"
-
-rm -f "$LUT"
-```
 
 We will also assume the presence of a disc dump in the form of a file called `source.mkv`. In
 actuality, this is a MakeMKV dump of *Alita: Battle Angel*. We'll also be scaling down to
-1920x800, which is this movie's native aspect ratio inside of a 1080p frame. This will allow
+1920x800, which is this movie's mastering aspect ratio inside of a 1080p frame. This will allow
 important detail to be preserved while also permitting playback on most current mobile devices.
 
 ## Determine MaxCLL
@@ -133,35 +116,35 @@ grayscale is to eliminate any issues with BT.2020 to BT.709 colorspace conversio
 
 `hlgprev.sh` has the following syntax:
 
-`hlgprev.sh [pq-input] [max-cll] [lum-scale] [timestamp] [name]`
+`hlgprev.sh [pq-input] [max-cll] [lum-scale] [timestamp] [output]`
 
 Begin by entering the following command:
 
-`hlgprev.sh source.mkv 737 1.0 5:30 alita`
+`hlgprev.sh source.mkv 737 1.0 5:30 alita-hlg-1.0.png`
 
-This will generate a single file named `alita-1.0-5_30.png`, representing a screenshot of the
+This will generate a single file named `alita-hlg-1.0.png`, representing a screenshot of the
 movie at the `5:30` mark with a MaxCLL value of `737` and a luminosity scaling factor of `1.0`.
 
 However, look at the image that's been generated and notice that it's obviously too dark:
 
-![hlgprev.sh source.mkv 737 1.0 5:30 alita](img/alita-1.0-5_30.jpg)
+![hlgprev.sh source.mkv 737 1.0 5:30 alita-hlg-1.0.png](img/alita-1.0-5_30.jpg)
 
 Now try again, but with a luminosity scaling factor of `2.0`:
 
-`hlgprev.sh source.mkv 737 2.0 5:30 alita`
+`hlgprev.sh source.mkv 737 2.0 5:30 alita-hlg-2.0.png`
 
-This causes the following screenshot named `alita-2.0-5_30.png` to be produced:
+This causes the following screenshot named `alita-hlg-2.0.png` to be produced:
 
-![hlgprev.sh source.mkv 737 2.0 5:30 alita](img/alita-2.0-5_30.jpg)
+![hlgprev.sh source.mkv 737 2.0 5:30 alita-hlg-2.0.png](img/alita-2.0-5_30.jpg)
 
 Now this is much better, but the light coming in from the outside is still a bit on the dim
 side. Let's take the luminosity scaling up to `4.0` and see what happens:
 
-`hlgprev.sh source.mkv 737 4.0 5:30 alita`
+`hlgprev.sh source.mkv 737 4.0 5:30 alita-hlg-4.0.png`
 
-This yields a file named `alita-4.0-5_30.png`:
+This yields a file named `alita-hlg-4.0.png`:
 
-![hlgprev.sh source.mkv 737 4.0 5:30 alita](img/alita-4.0-5_30.jpg)
+![hlgprev.sh source.mkv 737 4.0 5:30 alita-hlg-4.0.png](img/alita-4.0-5_30.jpg)
 
 The correct scaling value is ultimately determined by the user based on what looks right. Be
 sure to take sample frames from multiple timestamps. What looks good in one shot may not look
@@ -174,9 +157,15 @@ than the highlights. With this approach, the optimal luminance scaling factor fo
 Angel* happens to be very near `4.75`. For most movies, SDR screenshots can be sourced from
 [Blu-ray.com](http://blu-ray.com).
 
-Regardless, do not be overly concerned with preserving detail in the highlights. While the whole
-point of HDR is to retain such detail, it can be lost during SDR preview while still being
-correct.
+There is also a script included in `hlg-tools` named `sdrprev.sh`. It is similar to
+`hlgprev.sh`, except that it generates a grayscale SDR image from a SDR video stream. If using
+this script, then the outputs of `hlgprev.sh` and `sdrprev.sh` should match as closely as
+possible. If different shots produce inconsistent results, then use a frame with a caucasian
+face in a well-lit environment, comparing the brightness of that face.
+
+Regardless of the approach used, do not be overly concerned with preserving preview detail in
+the highlights. While the whole point of HDR is to retain such detail, it can be lost during SDR
+preview while still producing correct HLG.
 
 ## Generate the LUT
 
