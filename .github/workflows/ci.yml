@@ -37,7 +37,7 @@ jobs:
       - name: Generate licensing information
         run: cargo about generate about.hbs > licenses.html
       - name: Create archive
-        run: tar -xJf hlg-tools-${{ needs.extract_version.outputs.version }}-linux-amd64.tar.xz licenses.html target/release/pq2hlg target/release/pqstat scripts/*.sh
+        run: tar -cJf hlg-tools-${{ needs.extract_version.outputs.version }}-linux-amd64.tar.xz licenses.html target/release/pq2hlg target/release/pqstat scripts/*.sh
       - name: Upload binaries
         uses: actions/upload-artifact@v2
         with:
