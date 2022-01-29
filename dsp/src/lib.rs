@@ -32,9 +32,7 @@ pub trait Mapper {
 //
 
 pub struct PqHlgMapper {
-    factor: f64,
-    peak: f64,
-    tone_mapper: Bt2408ToneMapper,
+    prepper: PqPrepper,
 }
 
 impl PqHlgMapper {
@@ -48,27 +46,12 @@ impl PqHlgMapper {
     }
 
     pub fn new_by_factor(factor: f64, max_cll: f64) -> Self {
-
-        let peak = max_cll / 10_000.0 * factor;
-        let tone_mapper = Bt2408ToneMapper::new(peak);
-
-        Self { factor, peak, tone_mapper }
+        Self { prepper: PqPrepper::new(factor, max_cll) }
     }
 
     pub fn map(&self, input: Pixel) -> Pixel {
 
-        let mut pixel = input;
-
-        // PQ SIGNAL -> DISPLAY LINEAR
-        pixel = pixel.with_each_channel(|x| pq_e_to_dl(x)).clamp();
-
-        // REFERENCE WHITE ADJUSTMENT
-        pixel *= self.factor;
-
-        // TONE MAPPING
-        if self.peak > 0.1 {
-            pixel = pixel.with_each_channel(|x| self.tone_mapper.map(x));
-        }
+        let mut pixel = self.prepper.map(input);
 
         // PQ DISPLAY LINEAR -> HLG DISPLAY LINEAR
         pixel = (pixel * 10.0).clamp();
@@ -93,9 +76,7 @@ impl Mapper for PqHlgMapper {
 //
 
 pub struct PqSdrMapper {
-    factor: f64,
-    peak: f64,
-    tone_mapper: Bt2408ToneMapper,
+    prepper: PqPrepper,
 }
 
 impl PqSdrMapper {
@@ -109,27 +90,12 @@ impl PqSdrMapper {
     }
 
     pub fn new_by_factor(factor: f64, max_cll: f64) -> Self {
-
-        let peak = max_cll / 10_000.0 * factor;
-        let tone_mapper = Bt2408ToneMapper::new(peak);
-
-        Self { factor, peak, tone_mapper }
+        Self { prepper: PqPrepper::new(factor, max_cll) }
     }
 
     pub fn map(&self, input: Pixel) -> Pixel {
 
-        let mut pixel = input;
-
-        // PQ SIGNAL -> DISPLAY LINEAR
-        pixel = pixel.with_each_channel(|x| pq_e_to_dl(x)).clamp();
-
-        // REFERENCE WHITE ADJUSTMENT
-        pixel *= self.factor;
-
-        // TONE MAPPING
-        if self.peak > 0.1 {
-            pixel = pixel.with_each_channel(|x| self.tone_mapper.map(x));
-        }
+        let pixel = self.prepper.map(input);
 
         // MONOCHROME
         let mut y = pixel.y().clamp(0.0, 0.1);
@@ -150,5 +116,47 @@ impl Mapper for PqSdrMapper {
 
     fn map(&self, input: Pixel) -> Pixel {
         self.map(input)
+    }
+}
+
+//
+// PQ Prepper
+//
+
+struct PqPrepper {
+    factor: f64,
+    tm: Option<Bt2408ToneMapper>,
+}
+
+impl PqPrepper {
+
+    fn new(factor: f64, max_cll: f64) -> Self {
+
+        let peak = max_cll / 10_000.0 * factor;
+        let tm = if peak > 0.1 {
+            Some(Bt2408ToneMapper::new(peak))
+        } else {
+            None
+        };
+
+        Self { factor, tm }
+    }
+
+    fn map(&self, input: Pixel) -> Pixel {
+
+        let mut pixel = input;
+
+        // PQ SIGNAL -> DISPLAY LINEAR
+        pixel = pixel.with_each_channel(|x| pq_e_to_dl(x)).clamp();
+
+        // REFERENCE WHITE ADJUSTMENT
+        pixel *= self.factor;
+
+        // TONE MAPPING
+        if let Some(tm) = &self.tm {
+            pixel.with_each_channel(|x| tm.map(x))
+        } else {
+            pixel
+        }
     }
 }
