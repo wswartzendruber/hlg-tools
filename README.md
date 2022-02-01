@@ -72,6 +72,9 @@ using Windows:
 1. Add `.exe` to executable file names.
 2. Change any `.sh` extension to `.ps1`.
 
+Note that if `pqstat` needs to be used, then that command should be run from Command Prompt
+rather than PowerShell due to the pipe operator.
+
 ## Prerequisites
 
 Now let's walk through converting a 4K UltraHD Blu-ray to HLG. For this scenario, we'll be using
@@ -79,7 +82,9 @@ Now let's walk through converting a 4K UltraHD Blu-ray to HLG. For this scenario
 binaries and scripts are in the active `PATH`:
 
 - `pq2hlg` (part of the `hlg-tools` package)
+- `pqstat` (part of the `hlg-tools` package)
 - `hlgprev.sh` (part of the `hlg-tools` package)
+- `sdrprev.sh` (part of the `hlg-tools` package)
 - `ffmpeg` (provided by distribution or third party)
 
 We will also assume the presence of a disc dump in the form of a file called `source.mkv`. In
@@ -100,7 +105,13 @@ checking the MaxCLL value at different parts of the movie. Use the highest value
 With VLC 3, this information is available via the menu bar: `Tools` -> `Codec Information`.
 In the dialog that appears, look for the item called `MaxCLL`.
 
-In the case of *Alita: Battle Angel*, this value is 737 nits.
+If no MaxCLL value is listed, then it can be determined using `pqstat`:
+
+`ffmpeg -i source.mkv -vf scale=1920:1080 -pix_fmt rgb48le -f rawvideo - | pqstat -w 1920 -h 1080 -`
+
+The MaxCLL value will then be output after the entire video is analyzed.
+
+Regardless, in the case of *Alita: Battle Angel*, this value is 737 nits.
 
 ## Determine the Luminosity Scaling Factor
 
