@@ -3,7 +3,7 @@
  * copy of the MPL was not distributed with this file, You can obtain one at
  * https://mozilla.org/MPL/2.0/.
  *
- * Copyright 2021 William Swartzendruber
+ * Copyright 2022 William Swartzendruber
  *
  * SPDX-License-Identifier: MPL-2.0
  */
@@ -11,20 +11,13 @@
 #[cfg(test)]
 mod tests;
 
-mod io;
-
 use std::{
-    cmp::max,
     fs::File,
-    io::{stdin, BufReader, ErrorKind, Read},
+    io::{stdin, BufReader, ErrorKind, Read, Result},
 };
-use io::{read_frame, Pixel};
 use dsp::tf::pq_e_to_dl;
+use byteorder::{LittleEndian, ReadBytesExt};
 use clap::{app_from_crate, crate_authors, crate_description, crate_name, crate_version, Arg};
-
-struct FrameStats {
-    max_cll: u16,
-}
 
 fn main() {
 
@@ -65,7 +58,7 @@ fn main() {
             .help("Raw input video stream (PQ, BT.2020, RGB48LE); use - for STDIN")
             .required(true)
         )
-        .after_help(format!("Copyright © 2021 William Swartzendruber\n\
+        .after_help(format!("Copyright © 2022 William Swartzendruber\n\
             Licensed under the Mozilla Public License 2.0\n\
             <{}>", env!("CARGO_PKG_REPOSITORY")).as_str())
         .get_matches();
@@ -83,45 +76,37 @@ fn main() {
             &mut file_read
         }
     );
-    let mut max_cll = 0_u16;
-    let mut frame = vec![Pixel { red: 0, green: 0, blue: 0 }; width * height];
+    let mut max_channel = 0_u16;
 
     'frames: loop {
 
-        if let Err(err) = read_frame(&mut input, &mut frame) {
-            match err.kind() {
-                ErrorKind::UnexpectedEof => break 'frames,
-                _ => panic!("Could not read frame from input stream: {:?}", err),
+        match read_frame_max_channel(&mut input, width * height) {
+            Ok(frame_max_channel) => {
+                max_channel = max_channel.max(frame_max_channel);
+            }
+            Err(err) => {
+                match err.kind() {
+                    ErrorKind::UnexpectedEof => break 'frames,
+                    _ => panic!("Could not read frame from input stream: {:?}", err),
+                }
             }
         }
-
-        let stats = frame_stats(&frame);
-
-        max_cll = max_cll.max(stats.max_cll);
     }
 
-    println!("MaxCLL: {}", max_cll);
+    println!("MaxCLL: {}", to_nits(max_channel));
 }
 
-fn frame_stats(frame: &[Pixel]) -> FrameStats {
+fn read_frame_max_channel(input: &mut dyn Read, count: usize) -> Result<u16> {
 
-    let mut rg = 0_u16;
-    let mut gg = 0_u16;
-    let mut bg = 0_u16;
+    let mut max_channel = 0_u16;
 
-    for pixel in frame.iter() {
-        rg = rg.max(pixel.red);
-        gg = gg.max(pixel.green);
-        bg = bg.max(pixel.blue);
+    for _ in 0..(3 * count) {
+        max_channel = max_channel.max(input.read_u16::<LittleEndian>()?);
     }
 
-    let rl = pq_e_to_dl(rg as f64 / 65_535.0);
-    let gl = pq_e_to_dl(gg as f64 / 65_535.0);
-    let bl = pq_e_to_dl(bg as f64 / 65_535.0);
-    let rw = (rl * 10_000.0).round() as u16;
-    let gw = (gl * 10_000.0).round() as u16;
-    let bw = (bl * 10_000.0).round() as u16;
-    let max_cll = max(max(rw, gw), bw);
+    Ok(max_channel)
+}
 
-    FrameStats { max_cll }
+fn to_nits(max_channel: u16) -> u16 {
+    (pq_e_to_dl(max_channel as f64 / 65_535.0) * 10_000.0).ceil() as u16
 }

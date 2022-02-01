@@ -6,140 +6,252 @@
  * SPDX-License-Identifier: CC0-1.0
  */
 
-use super::{Pixel, frame_stats};
+use std::io::Cursor;
+use super::*;
+use byteorder::{LittleEndian, WriteBytesExt};
 
 #[test]
 fn test_frame_stats_black() {
 
-    let frame = vec![
-        Pixel { red: 0x0000, green: 0x0000, blue: 0x0000},
-        Pixel { red: 0x0000, green: 0x0000, blue: 0x0000},
-        Pixel { red: 0x0000, green: 0x0000, blue: 0x0000},
-        Pixel { red: 0x0000, green: 0x0000, blue: 0x0000},
-        Pixel { red: 0x0000, green: 0x0000, blue: 0x0000},
-        Pixel { red: 0x0000, green: 0x0000, blue: 0x0000},
-    ];
-    let frame_stats = frame_stats(&frame);
+    let mut frame = vec![0_u8; 0];
 
-    assert_eq!(frame_stats.max_cll, 0);
+    frame.write_u16::<LittleEndian>(0x0000).unwrap();
+    frame.write_u16::<LittleEndian>(0x0000).unwrap();
+    frame.write_u16::<LittleEndian>(0x0000).unwrap();
+    frame.write_u16::<LittleEndian>(0x0000).unwrap();
+    frame.write_u16::<LittleEndian>(0x0000).unwrap();
+    frame.write_u16::<LittleEndian>(0x0000).unwrap();
+    frame.write_u16::<LittleEndian>(0x0000).unwrap();
+    frame.write_u16::<LittleEndian>(0x0000).unwrap();
+    frame.write_u16::<LittleEndian>(0x0000).unwrap();
+    frame.write_u16::<LittleEndian>(0x0000).unwrap();
+    frame.write_u16::<LittleEndian>(0x0000).unwrap();
+    frame.write_u16::<LittleEndian>(0x0000).unwrap();
+    frame.write_u16::<LittleEndian>(0x0000).unwrap();
+    frame.write_u16::<LittleEndian>(0x0000).unwrap();
+    frame.write_u16::<LittleEndian>(0x0000).unwrap();
+    frame.write_u16::<LittleEndian>(0x0000).unwrap();
+    frame.write_u16::<LittleEndian>(0x0000).unwrap();
+    frame.write_u16::<LittleEndian>(0x0000).unwrap();
+
+    let mut cursor = Cursor::new(frame);
+    let max_channel = read_frame_max_channel(&mut cursor, 6).unwrap();
+
+    assert_eq!(to_nits(max_channel), 0);
 }
 
 #[test]
 fn test_frame_stats_red_rw() {
 
-    let frame = vec![
-        Pixel { red: 0x0000, green: 0x0000, blue: 0x0000 },
-        Pixel { red: 0x4000, green: 0x0000, blue: 0x0000 },
-        Pixel { red: 0x8000, green: 0x0000, blue: 0x0000 },
-        Pixel { red: 0x94A7, green: 0x0000, blue: 0x0000 },
-    ];
-    let frame_stats = frame_stats(&frame);
+    let mut frame = vec![0_u8; 0];
 
-    assert_eq!(frame_stats.max_cll, 203);
+    frame.write_u16::<LittleEndian>(0x0000).unwrap();
+    frame.write_u16::<LittleEndian>(0x0000).unwrap();
+    frame.write_u16::<LittleEndian>(0x0000).unwrap();
+    frame.write_u16::<LittleEndian>(0x4000).unwrap();
+    frame.write_u16::<LittleEndian>(0x0000).unwrap();
+    frame.write_u16::<LittleEndian>(0x0000).unwrap();
+    frame.write_u16::<LittleEndian>(0x8000).unwrap();
+    frame.write_u16::<LittleEndian>(0x0000).unwrap();
+    frame.write_u16::<LittleEndian>(0x0000).unwrap();
+    frame.write_u16::<LittleEndian>(0x94A7).unwrap();
+    frame.write_u16::<LittleEndian>(0x0000).unwrap();
+    frame.write_u16::<LittleEndian>(0x0000).unwrap();
+
+    let mut cursor = Cursor::new(frame);
+    let max_channel = read_frame_max_channel(&mut cursor, 4).unwrap();
+
+    assert_eq!(to_nits(max_channel), 203);
 }
 
 #[test]
 fn test_frame_stats_green_rw() {
 
-    let frame = vec![
-        Pixel { red: 0x0000, green: 0x0000, blue: 0x0000 },
-        Pixel { red: 0x0000, green: 0x4000, blue: 0x0000 },
-        Pixel { red: 0x0000, green: 0x8000, blue: 0x0000 },
-        Pixel { red: 0x0000, green: 0x94A7, blue: 0x0000 },
-    ];
-    let frame_stats = frame_stats(&frame);
+    let mut frame = vec![0_u8; 0];
 
-    assert_eq!(frame_stats.max_cll, 203);
+    frame.write_u16::<LittleEndian>(0x0000).unwrap();
+    frame.write_u16::<LittleEndian>(0x0000).unwrap();
+    frame.write_u16::<LittleEndian>(0x0000).unwrap();
+    frame.write_u16::<LittleEndian>(0x0000).unwrap();
+    frame.write_u16::<LittleEndian>(0x4000).unwrap();
+    frame.write_u16::<LittleEndian>(0x0000).unwrap();
+    frame.write_u16::<LittleEndian>(0x0000).unwrap();
+    frame.write_u16::<LittleEndian>(0x8000).unwrap();
+    frame.write_u16::<LittleEndian>(0x0000).unwrap();
+    frame.write_u16::<LittleEndian>(0x0000).unwrap();
+    frame.write_u16::<LittleEndian>(0x94A7).unwrap();
+    frame.write_u16::<LittleEndian>(0x0000).unwrap();
+
+    let mut cursor = Cursor::new(frame);
+    let max_channel = read_frame_max_channel(&mut cursor, 4).unwrap();
+
+    assert_eq!(to_nits(max_channel), 203);
 }
 
 #[test]
 fn test_frame_stats_blue_rw() {
 
-    let frame = vec![
-        Pixel { red: 0x0000, green: 0x0000, blue: 0x0000 },
-        Pixel { red: 0x0000, green: 0x0000, blue: 0x4000 },
-        Pixel { red: 0x0000, green: 0x0000, blue: 0x8000 },
-        Pixel { red: 0x0000, green: 0x0000, blue: 0x94A7 },
-    ];
-    let frame_stats = frame_stats(&frame);
+    let mut frame = vec![0_u8; 0];
 
-    assert_eq!(frame_stats.max_cll, 203);
+    frame.write_u16::<LittleEndian>(0x0000).unwrap();
+    frame.write_u16::<LittleEndian>(0x0000).unwrap();
+    frame.write_u16::<LittleEndian>(0x0000).unwrap();
+    frame.write_u16::<LittleEndian>(0x0000).unwrap();
+    frame.write_u16::<LittleEndian>(0x0000).unwrap();
+    frame.write_u16::<LittleEndian>(0x4000).unwrap();
+    frame.write_u16::<LittleEndian>(0x0000).unwrap();
+    frame.write_u16::<LittleEndian>(0x0000).unwrap();
+    frame.write_u16::<LittleEndian>(0x8000).unwrap();
+    frame.write_u16::<LittleEndian>(0x0000).unwrap();
+    frame.write_u16::<LittleEndian>(0x0000).unwrap();
+    frame.write_u16::<LittleEndian>(0x94A7).unwrap();
+
+    let mut cursor = Cursor::new(frame);
+    let max_channel = read_frame_max_channel(&mut cursor, 4).unwrap();
+
+    assert_eq!(to_nits(max_channel), 203);
 }
 
 #[test]
 fn test_frame_stats_white_rw() {
 
-    let frame = vec![
-        Pixel { red: 0x0000, green: 0x0000, blue: 0x0000 },
-        Pixel { red: 0x4000, green: 0x4000, blue: 0x4000 },
-        Pixel { red: 0x8000, green: 0x8000, blue: 0x8000 },
-        Pixel { red: 0x94A7, green: 0x94A7, blue: 0x94A7 },
-    ];
-    let frame_stats = frame_stats(&frame);
+    let mut frame = vec![0_u8; 0];
 
-    assert_eq!(frame_stats.max_cll, 203);
+    frame.write_u16::<LittleEndian>(0x0000).unwrap();
+    frame.write_u16::<LittleEndian>(0x0000).unwrap();
+    frame.write_u16::<LittleEndian>(0x0000).unwrap();
+    frame.write_u16::<LittleEndian>(0x4000).unwrap();
+    frame.write_u16::<LittleEndian>(0x4000).unwrap();
+    frame.write_u16::<LittleEndian>(0x4000).unwrap();
+    frame.write_u16::<LittleEndian>(0x8000).unwrap();
+    frame.write_u16::<LittleEndian>(0x8000).unwrap();
+    frame.write_u16::<LittleEndian>(0x8000).unwrap();
+    frame.write_u16::<LittleEndian>(0x94A7).unwrap();
+    frame.write_u16::<LittleEndian>(0x94A7).unwrap();
+    frame.write_u16::<LittleEndian>(0x94A7).unwrap();
+
+    let mut cursor = Cursor::new(frame);
+    let max_channel = read_frame_max_channel(&mut cursor, 4).unwrap();
+
+    assert_eq!(to_nits(max_channel), 203);
 }
 
 #[test]
 fn test_frame_stats_red_mw() {
 
-    let frame = vec![
-        Pixel { red: 0x0000, green: 0x0000, blue: 0x0000 },
-        Pixel { red: 0x4000, green: 0x0000, blue: 0x0000 },
-        Pixel { red: 0x8000, green: 0x0000, blue: 0x0000 },
-        Pixel { red: 0xA000, green: 0x0000, blue: 0x0000 },
-        Pixel { red: 0xD000, green: 0x0000, blue: 0x0000 },
-        Pixel { red: 0xFFFF, green: 0x0000, blue: 0x0000 },
-    ];
-    let frame_stats = frame_stats(&frame);
+    let mut frame = vec![0_u8; 0];
 
-    assert_eq!(frame_stats.max_cll, 10_000);
+    frame.write_u16::<LittleEndian>(0x0000).unwrap();
+    frame.write_u16::<LittleEndian>(0x0000).unwrap();
+    frame.write_u16::<LittleEndian>(0x0000).unwrap();
+    frame.write_u16::<LittleEndian>(0x4000).unwrap();
+    frame.write_u16::<LittleEndian>(0x0000).unwrap();
+    frame.write_u16::<LittleEndian>(0x0000).unwrap();
+    frame.write_u16::<LittleEndian>(0x8000).unwrap();
+    frame.write_u16::<LittleEndian>(0x0000).unwrap();
+    frame.write_u16::<LittleEndian>(0x0000).unwrap();
+    frame.write_u16::<LittleEndian>(0xA000).unwrap();
+    frame.write_u16::<LittleEndian>(0x0000).unwrap();
+    frame.write_u16::<LittleEndian>(0x0000).unwrap();
+    frame.write_u16::<LittleEndian>(0xD000).unwrap();
+    frame.write_u16::<LittleEndian>(0x0000).unwrap();
+    frame.write_u16::<LittleEndian>(0x0000).unwrap();
+    frame.write_u16::<LittleEndian>(0xFFFF).unwrap();
+    frame.write_u16::<LittleEndian>(0x0000).unwrap();
+    frame.write_u16::<LittleEndian>(0x0000).unwrap();
+
+    let mut cursor = Cursor::new(frame);
+    let max_channel = read_frame_max_channel(&mut cursor, 6).unwrap();
+
+    assert_eq!(to_nits(max_channel), 10_000);
 }
 
 #[test]
 fn test_frame_stats_green_mw() {
 
-    let frame = vec![
-        Pixel { red: 0x0000, green: 0x0000, blue: 0x0000 },
-        Pixel { red: 0x0000, green: 0x4000, blue: 0x0000 },
-        Pixel { red: 0x0000, green: 0x8000, blue: 0x0000 },
-        Pixel { red: 0x0000, green: 0xA000, blue: 0x0000 },
-        Pixel { red: 0x0000, green: 0xD000, blue: 0x0000 },
-        Pixel { red: 0x0000, green: 0xFFFF, blue: 0x0000 },
-    ];
-    let frame_stats = frame_stats(&frame);
+    let mut frame = vec![0_u8; 0];
 
-    assert_eq!(frame_stats.max_cll, 10_000);
+    frame.write_u16::<LittleEndian>(0x0000).unwrap();
+    frame.write_u16::<LittleEndian>(0x0000).unwrap();
+    frame.write_u16::<LittleEndian>(0x0000).unwrap();
+    frame.write_u16::<LittleEndian>(0x0000).unwrap();
+    frame.write_u16::<LittleEndian>(0x4000).unwrap();
+    frame.write_u16::<LittleEndian>(0x0000).unwrap();
+    frame.write_u16::<LittleEndian>(0x0000).unwrap();
+    frame.write_u16::<LittleEndian>(0x8000).unwrap();
+    frame.write_u16::<LittleEndian>(0x0000).unwrap();
+    frame.write_u16::<LittleEndian>(0x0000).unwrap();
+    frame.write_u16::<LittleEndian>(0xA000).unwrap();
+    frame.write_u16::<LittleEndian>(0x0000).unwrap();
+    frame.write_u16::<LittleEndian>(0x0000).unwrap();
+    frame.write_u16::<LittleEndian>(0xD000).unwrap();
+    frame.write_u16::<LittleEndian>(0x0000).unwrap();
+    frame.write_u16::<LittleEndian>(0x0000).unwrap();
+    frame.write_u16::<LittleEndian>(0xFFFF).unwrap();
+    frame.write_u16::<LittleEndian>(0x0000).unwrap();
+
+    let mut cursor = Cursor::new(frame);
+    let max_channel = read_frame_max_channel(&mut cursor, 6).unwrap();
+
+    assert_eq!(to_nits(max_channel), 10_000);
 }
 
 #[test]
 fn test_frame_stats_blue_mw() {
 
-    let frame = vec![
-        Pixel { red: 0x0000, green: 0x0000, blue: 0x0000 },
-        Pixel { red: 0x0000, green: 0x0000, blue: 0x4000 },
-        Pixel { red: 0x0000, green: 0x0000, blue: 0x8000 },
-        Pixel { red: 0x0000, green: 0x0000, blue: 0xA000 },
-        Pixel { red: 0x0000, green: 0x0000, blue: 0xD000 },
-        Pixel { red: 0x0000, green: 0x0000, blue: 0xFFFF },
-    ];
-    let frame_stats = frame_stats(&frame);
+    let mut frame = vec![0_u8; 0];
 
-    assert_eq!(frame_stats.max_cll, 10_000);
+    frame.write_u16::<LittleEndian>(0x0000).unwrap();
+    frame.write_u16::<LittleEndian>(0x0000).unwrap();
+    frame.write_u16::<LittleEndian>(0x0000).unwrap();
+    frame.write_u16::<LittleEndian>(0x0000).unwrap();
+    frame.write_u16::<LittleEndian>(0x0000).unwrap();
+    frame.write_u16::<LittleEndian>(0x4000).unwrap();
+    frame.write_u16::<LittleEndian>(0x0000).unwrap();
+    frame.write_u16::<LittleEndian>(0x0000).unwrap();
+    frame.write_u16::<LittleEndian>(0x8000).unwrap();
+    frame.write_u16::<LittleEndian>(0x0000).unwrap();
+    frame.write_u16::<LittleEndian>(0x0000).unwrap();
+    frame.write_u16::<LittleEndian>(0xA000).unwrap();
+    frame.write_u16::<LittleEndian>(0x0000).unwrap();
+    frame.write_u16::<LittleEndian>(0x0000).unwrap();
+    frame.write_u16::<LittleEndian>(0xD000).unwrap();
+    frame.write_u16::<LittleEndian>(0x0000).unwrap();
+    frame.write_u16::<LittleEndian>(0x0000).unwrap();
+    frame.write_u16::<LittleEndian>(0xFFFF).unwrap();
+
+    let mut cursor = Cursor::new(frame);
+    let max_channel = read_frame_max_channel(&mut cursor, 6).unwrap();
+
+    assert_eq!(to_nits(max_channel), 10_000);
 }
 
 #[test]
 fn test_frame_stats_white_mw() {
 
-    let frame = vec![
-        Pixel { red: 0x0000, green: 0x0000, blue: 0x0000 },
-        Pixel { red: 0x4000, green: 0x4000, blue: 0x4000 },
-        Pixel { red: 0x8000, green: 0x8000, blue: 0x8000 },
-        Pixel { red: 0xA000, green: 0xA000, blue: 0xA000 },
-        Pixel { red: 0xD000, green: 0xD000, blue: 0xD000 },
-        Pixel { red: 0xFFFF, green: 0xFFFF, blue: 0xFFFF },
-    ];
-    let frame_stats = frame_stats(&frame);
+    let mut frame = vec![0_u8; 0];
 
-    assert_eq!(frame_stats.max_cll, 10_000);
+    frame.write_u16::<LittleEndian>(0x0000).unwrap();
+    frame.write_u16::<LittleEndian>(0x0000).unwrap();
+    frame.write_u16::<LittleEndian>(0x0000).unwrap();
+    frame.write_u16::<LittleEndian>(0x4000).unwrap();
+    frame.write_u16::<LittleEndian>(0x4000).unwrap();
+    frame.write_u16::<LittleEndian>(0x4000).unwrap();
+    frame.write_u16::<LittleEndian>(0x8000).unwrap();
+    frame.write_u16::<LittleEndian>(0x8000).unwrap();
+    frame.write_u16::<LittleEndian>(0x8000).unwrap();
+    frame.write_u16::<LittleEndian>(0xA000).unwrap();
+    frame.write_u16::<LittleEndian>(0xA000).unwrap();
+    frame.write_u16::<LittleEndian>(0xA000).unwrap();
+    frame.write_u16::<LittleEndian>(0xD000).unwrap();
+    frame.write_u16::<LittleEndian>(0xD000).unwrap();
+    frame.write_u16::<LittleEndian>(0xD000).unwrap();
+    frame.write_u16::<LittleEndian>(0xFFFF).unwrap();
+    frame.write_u16::<LittleEndian>(0xFFFF).unwrap();
+    frame.write_u16::<LittleEndian>(0xFFFF).unwrap();
+
+    let mut cursor = Cursor::new(frame);
+    let max_channel = read_frame_max_channel(&mut cursor, 6).unwrap();
+
+    assert_eq!(to_nits(max_channel), 10_000);
 }
