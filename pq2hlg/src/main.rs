@@ -174,7 +174,7 @@ fn main() {
                     PqSdrMapper::new_by_ref_white(ref_white.parse::<f64>().unwrap(), max_cll)
                 }
                 (Some(_), Some(_)) => {
-                    panic!("--lum-scale and --ref-white were somehow both defined")
+                    unreachable!("--lum-scale and --ref-white were somehow both defined")
                 }
             }
         )
@@ -194,7 +194,7 @@ fn main() {
                     PqHlgMapper::new_by_ref_white(ref_white.parse::<f64>().unwrap(), max_cll)
                 }
                 (Some(_), Some(_)) => {
-                    panic!("--lum-scale and --ref-white were somehow both defined")
+                    unreachable!("--lum-scale and --ref-white were somehow both defined")
                 }
             }
         )
