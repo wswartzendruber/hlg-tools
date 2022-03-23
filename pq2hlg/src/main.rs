@@ -124,8 +124,8 @@ fn main() {
             .help("Tone mapping method to use.")
             .takes_value(true)
             .required(false)
-            .possible_values(&["rgb", "maxrgb", "blend"])
-            .default_value("blend")
+            .possible_values(&["rgb", "maxrgb"])
+            .default_value("maxrgb")
         )
         .arg(Arg::with_name("size")
             .long("size")
@@ -159,10 +159,10 @@ fn main() {
             scaled to bring the provided reference white level to 203 nits, respectively. This \
             will cause the --max-cll value to be internally adjusted as well. If the internal \
             MaxCLL value then exceeds 1,000 nits, BT.2408 tone mapping will be applied to \
-            compress the input to 1,000 nits, using either R'G'B', maxRGB, or an averaging \
-            blend of the two. From there, the signal will be converted to HLG. The generated \
-            LUTs are completely full range with 0.0 representing minimum brightness and 1.0 \
-            representing maximum brightness.\n\n\
+            compress the input to 1,000 nits using either the maxRGB or R'G'B' method. From \
+            there, the signal will be converted to HLG. The generated LUTs are completely full \
+            range with 0.0 representing minimum brightness and 1.0 representing maximum \
+            brightness.\n\n\
             Optionally, a preview LUT can be generated to convert the input to black and white \
             SDR. This can be used to compare the converted output to available BT.709 frames \
             once they are also converted to black and white. In this way, --lum-scale can be \
@@ -177,7 +177,6 @@ fn main() {
     let tm_method = match matches.value_of("tone-map-method").unwrap() {
         "rgb" => ToneMapMethod::Rgb,
         "maxrgb" => ToneMapMethod::MaxRgb,
-        "blend" => ToneMapMethod::Blend,
         _ => unreachable!("--tone-map-method select is irrational"),
     };
     let mapper: Box<dyn Mapper> = if matches.is_present("preview") {

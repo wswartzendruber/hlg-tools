@@ -19,7 +19,6 @@ use super::{
 pub enum ToneMapMethod {
     Rgb,
     MaxRgb,
-    Blend,
 }
 
 pub struct Bt2408ToneMapper {
@@ -49,9 +48,6 @@ impl Bt2408ToneMapper {
                 }
                 ToneMapMethod::MaxRgb => {
                     self.map_max_rgb(pixel)
-                }
-                ToneMapMethod::Blend => {
-                    (self.map_rgb(pixel) + self.map_max_rgb(pixel)) / 2.0
                 }
             }
         } else {
