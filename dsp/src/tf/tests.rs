@@ -7,7 +7,6 @@
  */
 
 use super::*;
-
 use assert_approx_eq::assert_approx_eq;
 
 const DIFF: f64 = 0.0000000001;

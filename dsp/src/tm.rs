@@ -3,7 +3,7 @@
  * copy of the MPL was not distributed with this file, You can obtain one at
  * https://mozilla.org/MPL/2.0/.
  *
- * Copyright 2021 William Swartzendruber
+ * Copyright 2022 William Swartzendruber
  *
  * SPDX-License-Identifier: MPL-2.0
  */
@@ -11,27 +11,69 @@
 #[cfg(test)]
 mod tests;
 
-use super::tf::{pq_e_to_dl, pq_dl_to_e};
+use super::{
+    Pixel,
+    tf::{pq_e_to_dl, pq_dl_to_e},
+};
+
+pub enum ToneMapMethod {
+    Rgb,
+    MaxRgb,
+    Blend,
+}
 
 pub struct Bt2408ToneMapper {
+    peak: f64,
     lwp: f64,
     ml: f64,
     ks: f64,
+    method: ToneMapMethod,
 }
 
 impl Bt2408ToneMapper {
 
-    pub fn new(peak: f64) -> Self {
+    pub fn new(peak: f64, method: ToneMapMethod) -> Self {
 
         let lwp = pq_dl_to_e(peak);
         let ml = pq_dl_to_e(0.10) / lwp;
         let ks = 1.5 * ml - 0.5;
 
-        Self { lwp, ml, ks }
+        Self { peak, lwp, ml, ks, method }
     }
 
-    pub fn map(&self, o: f64) -> f64 {
-        pq_e_to_dl(self.eetf(pq_dl_to_e(o))).min(0.1)
+    pub fn map(&self, pixel: Pixel) -> Pixel {
+        if self.peak > 0.1 {
+            match self.method {
+                ToneMapMethod::Rgb => {
+                    self.map_rgb(pixel)
+                }
+                ToneMapMethod::MaxRgb => {
+                    self.map_max_rgb(pixel)
+                }
+                ToneMapMethod::Blend => {
+                    (self.map_rgb(pixel) + self.map_max_rgb(pixel)) / 2.0
+                }
+            }
+        } else {
+            pixel
+        }
+    }
+
+    fn map_rgb(&self, pixel: Pixel) -> Pixel {
+        pixel.with_each_channel(|x| pq_e_to_dl(self.eetf(pq_dl_to_e(x))))
+    }
+
+    fn map_max_rgb(&self, pixel: Pixel) -> Pixel {
+
+        let m1 = pixel.red.max(pixel.green.max(pixel.blue));
+
+        if m1 > 0.0 {
+            let m2 = pq_e_to_dl(self.eetf(pq_dl_to_e(m1)));
+            let factor = m2 / m1;
+            pixel.with_each_channel(|x| (factor * x))
+        } else {
+            pixel
+        }
     }
 
     fn eetf(&self, e: f64) -> f64 {
