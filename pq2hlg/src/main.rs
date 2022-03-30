@@ -118,7 +118,7 @@ fn main() {
                 Ok(())
             })
         )
-        .arg(Arg::with_name("tone_map_method")
+        .arg(Arg::with_name("tone-map-method")
             .long("tone-map-method")
             .short("t")
             .help("Tone mapping method to use.")
