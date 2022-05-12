@@ -120,7 +120,6 @@ fn main() {
         )
         .arg(Arg::with_name("tone-map-method")
             .long("tone-map-method")
-            .short("t")
             .help("Tone mapping method to use.")
             .takes_value(true)
             .required(false)
