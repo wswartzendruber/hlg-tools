@@ -76,10 +76,21 @@ impl Bt2408ToneMapper {
 
         let e1 = e / self.lwp;
         let e2 =
-            if e1 < self.ks {
-                e1
-            } else {
+            /*
+             * The boundary provided in BT.2408-4 is incorrect. If used, it will cause `e2` to
+             * approach infinity as the luminosity scaling factor approaches 1.0 from the
+             * positive side. I stumbled upon the solution to this in a GitHub issue:
+             * (https://github.com/mpv-player/mpv/issues/7984). The work here seems to have been
+             * done by an individual named Florian Hoech. The specific answer to the infinity
+             * problem lies in a comment inside code that appears to be under a GPL-3.0 license.
+             * I am unsure if an idea mentioned in a comment is covered by GPL-3.0. However, the
+             * author is welcome to contact me with grievances if he or she feels that I have
+             * unfairly utilized their labor here.
+             */
+            if self.ks < e1 && e1 <= 1.0 {
                 self.p(e1)
+            } else {
+                e1
             };
 
         e2 * self.lwp
