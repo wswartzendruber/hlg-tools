@@ -9,7 +9,7 @@
 [package]
 name = "dsp"
 description = "DSP routines for hlg-tools"
-version = "1.0.0"
+version = "1.0.1"
 authors = ["William Swartzendruber <wswartzendruber@gmail.com>"]
 edition = "2021"
 license = "MPL-2.0"
