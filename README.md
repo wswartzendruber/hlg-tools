@@ -157,15 +157,15 @@ This yields a file named `alita-hlg-4.0.png`:
 
 ![hlgprev.sh source.mkv 737 4.0 5:30 alita-hlg-4.0.png](img/alita-4.0-5_30.jpg)
 
-The correct scaling value is ultimately determined by the user based on what looks right. Be
-sure to take sample frames from multiple timestamps. What looks good in one shot may not look
-good in another.
+The correct scaling value is typically determined by the user based on what looks right. Be sure
+to take sample frames from multiple timestamps. What looks good in one shot may not look good in
+another.
 
-Those wishing to be extremely accurate at this stage may wish to take screenshots of the SDR
-Blu-ray, convert them to grayscale, and then compare them to the output of `hlgprev.sh`. When
-using this method, be sure to compare the brightness levels of the midtones and shadows rather
-than the highlights. With this approach, the optimal luminance scaling factor for *Alita: Battle
-Angel* happens to be very near `4.75`. For most movies, SDR screenshots can be sourced from
+Those wishing to be more accurate at this stage may wish to take screenshots of the SDR Blu-ray,
+convert them to grayscale, and then compare them to the output of `hlgprev.sh`. When using this
+method, be sure to compare the brightness levels of the midtones and shadows rather than the
+highlights. With this approach, the optimal luminance scaling factor for *Alita: Battle Angel*
+happens to be very near `4.2`. For most movies, SDR screenshots can be sourced from
 [Blu-ray.com](http://blu-ray.com).
 
 There is also a script included in `hlg-tools` named `sdrprev.sh`. It is similar to
@@ -178,12 +178,25 @@ Regardless of the approach used, do not be overly concerned with preserving prev
 the highlights. While the whole point of HDR is to retain such detail, it can be lost during SDR
 preview while still producing correct HLG.
 
+**Trivia**: Signal analysis of *Alita: Battle Angel* on 4K Blu-ray reveals that this is actually
+a rather naïve transfer from cinematic digital. As such, its reference white level is going to
+be 48 nits. The brightest observed objects are the credits coming in at 162 nits, making this
+the movie's effective MaxCLL value. This is a strangely-mastered disc to be sure.
+
+Now we're ready to generate the 3D LUT using the values we've determined in the previous steps.
+
 ## Generate the LUT
 
-Now we're ready to generate the 3D LUT using the values we've determined in the previous steps:
+To generate the LUT using the visual estimation method mentioned first:
 
 ```
-pq2hlg -m 737 -l 4.75 -s 128 alita-battle-angel.cube
+pq2hlg --max-cll 737 --lum-scale 4.2 --size 128 alita-battle-angel.cube
+```
+
+To generate the LUT using the more precise values mentioned in the trivia:
+
+```
+pq2hlg --max-cll 162 --ref-white 48 --size 128 alita-battle-angel.cube
 ```
 
 This will generate a 128x128x128 3D LUT that we can now pass into `ffmpeg` (or something else,
