@@ -13,7 +13,7 @@ mod tests;
 
 use super::Pixel;
 
-pub fn pq_e_to_dl(e: f64) -> f64 {
+pub fn pq_eotf(e: f64) -> f64 {
 
     //
     // ITU-R BT.2100-2
@@ -29,7 +29,7 @@ pub fn pq_e_to_dl(e: f64) -> f64 {
     .powf(6.277394636015326)
 }
 
-pub fn pq_dl_to_e(e: f64) -> f64 {
+pub fn pq_ieotf(e: f64) -> f64 {
 
     //
     // ITU-R BT.2100-2
@@ -45,7 +45,7 @@ pub fn pq_dl_to_e(e: f64) -> f64 {
     .powf(78.84375)
 }
 
-pub fn hlg_sl_to_e(o: f64) -> f64 {
+pub fn hlg_oetf(o: f64) -> f64 {
 
     //
     // ITU-R BT.2100-2
@@ -60,7 +60,7 @@ pub fn hlg_sl_to_e(o: f64) -> f64 {
     }
 }
 
-pub fn hlg_dl_to_sl(pixel: Pixel) -> Pixel {
+pub fn hlg_iootf(pixel: Pixel) -> Pixel {
 
     //
     // ITU-R BT.2100-2

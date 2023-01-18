@@ -16,7 +16,7 @@ pub mod tf;
 pub mod tm;
 
 use pixel::Pixel;
-use tf::{hlg_sl_to_e, pq_e_to_dl, hlg_dl_to_sl, sdr_o_to_e};
+use tf::{hlg_oetf, pq_eotf, hlg_iootf, sdr_o_to_e};
 use tm::{sdn_tone_map, Bt2408ToneMapper, ToneMapMethod};
 
 //
@@ -57,10 +57,10 @@ impl PqHlgMapper {
         pixel *= 10.0;
 
         // HLG DISPLAY LINEAR -> HLG SCENE LINEAR
-        pixel = hlg_dl_to_sl(pixel);
+        pixel = hlg_iootf(pixel);
 
         // SCENE LINEAR -> HLG SIGNAL
-        pixel.with_each_channel(|x| hlg_sl_to_e(x))
+        pixel.with_each_channel(|x| hlg_oetf(x))
     }
 }
 
@@ -143,7 +143,7 @@ impl PqPrepper {
         let mut pixel = input;
 
         // PQ SIGNAL -> DISPLAY LINEAR
-        pixel = pixel.with_each_channel(|x| pq_e_to_dl(x)).clamp(0.0, 1.0);
+        pixel = pixel.with_each_channel(|x| pq_eotf(x)).clamp(0.0, 1.0);
 
         // REFERENCE WHITE ADJUSTMENT
         pixel *= self.factor;

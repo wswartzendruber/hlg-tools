@@ -15,7 +15,7 @@ use std::{
     fs::File,
     io::{stdin, BufReader, ErrorKind, Read, Result},
 };
-use dsp::tf::pq_e_to_dl;
+use dsp::tf::pq_eotf;
 use byteorder::{LittleEndian, ReadBytesExt};
 use clap::{app_from_crate, crate_authors, crate_description, crate_name, crate_version, Arg};
 
@@ -108,5 +108,5 @@ fn read_frame_max_channel(input: &mut dyn Read, count: usize) -> Result<u16> {
 }
 
 fn to_nits(max_channel: u16) -> u16 {
-    (pq_e_to_dl(max_channel as f64 / 65_535.0) * 10_000.0).ceil() as u16
+    (pq_eotf(max_channel as f64 / 65_535.0) * 10_000.0).ceil() as u16
 }

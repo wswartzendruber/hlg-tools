@@ -13,7 +13,7 @@ mod tests;
 
 use super::{
     Pixel,
-    tf::{pq_e_to_dl, pq_dl_to_e},
+    tf::{pq_eotf, pq_ieotf},
 };
 
 pub enum ToneMapMethod {
@@ -33,8 +33,8 @@ impl Bt2408ToneMapper {
 
     pub fn new(peak: f64, method: ToneMapMethod) -> Self {
 
-        let lwp = pq_dl_to_e(peak);
-        let ml = pq_dl_to_e(0.10) / lwp;
+        let lwp = pq_ieotf(peak);
+        let ml = pq_ieotf(0.10) / lwp;
         let ks = 1.5 * ml - 0.5;
 
         Self { peak, lwp, ml, ks, method }
@@ -56,7 +56,7 @@ impl Bt2408ToneMapper {
     }
 
     fn map_rgb(&self, pixel: Pixel) -> Pixel {
-        pixel.with_each_channel(|x| pq_e_to_dl(self.eetf(pq_dl_to_e(x))))
+        pixel.with_each_channel(|x| pq_eotf(self.eetf(pq_ieotf(x))))
     }
 
     fn map_max_rgb(&self, pixel: Pixel) -> Pixel {
@@ -64,7 +64,7 @@ impl Bt2408ToneMapper {
         let m1 = pixel.red.max(pixel.green.max(pixel.blue));
 
         if m1 > 0.0 {
-            let m2 = pq_e_to_dl(self.eetf(pq_dl_to_e(m1)));
+            let m2 = pq_eotf(self.eetf(pq_ieotf(m1)));
             let factor = m2 / m1;
             pixel.with_each_channel(|x| (factor * x))
         } else {
