@@ -19,6 +19,6 @@ if [ "$#" -ne 3 ]; then
 	exit
 fi
 
-ffmpeg -ss "$2" -i "$1" -vf format=gray,scale=1920:1080 \
+ffmpeg -ss "$2" -i "$1" -vf format=gray16le,scale=1920:1080 \
 	-color_primaries bt709 -color_trc bt709 -colorspace bt709 \
 	-vframes 1 "$3"

@@ -15,6 +15,6 @@ if ($args.count -ne 3) {
 	return
 }
 
-ffmpeg.exe -ss $args[1] -i $args[0] -vf format=gray,scale=1920:1080 `
+ffmpeg.exe -ss $args[1] -i $args[0] -vf format=gray16le,scale=1920:1080 `
 	-color_primaries bt709 -color_trc bt709 -colorspace bt709 `
 	-vframes 1 $args[2]
