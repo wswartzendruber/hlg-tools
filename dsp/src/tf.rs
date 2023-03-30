@@ -79,87 +79,44 @@ pub fn hlg_compensate(pixel: Pixel) -> Pixel {
     // Section 6.5
     //
 
-    if pixel.red >= pixel.green && pixel.green >= pixel.blue {
-        if pixel.red > 1.0 {
-            hlg_compensate_r(pixel)
+    let mut working = pixel;
+
+    while working.red > 1.0 || working.green > 1.0 || working.blue > 1.0 {
+
+        const RED_SLICE: f64 = (1.0 / RED_FACTOR) / 10_000.0;
+        const GREEN_SLICE: f64 = (1.0 / GREEN_FACTOR) / 10_000.0;
+        const BLUE_SLICE: f64 = (1.0 / BLUE_FACTOR) / 10_000.0;
+
+        if working.red < 1.0 && working.green < 1.0 && working.blue > 1.0 {
+            working.red += RED_SLICE;
+            working.green += GREEN_SLICE;
+            working.blue -= 2.0 * BLUE_SLICE;
+        } else if working.red < 1.0 && working.green > 1.0 && working.blue < 1.0 {
+            working.red += RED_SLICE;
+            working.green -= 2.0 * GREEN_SLICE;
+            working.blue += BLUE_SLICE;
+        } else if working.red < 1.0 && working.green > 1.0 && working.blue > 1.0 {
+            working.red += 2.0 * RED_SLICE;
+            working.green -= GREEN_SLICE;
+            working.blue -= BLUE_SLICE;
+        } else if working.red > 1.0 && working.green < 1.0 && working.blue < 1.0 {
+            working.red -= 2.0 * RED_SLICE;
+            working.green += GREEN_SLICE;
+            working.blue += BLUE_SLICE;
+        } else if working.red > 1.0 && working.green < 1.0 && working.blue > 1.0 {
+            working.red -= RED_SLICE;
+            working.green += 2.0 * GREEN_SLICE;
+            working.blue -= BLUE_SLICE;
+        } else if working.red > 1.0 && working.green > 1.0 && working.blue < 1.0 {
+            working.red -= RED_SLICE;
+            working.green -= GREEN_SLICE;
+            working.blue += 2.0 * BLUE_SLICE;
         } else {
-            pixel
+            unreachable!("HLG compensator has an invalid state.")
         }
-    } else if pixel.red >= pixel.blue && pixel.blue >= pixel.green {
-        if pixel.red > 1.0 {
-            hlg_compensate_r(pixel)
-        } else {
-            pixel
-        }
-    } else if pixel.green >= pixel.red && pixel.red >= pixel.blue {
-        if pixel.green > 1.0 {
-            hlg_compensate_g(pixel)
-        } else {
-            pixel
-        }
-    } else if pixel.green >= pixel.blue && pixel.blue >= pixel.red {
-        if pixel.green > 1.0 {
-            hlg_compensate_g(pixel)
-        } else {
-            pixel
-        }
-    } else if pixel.blue >= pixel.green && pixel.green >= pixel.red {
-        if pixel.blue > 1.0 {
-            hlg_compensate_b(pixel)
-        } else {
-            pixel
-        }
-    } else if pixel.blue >= pixel.red && pixel.red >= pixel.green {
-        if pixel.blue > 1.0 {
-            hlg_compensate_b(pixel)
-        } else {
-            pixel
-        }
-    } else {
-        unreachable!("HLG compensation has invalid state.")
     }
-}
 
-fn hlg_compensate_r(pixel: Pixel) -> Pixel {
-
-    let remaining_each = ((pixel.red - 1.0) * RED_FACTOR) / 2.0;
-    let red = 1.0;
-    let green = pixel.green + remaining_each / GREEN_FACTOR;
-    let blue = pixel.blue + remaining_each / BLUE_FACTOR;
-
-    Pixel {
-        red,
-        green,
-        blue,
-    }
-}
-
-fn hlg_compensate_g(pixel: Pixel) -> Pixel {
-
-    let remaining_each = ((pixel.green - 1.0) * GREEN_FACTOR) / 2.0;
-    let red = pixel.red + remaining_each / RED_FACTOR;
-    let green = 1.0;
-    let blue = pixel.blue + remaining_each / BLUE_FACTOR;
-
-    Pixel {
-        red,
-        green,
-        blue,
-    }
-}
-
-fn hlg_compensate_b(pixel: Pixel) -> Pixel {
-
-    let remaining_each = ((pixel.blue - 1.0) * BLUE_FACTOR) / 2.0;
-    let red = pixel.red + remaining_each / RED_FACTOR;
-    let green = pixel.green + remaining_each / GREEN_FACTOR;
-    let blue = 1.0;
-
-    Pixel {
-        red,
-        green,
-        blue,
-    }
+    return working;
 }
 
 pub fn sdr_o_to_e(o: f64) -> f64 {

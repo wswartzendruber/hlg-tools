@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 William Swartzendruber
+ * Copyright 2023 William Swartzendruber
  *
  * To the extent possible under law, the person who associated CC0 with this file has waived all
  * copyright and related or neighboring rights to this file.
@@ -12,6 +12,7 @@
 
 use super::*;
 use assert_approx_eq::assert_approx_eq;
+use more_asserts::assert_le;
 
 const DIFF: f64 = 0.0000000001;
 
@@ -137,4 +138,29 @@ fn test_hlg_dl_to_sl() {
     assert_approx_eq!(pixel.red, 1.0, DIFF);
     assert_approx_eq!(pixel.green, 1.0, DIFF);
     assert_approx_eq!(pixel.blue, 1.0, DIFF);
+}
+
+#[test]
+fn test_hlg_compensation() {
+
+    const SIZE: usize = 128;
+
+    for b in 0..SIZE {
+        for g in 0..SIZE {
+            for r in 0..SIZE {
+
+                let in_pixel = hlg_iootf(Pixel {
+                    red: r as f64 / (SIZE - 1) as f64,
+                    green: g as f64 / (SIZE - 1) as f64,
+                    blue: b as f64 / (SIZE - 1) as f64,
+                });
+                let out_pixel = hlg_compensate(in_pixel);
+
+                assert_approx_eq!(out_pixel.y(), in_pixel.y(), 0.1);
+                assert_le!(out_pixel.red, 1.0);
+                assert_le!(out_pixel.green, 1.0);
+                assert_le!(out_pixel.blue, 1.0);
+            }
+        }
+    }
 }
