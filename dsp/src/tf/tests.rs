@@ -156,7 +156,7 @@ fn test_hlg_compensation() {
                 });
                 let out_pixel = hlg_compensate(in_pixel);
 
-                assert_approx_eq!(out_pixel.y(), in_pixel.y(), 0.1);
+                assert_approx_eq!(out_pixel.y(), in_pixel.y(), DIFF);
                 assert_le!(out_pixel.red, 1.0);
                 assert_le!(out_pixel.green, 1.0);
                 assert_le!(out_pixel.blue, 1.0);
