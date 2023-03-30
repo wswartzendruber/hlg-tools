@@ -9,6 +9,7 @@
  */
 
 use std::ops::{Add, Div, Mul, MulAssign};
+use super::{RED_FACTOR, GREEN_FACTOR, BLUE_FACTOR};
 
 #[derive(Debug, Clone, Copy, PartialEq)]
 pub struct Pixel {
@@ -49,7 +50,7 @@ impl Pixel {
     }
 
     pub fn y(&self) -> f64 {
-        0.2627 * self.red + 0.6780 * self.green + 0.0593 * self.blue
+        RED_FACTOR * self.red + GREEN_FACTOR * self.green + BLUE_FACTOR * self.blue
     }
 }
 
