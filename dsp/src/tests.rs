@@ -15,7 +15,6 @@ use super::{
     tm::ToneMapMethod,
 };
 use assert_approx_eq::assert_approx_eq;
-use more_asserts::assert_gt;
 
 const HDR_DIFF: f64 = 0.0000001;
 const PQ_100_NITS: f64 = 0.508078421517399;
@@ -48,7 +47,7 @@ fn test_map_rw_100_peak_492() {
         Pixel { red: PQ_10000_NITS, green: PQ_10000_NITS, blue: PQ_10000_NITS },
     ];
     let pq_hlg_mapper =
-        PqHlgMapper::new_by_ref_white(100.0, 0.49261083743842365, ToneMapMethod::MaxRgb);
+        PqHlgMapper::new_by_ref_white(100.0, 0.49261083743842365, ToneMapMethod::MaxRgb, false);
 
     for pixel in frame.iter_mut() {
         *pixel = pq_hlg_mapper.map(*pixel);
@@ -66,13 +65,13 @@ fn test_map_rw_100_peak_492() {
     assert_approx_eq!(frame[2].green, 1.0, HDR_DIFF);
     assert_approx_eq!(frame[2].blue, 1.0, HDR_DIFF);
 
-    assert_gt!(frame[3].red, 1.0);
-    assert_gt!(frame[3].green, 1.0);
-    assert_gt!(frame[3].blue, 1.0);
+    assert_approx_eq!(frame[3].red, 1.0, HDR_DIFF);
+    assert_approx_eq!(frame[3].green, 1.0, HDR_DIFF);
+    assert_approx_eq!(frame[3].blue, 1.0, HDR_DIFF);
 
-    assert_gt!(frame[4].red, 1.0);
-    assert_gt!(frame[4].green, 1.0);
-    assert_gt!(frame[4].blue, 1.0);
+    assert_approx_eq!(frame[4].red, 1.0, HDR_DIFF);
+    assert_approx_eq!(frame[4].green, 1.0, HDR_DIFF);
+    assert_approx_eq!(frame[4].blue, 1.0, HDR_DIFF);
 }
 
 #[test]
@@ -86,7 +85,7 @@ fn test_map_rw_100_peak_1_970() {
         Pixel { red: PQ_10000_NITS, green: PQ_10000_NITS, blue: PQ_10000_NITS },
     ];
     let pq_hlg_mapper =
-        PqHlgMapper::new_by_ref_white(100.0, 1970.4433497536945, ToneMapMethod::MaxRgb);
+        PqHlgMapper::new_by_ref_white(100.0, 1970.4433497536945, ToneMapMethod::MaxRgb, false);
 
     for pixel in frame.iter_mut() {
         *pixel = pq_hlg_mapper.map(*pixel);
@@ -104,13 +103,13 @@ fn test_map_rw_100_peak_1_970() {
     assert_approx_eq!(frame[2].green, 1.0, HDR_DIFF);
     assert_approx_eq!(frame[2].blue, 1.0, HDR_DIFF);
 
-    assert_gt!(frame[3].red, 1.0);
-    assert_gt!(frame[3].green, 1.0);
-    assert_gt!(frame[3].blue, 1.0);
+    assert_approx_eq!(frame[3].red, 1.0, HDR_DIFF);
+    assert_approx_eq!(frame[3].green, 1.0, HDR_DIFF);
+    assert_approx_eq!(frame[3].blue, 1.0, HDR_DIFF);
 
-    assert_gt!(frame[4].red, 1.0);
-    assert_gt!(frame[4].green, 1.0);
-    assert_gt!(frame[4].blue, 1.0);
+    assert_approx_eq!(frame[4].red, 1.0, HDR_DIFF);
+    assert_approx_eq!(frame[4].green, 1.0, HDR_DIFF);
+    assert_approx_eq!(frame[4].blue, 1.0, HDR_DIFF);
 }
 
 #[test]
@@ -122,7 +121,7 @@ fn test_map_rw_100_peak_4_926() {
         Pixel { red: PQ_4926_NITS, green: PQ_4926_NITS, blue: PQ_4926_NITS },
         Pixel { red: PQ_10000_NITS, green: PQ_10000_NITS, blue: PQ_10000_NITS },
     ];
-    let pq_hlg_mapper = PqHlgMapper::new_by_ref_white(100.0, 4_926.0, ToneMapMethod::MaxRgb);
+    let pq_hlg_mapper = PqHlgMapper::new_by_ref_white(100.0, 4_926.0, ToneMapMethod::MaxRgb, false);
 
     for pixel in frame.iter_mut() {
         *pixel = pq_hlg_mapper.map(*pixel);
@@ -140,9 +139,9 @@ fn test_map_rw_100_peak_4_926() {
     assert_approx_eq!(frame[2].green, 1.0, HDR_DIFF);
     assert_approx_eq!(frame[2].blue, 1.0, HDR_DIFF);
 
-    assert_gt!(frame[3].red, 1.0);
-    assert_gt!(frame[3].green, 1.0);
-    assert_gt!(frame[3].blue, 1.0);
+    assert_approx_eq!(frame[3].red, 1.0, HDR_DIFF);
+    assert_approx_eq!(frame[3].green, 1.0, HDR_DIFF);
+    assert_approx_eq!(frame[3].blue, 1.0, HDR_DIFF);
 }
 
 #[test]
@@ -155,7 +154,7 @@ fn test_map_rw_203_peak_500() {
         Pixel { red: PQ_4000_NITS, green: PQ_4000_NITS, blue: PQ_4000_NITS },
         Pixel { red: PQ_10000_NITS, green: PQ_10000_NITS, blue: PQ_10000_NITS },
     ];
-    let pq_hlg_mapper = PqHlgMapper::new_by_ref_white(203.0, 500.0, ToneMapMethod::MaxRgb);
+    let pq_hlg_mapper = PqHlgMapper::new_by_ref_white(203.0, 500.0, ToneMapMethod::MaxRgb, false);
 
     for pixel in frame.iter_mut() {
         *pixel = pq_hlg_mapper.map(*pixel);
@@ -173,13 +172,13 @@ fn test_map_rw_203_peak_500() {
     assert_approx_eq!(frame[2].green, 1.0, HDR_DIFF);
     assert_approx_eq!(frame[2].blue, 1.0, HDR_DIFF);
 
-    assert_gt!(frame[3].red, 1.0);
-    assert_gt!(frame[3].green, 1.0);
-    assert_gt!(frame[3].blue, 1.0);
+    assert_approx_eq!(frame[3].red, 1.0, HDR_DIFF);
+    assert_approx_eq!(frame[3].green, 1.0, HDR_DIFF);
+    assert_approx_eq!(frame[3].blue, 1.0, HDR_DIFF);
 
-    assert_gt!(frame[4].red, 1.0);
-    assert_gt!(frame[4].green, 1.0);
-    assert_gt!(frame[4].blue, 1.0);
+    assert_approx_eq!(frame[4].red, 1.0, HDR_DIFF);
+    assert_approx_eq!(frame[4].green, 1.0, HDR_DIFF);
+    assert_approx_eq!(frame[4].blue, 1.0, HDR_DIFF);
 }
 
 #[test]
@@ -192,7 +191,7 @@ fn test_map_rw_203_peak_1_000() {
         Pixel { red: PQ_4000_NITS, green: PQ_4000_NITS, blue: PQ_4000_NITS },
         Pixel { red: PQ_10000_NITS, green: PQ_10000_NITS, blue: PQ_10000_NITS },
     ];
-    let pq_hlg_mapper = PqHlgMapper::new_by_ref_white(203.0, 1_000.0, ToneMapMethod::MaxRgb);
+    let pq_hlg_mapper = PqHlgMapper::new_by_ref_white(203.0, 1_000.0, ToneMapMethod::MaxRgb, false);
 
     for pixel in frame.iter_mut() {
         *pixel = pq_hlg_mapper.map(*pixel);
@@ -210,13 +209,13 @@ fn test_map_rw_203_peak_1_000() {
     assert_approx_eq!(frame[2].green, 1.0, HDR_DIFF);
     assert_approx_eq!(frame[2].blue, 1.0, HDR_DIFF);
 
-    assert_gt!(frame[3].red, 1.0);
-    assert_gt!(frame[3].green, 1.0);
-    assert_gt!(frame[3].blue, 1.0);
+    assert_approx_eq!(frame[3].red, 1.0, HDR_DIFF);
+    assert_approx_eq!(frame[3].green, 1.0, HDR_DIFF);
+    assert_approx_eq!(frame[3].blue, 1.0, HDR_DIFF);
 
-    assert_gt!(frame[4].red, 1.0);
-    assert_gt!(frame[4].green, 1.0);
-    assert_gt!(frame[4].blue, 1.0);
+    assert_approx_eq!(frame[4].red, 1.0, HDR_DIFF);
+    assert_approx_eq!(frame[4].green, 1.0, HDR_DIFF);
+    assert_approx_eq!(frame[4].blue, 1.0, HDR_DIFF);
 }
 
 #[test]
@@ -228,7 +227,7 @@ fn test_map_rw_203_peak_4_000() {
         Pixel { red: PQ_4000_NITS, green: PQ_4000_NITS, blue: PQ_4000_NITS },
         Pixel { red: PQ_10000_NITS, green: PQ_10000_NITS, blue: PQ_10000_NITS },
     ];
-    let pq_hlg_mapper = PqHlgMapper::new_by_ref_white(203.0, 4_000.0, ToneMapMethod::MaxRgb);
+    let pq_hlg_mapper = PqHlgMapper::new_by_ref_white(203.0, 4_000.0, ToneMapMethod::MaxRgb, false);
 
     for pixel in frame.iter_mut() {
         *pixel = pq_hlg_mapper.map(*pixel);
@@ -246,9 +245,9 @@ fn test_map_rw_203_peak_4_000() {
     assert_approx_eq!(frame[2].green, 1.0, HDR_DIFF);
     assert_approx_eq!(frame[2].blue, 1.0, HDR_DIFF);
 
-    assert_gt!(frame[3].red, 1.0);
-    assert_gt!(frame[3].green, 1.0);
-    assert_gt!(frame[3].blue, 1.0);
+    assert_approx_eq!(frame[3].red, 1.0, HDR_DIFF);
+    assert_approx_eq!(frame[3].green, 1.0, HDR_DIFF);
+    assert_approx_eq!(frame[3].blue, 1.0, HDR_DIFF);
 }
 
 #[test]
@@ -259,7 +258,7 @@ fn test_map_rw_203_peak_10_000() {
         Pixel { red: PQ_REF_WHITE, green: PQ_REF_WHITE, blue: PQ_REF_WHITE },
         Pixel { red: PQ_10000_NITS, green: PQ_10000_NITS, blue: PQ_10000_NITS },
     ];
-    let pq_hlg_mapper = PqHlgMapper::new_by_ref_white(203.0, 10_000.0, ToneMapMethod::MaxRgb);
+    let pq_hlg_mapper = PqHlgMapper::new_by_ref_white(203.0, 10_000.0, ToneMapMethod::MaxRgb, false);
 
     for pixel in frame.iter_mut() {
         *pixel = pq_hlg_mapper.map(*pixel);
