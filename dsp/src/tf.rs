@@ -83,38 +83,153 @@ pub fn hlg_compensate(pixel: Pixel) -> Pixel {
 
     while working.red > 1.0 || working.green > 1.0 || working.blue > 1.0 {
 
-        const RED_SLICE: f64 = (1.0 / RED_FACTOR) / 10_000.0;
-        const GREEN_SLICE: f64 = (1.0 / GREEN_FACTOR) / 10_000.0;
-        const BLUE_SLICE: f64 = (1.0 / BLUE_FACTOR) / 10_000.0;
+        println!("ENTERING: {:?}", working);
 
-        if working.red < 1.0 && working.green < 1.0 && working.blue > 1.0 {
-            working.red += RED_SLICE;
-            working.green += GREEN_SLICE;
-            working.blue -= 2.0 * BLUE_SLICE;
+        if working.red > 1.0 && working.green < 1.0 && working.blue == 1.0 {
+
+            // R->G
+
+            let excess = working.red - 1.0;
+            let nits = excess * RED_FACTOR;
+            let addition = nits / GREEN_FACTOR;
+
+            working.red -= excess;
+            working.green += addition;
+
+        } else if working.red > 1.0 && working.green == 1.0 && working.blue < 1.0 {
+
+            // R->B
+
+            let excess = working.red - 1.0;
+            let nits = excess * RED_FACTOR;
+            let addition = nits / BLUE_FACTOR;
+
+            working.red -= excess;
+            working.blue += addition;
+
+        } else if working.red < 1.0 && working.green > 1.0 && working.blue == 1.0 {
+
+            // G->R
+
+            let excess = working.green - 1.0;
+            let nits = excess * GREEN_FACTOR;
+            let addition = nits / RED_FACTOR;
+
+            working.red += addition;
+            working.green -= excess;
+
+        } else if working.red == 1.0 && working.green > 1.0 && working.blue < 1.0 {
+
+            // G->B
+
+            let excess = working.green - 1.0;
+            let nits = excess * GREEN_FACTOR;
+            let addition = nits / BLUE_FACTOR;
+
+            working.green -= excess;
+            working.blue += addition;
+
+        } else if working.red < 1.0 && working.green == 1.0 && working.blue > 1.0 {
+
+            // B->R
+
+            let excess = working.blue - 1.0;
+            let nits = excess * BLUE_FACTOR;
+            let addition = nits / RED_FACTOR;
+
+            working.red += addition;
+            working.blue -= excess;
+
+        } else if working.red == 1.0 && working.green < 1.0 && working.blue > 1.0 {
+
+            // B->G
+
+            let excess = working.blue - 1.0;
+            let nits = excess * BLUE_FACTOR;
+            let addition = nits / GREEN_FACTOR;
+
+            working.blue -= excess;
+            working.green += addition;
+
+        } else if working.red < 1.0 && working.green < 1.0 && working.blue > 1.0 {
+
+            // B->RG
+
+            let excess = working.blue - 1.0;
+            let nits = excess * BLUE_FACTOR;
+            let factor = (RED_FACTOR + GREEN_FACTOR) / 2.0;
+            let addition = nits / 2.0 / factor;
+
+            working.red += addition;
+            working.green += addition;
+            working.blue -= excess;
+
         } else if working.red < 1.0 && working.green > 1.0 && working.blue < 1.0 {
-            working.red += RED_SLICE;
-            working.green -= 2.0 * GREEN_SLICE;
-            working.blue += BLUE_SLICE;
-        } else if working.red < 1.0 && working.green > 1.0 && working.blue > 1.0 {
-            working.red += 2.0 * RED_SLICE;
-            working.green -= GREEN_SLICE;
-            working.blue -= BLUE_SLICE;
+
+            // G->RB
+
+            let excess = working.green - 1.0;
+            let nits = excess * GREEN_FACTOR;
+            let factor = (RED_FACTOR + BLUE_FACTOR) / 2.0;
+            let addition = nits / 2.0 / factor;
+
+            working.red += addition;
+            working.green -= excess;
+            working.blue += addition;
+
         } else if working.red > 1.0 && working.green < 1.0 && working.blue < 1.0 {
-            working.red -= 2.0 * RED_SLICE;
-            working.green += GREEN_SLICE;
-            working.blue += BLUE_SLICE;
+
+            // R->GB
+
+            let excess = working.red - 1.0;
+            let nits = excess * RED_FACTOR;
+            let factor = (GREEN_FACTOR + BLUE_FACTOR) / 2.0;
+            let addition = nits / 2.0 / factor;
+
+            working.red -= excess;
+            working.green += addition;
+            working.blue += addition;
+
+        } else if working.red < 1.0 && working.green > 1.0 && working.blue > 1.0 {
+
+            // GB->R
+
+            let excess = working.green.min(working.blue) - 1.0;
+            let nits = excess * GREEN_FACTOR + excess * BLUE_FACTOR;
+
+            working.red += nits / RED_FACTOR;
+            working.green -= excess;
+            working.blue -= excess;
+
         } else if working.red > 1.0 && working.green < 1.0 && working.blue > 1.0 {
-            working.red -= RED_SLICE;
-            working.green += 2.0 * GREEN_SLICE;
-            working.blue -= BLUE_SLICE;
+
+            // RB->G
+
+            let excess = working.red.min(working.blue) - 1.0;
+            let nits = excess * RED_FACTOR + excess * BLUE_FACTOR;
+
+            working.red -= excess;
+            working.green += nits / GREEN_FACTOR;
+            working.blue -= excess;
+
         } else if working.red > 1.0 && working.green > 1.0 && working.blue < 1.0 {
-            working.red -= RED_SLICE;
-            working.green -= GREEN_SLICE;
-            working.blue += 2.0 * BLUE_SLICE;
+
+            // RG->B
+
+            let excess = working.red.min(working.green) - 1.0;
+            let nits = excess * RED_FACTOR + excess * GREEN_FACTOR;
+
+            working.red -= excess;
+            working.green -= excess;
+            working.blue += nits / BLUE_FACTOR;
+
         } else {
+            println!("WORKING PIXEL = {:?}", working);
             unreachable!("HLG compensator has an invalid state.")
         }
     }
+
+    println!("{:?}", working);
 
     return working;
 }
