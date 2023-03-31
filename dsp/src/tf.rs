@@ -222,7 +222,7 @@ pub fn hlg_compensate(pixel: Pixel) -> Pixel {
             working.blue += nits / BLUE_FACTOR;
 
         } else {
-            unreachable!("HLG compensator has an invalid state.")
+            unreachable!("HLG compensator has an invalid state: {:?}", working)
         }
     }
 

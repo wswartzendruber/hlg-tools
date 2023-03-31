@@ -172,6 +172,9 @@ impl PqPrepper {
         pixel *= self.factor;
 
         // TONE MAPPING
-        self.tm.map(pixel)
+        pixel = self.tm.map(pixel);
+
+        // 1,000 NIT CLAMPING
+        pixel.clamp(0.0, 0.1)
     }
 }
