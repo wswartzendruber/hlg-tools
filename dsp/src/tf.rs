@@ -83,8 +83,6 @@ pub fn hlg_compensate(pixel: Pixel) -> Pixel {
 
     while working.red > 1.0 || working.green > 1.0 || working.blue > 1.0 {
 
-        println!("ENTERING: {:?}", working);
-
         if working.red > 1.0 && working.green < 1.0 && working.blue == 1.0 {
 
             // R->G
@@ -224,12 +222,9 @@ pub fn hlg_compensate(pixel: Pixel) -> Pixel {
             working.blue += nits / BLUE_FACTOR;
 
         } else {
-            println!("WORKING PIXEL = {:?}", working);
             unreachable!("HLG compensator has an invalid state.")
         }
     }
-
-    println!("{:?}", working);
 
     return working;
 }
