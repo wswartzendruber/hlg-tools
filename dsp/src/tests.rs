@@ -17,6 +17,9 @@ use super::{
 use assert_approx_eq::assert_approx_eq;
 
 const HDR_DIFF: f64 = 0.0000001;
+const HLG_BLACK: f64 = 0.0;
+const HLG_REF_WHITE: f64 = 0.7498773;
+const HLG_MAX_WHITE: f64 = 1.0;
 const PQ_100_NITS: f64 = 0.508078421517399;
 const PQ_492_NITS: f64 = 0.6749788198754852;
 const PQ_1000_NITS: f64 = 0.751827096247041;
@@ -37,7 +40,7 @@ const SDR_GREY_90: f64 = 0.8646750115119883;
 const SDR_REF_WHITE: f64 = 0.9112149320796772;
 
 #[test]
-fn test_map_rw_100_peak_492() {
+fn test_pq_hlg_map_rw_100_peak_492() {
 
     let mut frame = vec![
         Pixel { red: PQ_BLACK, green: PQ_BLACK, blue: PQ_BLACK },
@@ -53,29 +56,29 @@ fn test_map_rw_100_peak_492() {
         *pixel = pq_hlg_mapper.map(*pixel);
     }
 
-    assert_approx_eq!(frame[0].red, 0.0, HDR_DIFF);
-    assert_approx_eq!(frame[0].green, 0.0, HDR_DIFF);
-    assert_approx_eq!(frame[0].blue, 0.0, HDR_DIFF);
+    assert_approx_eq!(frame[0].red, HLG_BLACK, HDR_DIFF);
+    assert_approx_eq!(frame[0].green, HLG_BLACK, HDR_DIFF);
+    assert_approx_eq!(frame[0].blue, HLG_BLACK, HDR_DIFF);
 
-    assert_approx_eq!(frame[1].red, 0.7498773, HDR_DIFF);
-    assert_approx_eq!(frame[1].green, 0.7498773, HDR_DIFF);
-    assert_approx_eq!(frame[1].blue, 0.7498773, HDR_DIFF);
+    assert_approx_eq!(frame[1].red, HLG_REF_WHITE, HDR_DIFF);
+    assert_approx_eq!(frame[1].green, HLG_REF_WHITE, HDR_DIFF);
+    assert_approx_eq!(frame[1].blue, HLG_REF_WHITE, HDR_DIFF);
 
-    assert_approx_eq!(frame[2].red, 1.0, HDR_DIFF);
-    assert_approx_eq!(frame[2].green, 1.0, HDR_DIFF);
-    assert_approx_eq!(frame[2].blue, 1.0, HDR_DIFF);
+    assert_approx_eq!(frame[2].red, HLG_MAX_WHITE, HDR_DIFF);
+    assert_approx_eq!(frame[2].green, HLG_MAX_WHITE, HDR_DIFF);
+    assert_approx_eq!(frame[2].blue, HLG_MAX_WHITE, HDR_DIFF);
 
-    assert_approx_eq!(frame[3].red, 1.0, HDR_DIFF);
-    assert_approx_eq!(frame[3].green, 1.0, HDR_DIFF);
-    assert_approx_eq!(frame[3].blue, 1.0, HDR_DIFF);
+    assert_approx_eq!(frame[3].red, HLG_MAX_WHITE, HDR_DIFF);
+    assert_approx_eq!(frame[3].green, HLG_MAX_WHITE, HDR_DIFF);
+    assert_approx_eq!(frame[3].blue, HLG_MAX_WHITE, HDR_DIFF);
 
-    assert_approx_eq!(frame[4].red, 1.0, HDR_DIFF);
-    assert_approx_eq!(frame[4].green, 1.0, HDR_DIFF);
-    assert_approx_eq!(frame[4].blue, 1.0, HDR_DIFF);
+    assert_approx_eq!(frame[4].red, HLG_MAX_WHITE, HDR_DIFF);
+    assert_approx_eq!(frame[4].green, HLG_MAX_WHITE, HDR_DIFF);
+    assert_approx_eq!(frame[4].blue, HLG_MAX_WHITE, HDR_DIFF);
 }
 
 #[test]
-fn test_map_rw_100_peak_1_970() {
+fn test_pq_hlg_map_rw_100_peak_1_970() {
 
     let mut frame = vec![
         Pixel { red: PQ_BLACK, green: PQ_BLACK, blue: PQ_BLACK },
@@ -91,29 +94,29 @@ fn test_map_rw_100_peak_1_970() {
         *pixel = pq_hlg_mapper.map(*pixel);
     }
 
-    assert_approx_eq!(frame[0].red, 0.0, HDR_DIFF);
-    assert_approx_eq!(frame[0].green, 0.0, HDR_DIFF);
-    assert_approx_eq!(frame[0].blue, 0.0, HDR_DIFF);
+    assert_approx_eq!(frame[0].red, HLG_BLACK, HDR_DIFF);
+    assert_approx_eq!(frame[0].green, HLG_BLACK, HDR_DIFF);
+    assert_approx_eq!(frame[0].blue, HLG_BLACK, HDR_DIFF);
 
-    assert_approx_eq!(frame[1].red, 0.7498773, HDR_DIFF);
-    assert_approx_eq!(frame[1].green, 0.7498773, HDR_DIFF);
-    assert_approx_eq!(frame[1].blue, 0.7498773, HDR_DIFF);
+    assert_approx_eq!(frame[1].red, HLG_REF_WHITE, HDR_DIFF);
+    assert_approx_eq!(frame[1].green, HLG_REF_WHITE, HDR_DIFF);
+    assert_approx_eq!(frame[1].blue, HLG_REF_WHITE, HDR_DIFF);
 
-    assert_approx_eq!(frame[2].red, 1.0, HDR_DIFF);
-    assert_approx_eq!(frame[2].green, 1.0, HDR_DIFF);
-    assert_approx_eq!(frame[2].blue, 1.0, HDR_DIFF);
+    assert_approx_eq!(frame[2].red, HLG_MAX_WHITE, HDR_DIFF);
+    assert_approx_eq!(frame[2].green, HLG_MAX_WHITE, HDR_DIFF);
+    assert_approx_eq!(frame[2].blue, HLG_MAX_WHITE, HDR_DIFF);
 
-    assert_approx_eq!(frame[3].red, 1.0, HDR_DIFF);
-    assert_approx_eq!(frame[3].green, 1.0, HDR_DIFF);
-    assert_approx_eq!(frame[3].blue, 1.0, HDR_DIFF);
+    assert_approx_eq!(frame[3].red, HLG_MAX_WHITE, HDR_DIFF);
+    assert_approx_eq!(frame[3].green, HLG_MAX_WHITE, HDR_DIFF);
+    assert_approx_eq!(frame[3].blue, HLG_MAX_WHITE, HDR_DIFF);
 
-    assert_approx_eq!(frame[4].red, 1.0, HDR_DIFF);
-    assert_approx_eq!(frame[4].green, 1.0, HDR_DIFF);
-    assert_approx_eq!(frame[4].blue, 1.0, HDR_DIFF);
+    assert_approx_eq!(frame[4].red, HLG_MAX_WHITE, HDR_DIFF);
+    assert_approx_eq!(frame[4].green, HLG_MAX_WHITE, HDR_DIFF);
+    assert_approx_eq!(frame[4].blue, HLG_MAX_WHITE, HDR_DIFF);
 }
 
 #[test]
-fn test_map_rw_100_peak_4_926() {
+fn test_pq_hlg_map_rw_100_peak_4_926() {
 
     let mut frame = vec![
         Pixel { red: PQ_BLACK, green: PQ_BLACK, blue: PQ_BLACK },
@@ -127,25 +130,25 @@ fn test_map_rw_100_peak_4_926() {
         *pixel = pq_hlg_mapper.map(*pixel);
     }
 
-    assert_approx_eq!(frame[0].red, 0.0, HDR_DIFF);
-    assert_approx_eq!(frame[0].green, 0.0, HDR_DIFF);
-    assert_approx_eq!(frame[0].blue, 0.0, HDR_DIFF);
+    assert_approx_eq!(frame[0].red, HLG_BLACK, HDR_DIFF);
+    assert_approx_eq!(frame[0].green, HLG_BLACK, HDR_DIFF);
+    assert_approx_eq!(frame[0].blue, HLG_BLACK, HDR_DIFF);
 
-    assert_approx_eq!(frame[1].red, 0.7498773, HDR_DIFF);
-    assert_approx_eq!(frame[1].green, 0.7498773, HDR_DIFF);
-    assert_approx_eq!(frame[1].blue, 0.7498773, HDR_DIFF);
+    assert_approx_eq!(frame[1].red, HLG_REF_WHITE, HDR_DIFF);
+    assert_approx_eq!(frame[1].green, HLG_REF_WHITE, HDR_DIFF);
+    assert_approx_eq!(frame[1].blue, HLG_REF_WHITE, HDR_DIFF);
 
-    assert_approx_eq!(frame[2].red, 1.0, HDR_DIFF);
-    assert_approx_eq!(frame[2].green, 1.0, HDR_DIFF);
-    assert_approx_eq!(frame[2].blue, 1.0, HDR_DIFF);
+    assert_approx_eq!(frame[2].red, HLG_MAX_WHITE, HDR_DIFF);
+    assert_approx_eq!(frame[2].green, HLG_MAX_WHITE, HDR_DIFF);
+    assert_approx_eq!(frame[2].blue, HLG_MAX_WHITE, HDR_DIFF);
 
-    assert_approx_eq!(frame[3].red, 1.0, HDR_DIFF);
-    assert_approx_eq!(frame[3].green, 1.0, HDR_DIFF);
-    assert_approx_eq!(frame[3].blue, 1.0, HDR_DIFF);
+    assert_approx_eq!(frame[3].red, HLG_MAX_WHITE, HDR_DIFF);
+    assert_approx_eq!(frame[3].green, HLG_MAX_WHITE, HDR_DIFF);
+    assert_approx_eq!(frame[3].blue, HLG_MAX_WHITE, HDR_DIFF);
 }
 
 #[test]
-fn test_map_rw_203_peak_500() {
+fn test_pq_hlg_map_rw_203_peak_500() {
 
     let mut frame = vec![
         Pixel { red: PQ_BLACK, green: PQ_BLACK, blue: PQ_BLACK },
@@ -160,29 +163,29 @@ fn test_map_rw_203_peak_500() {
         *pixel = pq_hlg_mapper.map(*pixel);
     }
 
-    assert_approx_eq!(frame[0].red, 0.0, HDR_DIFF);
-    assert_approx_eq!(frame[0].green, 0.0, HDR_DIFF);
-    assert_approx_eq!(frame[0].blue, 0.0, HDR_DIFF);
+    assert_approx_eq!(frame[0].red, HLG_BLACK, HDR_DIFF);
+    assert_approx_eq!(frame[0].green, HLG_BLACK, HDR_DIFF);
+    assert_approx_eq!(frame[0].blue, HLG_BLACK, HDR_DIFF);
 
-    assert_approx_eq!(frame[1].red, 0.7498773, HDR_DIFF);
-    assert_approx_eq!(frame[1].green, 0.7498773, HDR_DIFF);
-    assert_approx_eq!(frame[1].blue, 0.7498773, HDR_DIFF);
+    assert_approx_eq!(frame[1].red, HLG_REF_WHITE, HDR_DIFF);
+    assert_approx_eq!(frame[1].green, HLG_REF_WHITE, HDR_DIFF);
+    assert_approx_eq!(frame[1].blue, HLG_REF_WHITE, HDR_DIFF);
 
-    assert_approx_eq!(frame[2].red, 1.0, HDR_DIFF);
-    assert_approx_eq!(frame[2].green, 1.0, HDR_DIFF);
-    assert_approx_eq!(frame[2].blue, 1.0, HDR_DIFF);
+    assert_approx_eq!(frame[2].red, HLG_MAX_WHITE, HDR_DIFF);
+    assert_approx_eq!(frame[2].green, HLG_MAX_WHITE, HDR_DIFF);
+    assert_approx_eq!(frame[2].blue, HLG_MAX_WHITE, HDR_DIFF);
 
-    assert_approx_eq!(frame[3].red, 1.0, HDR_DIFF);
-    assert_approx_eq!(frame[3].green, 1.0, HDR_DIFF);
-    assert_approx_eq!(frame[3].blue, 1.0, HDR_DIFF);
+    assert_approx_eq!(frame[3].red, HLG_MAX_WHITE, HDR_DIFF);
+    assert_approx_eq!(frame[3].green, HLG_MAX_WHITE, HDR_DIFF);
+    assert_approx_eq!(frame[3].blue, HLG_MAX_WHITE, HDR_DIFF);
 
-    assert_approx_eq!(frame[4].red, 1.0, HDR_DIFF);
-    assert_approx_eq!(frame[4].green, 1.0, HDR_DIFF);
-    assert_approx_eq!(frame[4].blue, 1.0, HDR_DIFF);
+    assert_approx_eq!(frame[4].red, HLG_MAX_WHITE, HDR_DIFF);
+    assert_approx_eq!(frame[4].green, HLG_MAX_WHITE, HDR_DIFF);
+    assert_approx_eq!(frame[4].blue, HLG_MAX_WHITE, HDR_DIFF);
 }
 
 #[test]
-fn test_map_rw_203_peak_1_000() {
+fn test_pq_hlg_map_rw_203_peak_1_000() {
 
     let mut frame = vec![
         Pixel { red: PQ_BLACK, green: PQ_BLACK, blue: PQ_BLACK },
@@ -197,29 +200,29 @@ fn test_map_rw_203_peak_1_000() {
         *pixel = pq_hlg_mapper.map(*pixel);
     }
 
-    assert_approx_eq!(frame[0].red, 0.0, HDR_DIFF);
-    assert_approx_eq!(frame[0].green, 0.0, HDR_DIFF);
-    assert_approx_eq!(frame[0].blue, 0.0, HDR_DIFF);
+    assert_approx_eq!(frame[0].red, HLG_BLACK, HDR_DIFF);
+    assert_approx_eq!(frame[0].green, HLG_BLACK, HDR_DIFF);
+    assert_approx_eq!(frame[0].blue, HLG_BLACK, HDR_DIFF);
 
-    assert_approx_eq!(frame[1].red, 0.7498773, HDR_DIFF);
-    assert_approx_eq!(frame[1].green, 0.7498773, HDR_DIFF);
-    assert_approx_eq!(frame[1].blue, 0.7498773, HDR_DIFF);
+    assert_approx_eq!(frame[1].red, HLG_REF_WHITE, HDR_DIFF);
+    assert_approx_eq!(frame[1].green, HLG_REF_WHITE, HDR_DIFF);
+    assert_approx_eq!(frame[1].blue, HLG_REF_WHITE, HDR_DIFF);
 
-    assert_approx_eq!(frame[2].red, 1.0, HDR_DIFF);
-    assert_approx_eq!(frame[2].green, 1.0, HDR_DIFF);
-    assert_approx_eq!(frame[2].blue, 1.0, HDR_DIFF);
+    assert_approx_eq!(frame[2].red, HLG_MAX_WHITE, HDR_DIFF);
+    assert_approx_eq!(frame[2].green, HLG_MAX_WHITE, HDR_DIFF);
+    assert_approx_eq!(frame[2].blue, HLG_MAX_WHITE, HDR_DIFF);
 
-    assert_approx_eq!(frame[3].red, 1.0, HDR_DIFF);
-    assert_approx_eq!(frame[3].green, 1.0, HDR_DIFF);
-    assert_approx_eq!(frame[3].blue, 1.0, HDR_DIFF);
+    assert_approx_eq!(frame[3].red, HLG_MAX_WHITE, HDR_DIFF);
+    assert_approx_eq!(frame[3].green, HLG_MAX_WHITE, HDR_DIFF);
+    assert_approx_eq!(frame[3].blue, HLG_MAX_WHITE, HDR_DIFF);
 
-    assert_approx_eq!(frame[4].red, 1.0, HDR_DIFF);
-    assert_approx_eq!(frame[4].green, 1.0, HDR_DIFF);
-    assert_approx_eq!(frame[4].blue, 1.0, HDR_DIFF);
+    assert_approx_eq!(frame[4].red, HLG_MAX_WHITE, HDR_DIFF);
+    assert_approx_eq!(frame[4].green, HLG_MAX_WHITE, HDR_DIFF);
+    assert_approx_eq!(frame[4].blue, HLG_MAX_WHITE, HDR_DIFF);
 }
 
 #[test]
-fn test_map_rw_203_peak_4_000() {
+fn test_pq_hlg_map_rw_203_peak_4_000() {
 
     let mut frame = vec![
         Pixel { red: PQ_BLACK, green: PQ_BLACK, blue: PQ_BLACK },
@@ -233,25 +236,25 @@ fn test_map_rw_203_peak_4_000() {
         *pixel = pq_hlg_mapper.map(*pixel);
     }
 
-    assert_approx_eq!(frame[0].red, 0.0, HDR_DIFF);
-    assert_approx_eq!(frame[0].green, 0.0, HDR_DIFF);
-    assert_approx_eq!(frame[0].blue, 0.0, HDR_DIFF);
+    assert_approx_eq!(frame[0].red, HLG_BLACK, HDR_DIFF);
+    assert_approx_eq!(frame[0].green, HLG_BLACK, HDR_DIFF);
+    assert_approx_eq!(frame[0].blue, HLG_BLACK, HDR_DIFF);
 
-    assert_approx_eq!(frame[1].red, 0.7498773, HDR_DIFF);
-    assert_approx_eq!(frame[1].green, 0.7498773, HDR_DIFF);
-    assert_approx_eq!(frame[1].blue, 0.7498773, HDR_DIFF);
+    assert_approx_eq!(frame[1].red, HLG_REF_WHITE, HDR_DIFF);
+    assert_approx_eq!(frame[1].green, HLG_REF_WHITE, HDR_DIFF);
+    assert_approx_eq!(frame[1].blue, HLG_REF_WHITE, HDR_DIFF);
 
-    assert_approx_eq!(frame[2].red, 1.0, HDR_DIFF);
-    assert_approx_eq!(frame[2].green, 1.0, HDR_DIFF);
-    assert_approx_eq!(frame[2].blue, 1.0, HDR_DIFF);
+    assert_approx_eq!(frame[2].red, HLG_MAX_WHITE, HDR_DIFF);
+    assert_approx_eq!(frame[2].green, HLG_MAX_WHITE, HDR_DIFF);
+    assert_approx_eq!(frame[2].blue, HLG_MAX_WHITE, HDR_DIFF);
 
-    assert_approx_eq!(frame[3].red, 1.0, HDR_DIFF);
-    assert_approx_eq!(frame[3].green, 1.0, HDR_DIFF);
-    assert_approx_eq!(frame[3].blue, 1.0, HDR_DIFF);
+    assert_approx_eq!(frame[3].red, HLG_MAX_WHITE, HDR_DIFF);
+    assert_approx_eq!(frame[3].green, HLG_MAX_WHITE, HDR_DIFF);
+    assert_approx_eq!(frame[3].blue, HLG_MAX_WHITE, HDR_DIFF);
 }
 
 #[test]
-fn test_map_rw_203_peak_10_000() {
+fn test_pq_hlg_map_rw_203_peak_10_000() {
 
     let mut frame = vec![
         Pixel { red: PQ_BLACK, green: PQ_BLACK, blue: PQ_BLACK },
@@ -264,17 +267,17 @@ fn test_map_rw_203_peak_10_000() {
         *pixel = pq_hlg_mapper.map(*pixel);
     }
 
-    assert_approx_eq!(frame[0].red, 0.0, HDR_DIFF);
-    assert_approx_eq!(frame[0].green, 0.0, HDR_DIFF);
-    assert_approx_eq!(frame[0].blue, 0.0, HDR_DIFF);
+    assert_approx_eq!(frame[0].red, HLG_BLACK, HDR_DIFF);
+    assert_approx_eq!(frame[0].green, HLG_BLACK, HDR_DIFF);
+    assert_approx_eq!(frame[0].blue, HLG_BLACK, HDR_DIFF);
 
-    assert_approx_eq!(frame[1].red, 0.7498773, HDR_DIFF);
-    assert_approx_eq!(frame[1].green, 0.7498773, HDR_DIFF);
-    assert_approx_eq!(frame[1].blue, 0.7498773, HDR_DIFF);
+    assert_approx_eq!(frame[1].red, HLG_REF_WHITE, HDR_DIFF);
+    assert_approx_eq!(frame[1].green, HLG_REF_WHITE, HDR_DIFF);
+    assert_approx_eq!(frame[1].blue, HLG_REF_WHITE, HDR_DIFF);
 
-    assert_approx_eq!(frame[2].red, 1.0, HDR_DIFF);
-    assert_approx_eq!(frame[2].green, 1.0, HDR_DIFF);
-    assert_approx_eq!(frame[2].blue, 1.0, HDR_DIFF);
+    assert_approx_eq!(frame[2].red, HLG_MAX_WHITE, HDR_DIFF);
+    assert_approx_eq!(frame[2].green, HLG_MAX_WHITE, HDR_DIFF);
+    assert_approx_eq!(frame[2].blue, HLG_MAX_WHITE, HDR_DIFF);
 }
 
 #[test]
@@ -312,4 +315,31 @@ fn test_preview_map() {
     assert_approx_eq!(frame[4].red, SDR_REF_WHITE, SDR_DIFF);
     assert_approx_eq!(frame[4].green, SDR_REF_WHITE, SDR_DIFF);
     assert_approx_eq!(frame[4].blue, SDR_REF_WHITE, SDR_DIFF);
+}
+
+#[test]
+fn test_hlg_pq_map_1_000() {
+
+    let mut frame = vec![
+        Pixel { red: HLG_BLACK, green: HLG_BLACK, blue: HLG_BLACK },
+        Pixel { red: HLG_REF_WHITE, green: HLG_REF_WHITE, blue: HLG_REF_WHITE },
+        Pixel { red: HLG_MAX_WHITE, green: HLG_MAX_WHITE, blue: HLG_MAX_WHITE },
+    ];
+    let hlg_pq_mapper = HlgPqMapper::new(1_000.0);
+
+    for pixel in frame.iter_mut() {
+        *pixel = hlg_pq_mapper.map(*pixel);
+    }
+
+    // assert_approx_eq!(frame[0].red, PQ_BLACK, HDR_DIFF);
+    // assert_approx_eq!(frame[0].green, PQ_BLACK, HDR_DIFF);
+    // assert_approx_eq!(frame[0].blue, PQ_BLACK, HDR_DIFF);
+
+    assert_approx_eq!(frame[1].red, PQ_REF_WHITE, HDR_DIFF);
+    assert_approx_eq!(frame[1].green, PQ_REF_WHITE, HDR_DIFF);
+    assert_approx_eq!(frame[1].blue, PQ_REF_WHITE, HDR_DIFF);
+
+    assert_approx_eq!(frame[2].red, PQ_1000_NITS, HDR_DIFF);
+    assert_approx_eq!(frame[2].green, PQ_1000_NITS, HDR_DIFF);
+    assert_approx_eq!(frame[2].blue, PQ_1000_NITS, HDR_DIFF);
 }

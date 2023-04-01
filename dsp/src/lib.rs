@@ -16,7 +16,7 @@ pub mod tf;
 pub mod tm;
 
 use pixel::Pixel;
-use tf::{hlg_compensate, hlg_iootf, hlg_oetf, pq_eotf, sdr_o_to_e};
+use tf::{hlg_compensate, hlg_eotf, hlg_iootf, hlg_oetf, pq_eotf, pq_ieotf, sdr_o_to_e};
 use tm::{sdn_tone_map, Bt2408ToneMapper, ToneMapMethod};
 
 pub const RED_FACTOR: f64 = 0.2627;
@@ -136,6 +136,49 @@ impl PqSdrMapper {
 }
 
 impl Mapper for PqSdrMapper {
+
+    fn map(&self, input: Pixel) -> Pixel {
+        self.map(input)
+    }
+}
+
+//
+// HLG to PQ Mapper
+//
+
+pub struct HlgPqMapper {
+    max_cll: f64,
+    gamma: f64,
+}
+
+impl HlgPqMapper {
+
+    pub fn new(max_cll: f64) -> Self {
+
+        let gamma = 1.2 + 0.42 * (max_cll / 1_000.0).log10();
+
+        Self {
+            max_cll,
+            gamma,
+        }
+    }
+
+    pub fn map(&self, input: Pixel) -> Pixel {
+
+        let mut pixel = input;
+
+        // HLG SIGNAL -> HLG DISPLAY LINEAR
+        pixel = hlg_eotf(pixel, self.gamma);
+
+        // HLG DISPLAY LINEAR -> PQ DISPLAY LINEAR
+        pixel *= 10_000.0 / self.max_cll;
+
+        // PQ DISPLAY LINEAR -> PQ SIGNAL
+        pixel.with_each_channel(|x| pq_ieotf(x))
+    }
+}
+
+impl Mapper for HlgPqMapper {
 
     fn map(&self, input: Pixel) -> Pixel {
         self.map(input)

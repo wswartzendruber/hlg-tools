@@ -45,6 +45,17 @@ pub fn pq_ieotf(e: f64) -> f64 {
     .powf(78.84375)
 }
 
+pub fn hlg_eotf(pixel: Pixel, gamma: f64) -> Pixel {
+
+    //
+    // ITU-R BT.2100-2
+    // Page 7
+    // Table 5
+    //
+
+    hlg_ootf(pixel.with_each_channel(|x| hlg_ioetf(x)), gamma)
+}
+
 pub fn hlg_oetf(o: f64) -> f64 {
 
     //
@@ -58,6 +69,38 @@ pub fn hlg_oetf(o: f64) -> f64 {
     } else {
         0.17883277 * (12.0 * o - 0.28466892).ln() + 0.559910729529562
     }
+}
+
+pub fn hlg_ioetf(e: f64) -> f64 {
+
+    //
+    // ITU-R BT.2100-2
+    // Page 7
+    // Table 5
+    //
+
+    let a = 0.17883277_f64;
+    let b = 1.0 - 4.0 * a;
+    let c = 0.5 - a * (4.0 * a).ln();
+
+    if e < 0.5 {
+        e.powf(2.0)
+    } else {
+        (((e - c) / a) + b).exp() / 12.0
+    }
+}
+
+pub fn hlg_ootf(pixel: Pixel, gamma: f64) -> Pixel {
+
+    //
+    // ITU-R BT.2100-2
+    // Page 6
+    // Table 5
+    //
+
+    let y = pixel.y().powf(gamma - 1.0);
+
+    pixel.with_each_channel(|x| y * x)
 }
 
 pub fn hlg_iootf(pixel: Pixel) -> Pixel {

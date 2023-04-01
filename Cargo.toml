@@ -13,6 +13,7 @@
 [workspace]
 
 members = [
+    "hlg2pq",
     "pq2hlg",
     "pqstat",
     "dsp",
