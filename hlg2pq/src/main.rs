@@ -58,8 +58,8 @@ fn main() {
                 if !max_cll_value.is_sign_positive() {
                     return Err("Must be a positive number".to_string())
                 }
-                if max_cll_value > 4_000.0 {
-                    return Err("Must not exceed 4,000.0.".to_string())
+                if max_cll_value > 10_000.0 {
+                    return Err("Must not exceed 10,000.0.".to_string())
                 }
                 Ok(())
             })
