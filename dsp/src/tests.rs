@@ -16,7 +16,7 @@ use super::{
 };
 use assert_approx_eq::assert_approx_eq;
 
-const HDR_DIFF: f64 = 0.0000001;
+const HDR_DIFF: f64 = 0.000001;
 const HLG_BLACK: f64 = 0.0;
 const HLG_REF_WHITE: f64 = 0.7498773;
 const HLG_MAX_WHITE: f64 = 1.0;
@@ -331,9 +331,9 @@ fn test_hlg_pq_map_1_000() {
         *pixel = hlg_pq_mapper.map(*pixel);
     }
 
-    // assert_approx_eq!(frame[0].red, PQ_BLACK, HDR_DIFF);
-    // assert_approx_eq!(frame[0].green, PQ_BLACK, HDR_DIFF);
-    // assert_approx_eq!(frame[0].blue, PQ_BLACK, HDR_DIFF);
+    assert_approx_eq!(frame[0].red, PQ_BLACK, HDR_DIFF);
+    assert_approx_eq!(frame[0].green, PQ_BLACK, HDR_DIFF);
+    assert_approx_eq!(frame[0].blue, PQ_BLACK, HDR_DIFF);
 
     assert_approx_eq!(frame[1].red, PQ_REF_WHITE, HDR_DIFF);
     assert_approx_eq!(frame[1].green, PQ_REF_WHITE, HDR_DIFF);
