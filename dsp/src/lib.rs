@@ -171,7 +171,7 @@ impl HlgPqMapper {
         pixel = hlg_eotf(pixel, self.gamma);
 
         // HLG DISPLAY LINEAR -> PQ DISPLAY LINEAR
-        pixel *= 10_000.0 / self.max_cll;
+        pixel *= self.max_cll / 10_000.0;
 
         // PQ DISPLAY LINEAR -> PQ SIGNAL
         pixel.with_each_channel(|x| pq_ieotf(x))
