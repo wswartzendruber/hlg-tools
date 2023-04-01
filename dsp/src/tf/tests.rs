@@ -141,6 +141,32 @@ fn test_hlg_dl_to_sl() {
 }
 
 #[test]
+fn test_pq_eotf_cycle() {
+
+    const SIZE: usize = 1_024;
+
+    for i in 0..SIZE {
+
+        let x = i as f64 / (SIZE - 1) as f64;
+
+        assert_approx_eq!(pq_eotf(pq_ieotf(x)), x, DIFF);
+    }
+}
+
+#[test]
+fn test_hlg_oetf_cycle() {
+
+    const SIZE: usize = 1_024;
+
+    for i in 0..SIZE {
+
+        let x = i as f64 / (SIZE - 1) as f64;
+
+        assert_approx_eq!(hlg_oetf(hlg_ioetf(x)), x, DIFF);
+    }
+}
+
+#[test]
 fn test_hlg_compensation() {
 
     const SIZE: usize = 128;

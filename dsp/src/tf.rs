@@ -83,10 +83,10 @@ pub fn hlg_ioetf(e: f64) -> f64 {
     let b = 1.0 - 4.0 * a;
     let c = 0.5 - a * (4.0 * a).ln();
 
-    if e < 0.5 {
-        e.powf(2.0)
+    if e <= 0.5 {
+        e.powf(2.0) / 3.0
     } else {
-        (((e - c) / a) + b).exp() / 12.0
+        (((e - c) / a).exp() + b) / 12.0
     }
 }
 
