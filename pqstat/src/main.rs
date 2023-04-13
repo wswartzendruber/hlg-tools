@@ -58,7 +58,7 @@ fn main() {
             .help("Raw input video stream (PQ, BT.2020, RGB48LE); use - for STDIN")
             .required(true)
         )
-        .after_help(format!("Copyright © 2022 William Swartzendruber\n\
+        .after_help(format!("Copyright © 2023 William Swartzendruber\n\
             Licensed under the Mozilla Public License 2.0\n\
             <{}>", env!("CARGO_PKG_REPOSITORY")).as_str())
         .get_matches();
