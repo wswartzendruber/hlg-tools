@@ -11,7 +11,7 @@
 #[cfg(test)]
 mod tests;
 
-use super::{RED_FACTOR, GREEN_FACTOR, BLUE_FACTOR, RgbPixel};
+use super::{RED_FACTOR, GREEN_FACTOR, BLUE_FACTOR, Pixel};
 
 pub fn pq_eotf(e: f64) -> f64 {
 
@@ -45,7 +45,7 @@ pub fn pq_ieotf(e: f64) -> f64 {
     .powf(78.84375)
 }
 
-pub fn hlg_eotf(pixel: RgbPixel, gamma: f64) -> RgbPixel {
+pub fn hlg_eotf(pixel: Pixel, gamma: f64) -> Pixel {
 
     //
     // ITU-R BT.2100-2
@@ -90,7 +90,7 @@ pub fn hlg_ioetf(e: f64) -> f64 {
     }
 }
 
-pub fn hlg_ootf(pixel: RgbPixel, gamma: f64) -> RgbPixel {
+pub fn hlg_ootf(pixel: Pixel, gamma: f64) -> Pixel {
 
     //
     // ITU-R BT.2100-2
@@ -103,7 +103,7 @@ pub fn hlg_ootf(pixel: RgbPixel, gamma: f64) -> RgbPixel {
     pixel.with_each_channel(|x| y * x)
 }
 
-pub fn hlg_iootf(pixel: RgbPixel) -> RgbPixel {
+pub fn hlg_iootf(pixel: Pixel) -> Pixel {
 
     //
     // ITU-R BT.2100-2
@@ -114,7 +114,7 @@ pub fn hlg_iootf(pixel: RgbPixel) -> RgbPixel {
     pixel * pixel.y().powf(-0.16666666666666663).min(f64::MAX)
 }
 
-pub fn hlg_compensate(pixel: RgbPixel) -> RgbPixel {
+pub fn hlg_compensate(pixel: Pixel) -> Pixel {
 
     //
     // ITU-R BT.2408-4

@@ -89,52 +89,52 @@ fn test_hlg_dl_to_sl() {
 
     let mut pixel;
 
-    pixel = hlg_iootf(RgbPixel { red: 0.0, green: 0.0, blue: 0.0 });
+    pixel = hlg_iootf(Pixel { red: 0.0, green: 0.0, blue: 0.0 });
     assert_approx_eq!(pixel.red, 0.0, DIFF);
     assert_approx_eq!(pixel.green, 0.0, DIFF);
     assert_approx_eq!(pixel.blue, 0.0, DIFF);
 
-    pixel = hlg_iootf(RgbPixel { red: 0.33, green: 0.2, blue: 0.111 });
+    pixel = hlg_iootf(Pixel { red: 0.33, green: 0.2, blue: 0.111 });
     assert_approx_eq!(pixel.red, 0.42193746045, DIFF);
     assert_approx_eq!(pixel.green, 0.255719673, DIFF);
     assert_approx_eq!(pixel.blue, 0.141924418515, DIFF);
 
-    pixel = hlg_iootf(RgbPixel { red: 0.33, green: 0.2, blue: 0.222 });
+    pixel = hlg_iootf(Pixel { red: 0.33, green: 0.2, blue: 0.222 });
     assert_approx_eq!(pixel.red, 0.419948243609, DIFF);
     assert_approx_eq!(pixel.green, 0.254514087036, DIFF);
     assert_approx_eq!(pixel.blue, 0.28251063661, DIFF);
 
-    pixel = hlg_iootf(RgbPixel { red: 0.33, green: 0.4, blue: 0.333 });
+    pixel = hlg_iootf(Pixel { red: 0.33, green: 0.4, blue: 0.333 });
     assert_approx_eq!(pixel.red, 0.388151567394, DIFF);
     assert_approx_eq!(pixel.green, 0.470486748357, DIFF);
     assert_approx_eq!(pixel.blue, 0.391680218007, DIFF);
 
-    pixel = hlg_iootf(RgbPixel { red: 0.33, green: 0.4, blue: 0.444 });
+    pixel = hlg_iootf(Pixel { red: 0.33, green: 0.4, blue: 0.444 });
     assert_approx_eq!(pixel.red, 0.387035297418, DIFF);
     assert_approx_eq!(pixel.green, 0.46913369384, DIFF);
     assert_approx_eq!(pixel.blue, 0.520738400162, DIFF);
 
-    pixel = hlg_iootf(RgbPixel { red: 0.66, green: 0.6, blue: 0.555 });
+    pixel = hlg_iootf(Pixel { red: 0.66, green: 0.6, blue: 0.555 });
     assert_approx_eq!(pixel.red, 0.716071106446, DIFF);
     assert_approx_eq!(pixel.green, 0.650973733133, DIFF);
     assert_approx_eq!(pixel.blue, 0.602150703148, DIFF);
 
-    pixel = hlg_iootf(RgbPixel { red: 0.66, green: 0.6, blue: 0.666 });
+    pixel = hlg_iootf(Pixel { red: 0.66, green: 0.6, blue: 0.666 });
     assert_approx_eq!(pixel.red, 0.7147977545, DIFF);
     assert_approx_eq!(pixel.green, 0.649816140455, DIFF);
     assert_approx_eq!(pixel.blue, 0.721295915905, DIFF);
 
-    pixel = hlg_iootf(RgbPixel { red: 0.66, green: 0.8, blue: 0.777 });
+    pixel = hlg_iootf(Pixel { red: 0.66, green: 0.8, blue: 0.777 });
     assert_approx_eq!(pixel.red, 0.690607972044, DIFF);
     assert_approx_eq!(pixel.green, 0.837100572175, DIFF);
     assert_approx_eq!(pixel.blue, 0.813033930725, DIFF);
 
-    pixel = hlg_iootf(RgbPixel { red: 0.66, green: 0.8, blue: 0.888 });
+    pixel = hlg_iootf(Pixel { red: 0.66, green: 0.8, blue: 0.888 });
     assert_approx_eq!(pixel.red, 0.689618500689, DIFF);
     assert_approx_eq!(pixel.green, 0.835901212956, DIFF);
     assert_approx_eq!(pixel.blue, 0.927850346382, DIFF);
 
-    pixel = hlg_iootf(RgbPixel { red: 1.0, green: 1.0, blue: 1.0 });
+    pixel = hlg_iootf(Pixel { red: 1.0, green: 1.0, blue: 1.0 });
     assert_approx_eq!(pixel.red, 1.0, DIFF);
     assert_approx_eq!(pixel.green, 1.0, DIFF);
     assert_approx_eq!(pixel.blue, 1.0, DIFF);
@@ -175,7 +175,7 @@ fn test_hlg_compensation() {
         for g in 0..SIZE {
             for r in 0..SIZE {
 
-                let in_pixel = hlg_iootf(RgbPixel {
+                let in_pixel = hlg_iootf(Pixel {
                     red: r as f64 / (SIZE - 1) as f64,
                     green: g as f64 / (SIZE - 1) as f64,
                     blue: b as f64 / (SIZE - 1) as f64,

@@ -15,7 +15,7 @@ pub mod pixel;
 pub mod tf;
 pub mod tm;
 
-use pixel::RgbPixel;
+use pixel::Pixel;
 use tf::{hlg_compensate, hlg_eotf, hlg_iootf, hlg_oetf, pq_eotf, pq_ieotf, sdr_o_to_e};
 use tm::{sdn_tone_map, Bt2408ToneMapper, ToneMapMethod};
 
@@ -28,7 +28,7 @@ pub const BLUE_FACTOR: f64 = 0.0593;
 //
 
 pub trait Mapper {
-    fn map(&self, input: RgbPixel) -> RgbPixel;
+    fn map(&self, input: Pixel) -> Pixel;
 }
 
 //
@@ -67,7 +67,7 @@ impl PqHlgMapper {
         }
     }
 
-    pub fn map(&self, input: RgbPixel) -> RgbPixel {
+    pub fn map(&self, input: Pixel) -> Pixel {
 
         let mut pixel = self.prepper.map(input);
 
@@ -89,7 +89,7 @@ impl PqHlgMapper {
 
 impl Mapper for PqHlgMapper {
 
-    fn map(&self, input: RgbPixel) -> RgbPixel {
+    fn map(&self, input: Pixel) -> Pixel {
         self.map(input)
     }
 }
@@ -116,7 +116,7 @@ impl PqSdrMapper {
         Self { prepper: PqPrepper::new(factor, max_cll, tm_method) }
     }
 
-    pub fn map(&self, input: RgbPixel) -> RgbPixel {
+    pub fn map(&self, input: Pixel) -> Pixel {
 
         let pixel = self.prepper.map(input);
 
@@ -127,7 +127,7 @@ impl PqSdrMapper {
         y = sdn_tone_map(y * 10.0);
 
         // SDR LINEAR -> SDR GAMMA
-        RgbPixel {
+        Pixel {
             red: sdr_o_to_e(y),
             green: sdr_o_to_e(y),
             blue: sdr_o_to_e(y),
@@ -137,7 +137,7 @@ impl PqSdrMapper {
 
 impl Mapper for PqSdrMapper {
 
-    fn map(&self, input: RgbPixel) -> RgbPixel {
+    fn map(&self, input: Pixel) -> Pixel {
         self.map(input)
     }
 }
@@ -163,7 +163,7 @@ impl HlgPqMapper {
         }
     }
 
-    pub fn map(&self, input: RgbPixel) -> RgbPixel {
+    pub fn map(&self, input: Pixel) -> Pixel {
 
         let mut pixel = input;
 
@@ -180,7 +180,7 @@ impl HlgPqMapper {
 
 impl Mapper for HlgPqMapper {
 
-    fn map(&self, input: RgbPixel) -> RgbPixel {
+    fn map(&self, input: Pixel) -> Pixel {
         self.map(input)
     }
 }
@@ -204,7 +204,7 @@ impl PqPrepper {
         Self { factor, tm }
     }
 
-    fn map(&self, input: RgbPixel) -> RgbPixel {
+    fn map(&self, input: Pixel) -> Pixel {
 
         let mut pixel = input;
 
