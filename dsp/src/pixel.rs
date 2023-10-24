@@ -8,8 +8,15 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
+#[cfg(test)]
+mod tests;
+
 use std::ops::{Add, Div, Mul, MulAssign};
 use super::{RED_FACTOR, GREEN_FACTOR, BLUE_FACTOR};
+
+//
+// RGB (BT.2020)
+//
 
 #[derive(Debug, Clone, Copy, PartialEq)]
 pub struct RgbPixel {
@@ -52,6 +59,14 @@ impl RgbPixel {
     pub fn y(&self) -> f64 {
         RED_FACTOR * self.red + GREEN_FACTOR * self.green + BLUE_FACTOR * self.blue
     }
+
+    pub fn to_xyz(&self) -> XyzPixel {
+        XyzPixel {
+            x: 0.6369580 * self.red + 0.1446169 * self.green + 0.1688810 * self.blue,
+            y: 0.2627002 * self.red + 0.6779981 * self.green + 0.0593017 * self.blue,
+            z: 0.0000000 * self.red + 0.0280727 * self.green + 1.0609851 * self.blue,
+        }
+    }
 }
 
 impl Add<RgbPixel> for RgbPixel {
@@ -89,5 +104,27 @@ impl MulAssign<f64> for RgbPixel {
 
     fn mul_assign(&mut self, rhs: f64) {
         *self = self.with_each_channel(|x| x * rhs);
+    }
+}
+
+//
+// XYZ
+//
+
+#[derive(Debug, Clone, Copy, PartialEq)]
+pub struct XyzPixel {
+    pub x: f64,
+    pub y: f64,
+    pub z: f64,
+}
+
+impl XyzPixel {
+
+    pub fn to_rgb(&self) -> RgbPixel {
+        RgbPixel {
+            red: 1.7166512 * self.x - 0.3556708 * self.y - 0.2533663 * self.z,
+            green: -0.6666844 * self.x + 1.6164812 * self.y + 0.0157685 * self.z,
+            blue: 0.0176399 * self.x - 0.0427706 * self.y + 0.9421031 * self.z,
+        }
     }
 }
