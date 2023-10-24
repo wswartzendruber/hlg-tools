@@ -12,7 +12,7 @@
 mod tests;
 
 use super::{
-    Pixel,
+    RgbPixel,
     tf::{pq_eotf, pq_ieotf},
 };
 
@@ -40,7 +40,7 @@ impl Bt2408ToneMapper {
         Self { peak, lwp, ml, ks, method }
     }
 
-    pub fn map(&self, pixel: Pixel) -> Pixel {
+    pub fn map(&self, pixel: RgbPixel) -> RgbPixel {
         if self.peak > 0.1 {
             match self.method {
                 ToneMapMethod::Rgb => {
@@ -55,11 +55,11 @@ impl Bt2408ToneMapper {
         }
     }
 
-    fn map_rgb(&self, pixel: Pixel) -> Pixel {
+    fn map_rgb(&self, pixel: RgbPixel) -> RgbPixel {
         pixel.with_each_channel(|x| pq_eotf(self.eetf(pq_ieotf(x))))
     }
 
-    fn map_max_rgb(&self, pixel: Pixel) -> Pixel {
+    fn map_max_rgb(&self, pixel: RgbPixel) -> RgbPixel {
 
         let m1 = pixel.red.max(pixel.green.max(pixel.blue));
 

@@ -14,7 +14,7 @@ use std::{
 };
 use dsp::{
     HlgPqMapper,
-    pixel::Pixel,
+    pixel::RgbPixel,
 };
 use clap::{app_from_crate, crate_authors, crate_description, crate_name, crate_version, Arg};
 
@@ -124,7 +124,7 @@ fn main() {
         for g in 0..size {
             for r in 0..size {
 
-                let pixel = mapper.map(Pixel {
+                let pixel = mapper.map(RgbPixel {
                     red: r as f64 / (size - 1) as f64,
                     green: g as f64 / (size - 1) as f64,
                     blue: b as f64 / (size - 1) as f64,

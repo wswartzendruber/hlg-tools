@@ -12,13 +12,13 @@ use std::ops::{Add, Div, Mul, MulAssign};
 use super::{RED_FACTOR, GREEN_FACTOR, BLUE_FACTOR};
 
 #[derive(Debug, Clone, Copy, PartialEq)]
-pub struct Pixel {
+pub struct RgbPixel {
     pub red: f64,
     pub green: f64,
     pub blue: f64,
 }
 
-impl Pixel {
+impl RgbPixel {
 
     pub fn new_y(y: f64) -> Self {
         Self {
@@ -54,11 +54,11 @@ impl Pixel {
     }
 }
 
-impl Add<Pixel> for Pixel {
+impl Add<RgbPixel> for RgbPixel {
 
     type Output = Self;
 
-    fn add(self, rhs: Pixel) -> Self {
+    fn add(self, rhs: RgbPixel) -> Self {
         Self {
             red: self.red + rhs.red,
             green: self.green + self.green,
@@ -67,7 +67,7 @@ impl Add<Pixel> for Pixel {
     }
 }
 
-impl Div<f64> for Pixel {
+impl Div<f64> for RgbPixel {
 
     type Output = Self;
 
@@ -76,7 +76,7 @@ impl Div<f64> for Pixel {
     }
 }
 
-impl Mul<f64> for Pixel {
+impl Mul<f64> for RgbPixel {
 
     type Output = Self;
 
@@ -85,7 +85,7 @@ impl Mul<f64> for Pixel {
     }
 }
 
-impl MulAssign<f64> for Pixel {
+impl MulAssign<f64> for RgbPixel {
 
     fn mul_assign(&mut self, rhs: f64) {
         *self = self.with_each_channel(|x| x * rhs);
