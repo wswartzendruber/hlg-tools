@@ -28,7 +28,7 @@ fn test_rgb_xyz_round_trip() {
                     green: (g as f64) / (SIZE as f64),
                     blue: (b as f64) / (SIZE as f64),
                 };
-                let out_pixel = in_pixel.to_xyz().to_rgb();
+                let out_pixel = in_pixel.to_xyz().to_oklab().to_xyz().to_rgb();
 
                 assert_approx_eq!(out_pixel.red, in_pixel.red, DIFF);
                 assert_approx_eq!(out_pixel.green, in_pixel.green, DIFF);
