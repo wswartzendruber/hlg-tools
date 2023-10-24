@@ -193,3 +193,16 @@ impl OklabPixel {
         }
     }
 }
+
+impl Mul<f64> for OklabPixel {
+
+    type Output = Self;
+
+    fn mul(self, rhs: f64) -> Self {
+        Self {
+            l: self.l * rhs,
+            a: self.a,
+            b: self.b,
+        }
+    }
+}

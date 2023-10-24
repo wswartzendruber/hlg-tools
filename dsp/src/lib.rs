@@ -52,7 +52,11 @@ impl PqHlgMapper {
         tm_method: ToneMapMethod,
         compensate: bool
     ) -> Self {
-        Self::new_by_factor(203.0 / ref_white, max_cll, tm_method, compensate)
+
+        let l_from = RgbPixel::new_y(ref_white / 10_000.0).to_xyz().to_oklab().l;
+        let l_to = RgbPixel::new_y(203.0 / 10_000.0).to_xyz().to_oklab().l;
+
+        Self::new_by_factor(l_to / l_from, max_cll, tm_method, compensate)
     }
 
     pub fn new_by_factor(
@@ -212,7 +216,7 @@ impl PqPrepper {
         pixel = pixel.with_each_channel(|x| pq_eotf(x)).clamp(0.0, 1.0);
 
         // REFERENCE WHITE ADJUSTMENT
-        pixel *= self.factor;
+        pixel = (pixel.to_xyz().to_oklab() * self.factor).to_xyz().to_rgb();
 
         // TONE MAPPING
         pixel = self.tm.map(pixel);
