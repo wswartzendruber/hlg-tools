@@ -1,5 +1,5 @@
 #
-# Copyright 2021 William Swartzendruber
+# Copyright 2023 William Swartzendruber
 #
 # To the extent possible under law, the person who associated CC0 with this file has waived all
 # copyright and related or neighboring rights to this file.
@@ -13,7 +13,7 @@
 [package]
 name = "pqstat"
 description = "Determines a PQ stream's brightness characteristics for HLG conversion"
-version = "1.1.0"
+version = "2.0.0-beta1"
 authors = ["William Swartzendruber <wswartzendruber@gmail.com>"]
 edition = "2021"
 license = "MPL-2.0"

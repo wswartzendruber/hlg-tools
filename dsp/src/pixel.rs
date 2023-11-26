@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 William Swartzendruber
+ * Copyright 2023 William Swartzendruber
  *
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a
  * copy of the MPL was not distributed with this file, You can obtain one at
@@ -158,6 +158,14 @@ pub struct OklabPixel {
 }
 
 impl OklabPixel {
+
+    pub fn monochrome(&self) -> Self {
+        OklabPixel {
+            l: self.l,
+            a: 0.0,
+            b: 0.0,
+        }
+    }
 
     pub fn to_xyz(&self) -> XyzPixel {
 

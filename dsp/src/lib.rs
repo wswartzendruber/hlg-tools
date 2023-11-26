@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 William Swartzendruber
+ * Copyright 2023 William Swartzendruber
  *
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a
  * copy of the MPL was not distributed with this file, You can obtain one at
@@ -53,10 +53,9 @@ impl PqHlgMapper {
         compensate: bool
     ) -> Self {
 
-        let l_from = RgbPixel::new_y(ref_white / 10_000.0).to_xyz().to_oklab().l;
-        let l_to = RgbPixel::new_y(203.0 / 10_000.0).to_xyz().to_oklab().l;
+        let factor = scale_nits_factor(ref_white, 203.0);
 
-        Self::new_by_factor(l_to / l_from, max_cll, tm_method, compensate)
+        Self::new_by_factor(factor, max_cll, tm_method, compensate)
     }
 
     pub fn new_by_factor(
@@ -113,7 +112,10 @@ impl PqSdrMapper {
     }
 
     pub fn new_by_ref_white(ref_white: f64, max_cll: f64, tm_method: ToneMapMethod) -> Self {
-        Self::new_by_factor(203.0 / ref_white, max_cll, tm_method)
+
+        let factor = scale_nits_factor(ref_white, 203.0);
+
+        Self::new_by_factor(factor, max_cll, tm_method)
     }
 
     pub fn new_by_factor(factor: f64, max_cll: f64, tm_method: ToneMapMethod) -> Self {
@@ -123,11 +125,8 @@ impl PqSdrMapper {
     pub fn map(&self, input: RgbPixel) -> RgbPixel {
 
         let pixel = self.prepper.map(input);
+        let mut y = pixel.to_xyz().to_oklab().monochrome().to_xyz().to_rgb().y();
 
-        // MONOCHROME
-        let mut y = pixel.y();
-
-        // TONE MAPPING (FROM 1,000 NITS TO 100 NITS)
         y = sdn_tone_map(y * 10.0);
 
         // SDR LINEAR -> SDR GAMMA
@@ -225,4 +224,16 @@ impl PqPrepper {
         // 1,000 NIT CLAMPING
         pixel.clamp(0.0, 0.1)
     }
+}
+
+//
+// Shared
+//
+
+fn scale_nits_factor(from: f64, to: f64) -> f64 {
+
+    let l_from = RgbPixel::new_y(from / 10_000.0).to_xyz().to_oklab().l;
+    let l_to = RgbPixel::new_y(to / 10_000.0).to_xyz().to_oklab().l;
+
+    l_to / l_from
 }
