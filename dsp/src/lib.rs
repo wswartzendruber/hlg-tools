@@ -202,7 +202,8 @@ impl PqPrepper {
 
     fn new(factor: f64, max_cll: f64, tm_method: ToneMapMethod) -> Self {
 
-        let peak = max_cll / 10_000.0 * factor;
+        let peak = (RgbPixel::new_y(max_cll / 10_000.0).to_xyz().to_oklab() * factor)
+            .to_xyz().to_rgb().y();
         let tm = Bt2408ToneMapper::new(peak, tm_method);
 
         Self { factor, tm }
