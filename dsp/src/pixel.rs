@@ -201,8 +201,8 @@ impl Mul<f64> for OklabPixel {
     fn mul(self, rhs: f64) -> Self {
         Self {
             l: self.l * rhs,
-            a: self.a,
-            b: self.b,
+            a: self.a * rhs,
+            b: self.b * rhs,
         }
     }
 }
