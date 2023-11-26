@@ -127,7 +127,7 @@ grayscale is to eliminate any issues with BT.2020 to BT.709 colorspace conversio
 
 `hlgprev.sh` has the following syntax:
 
-`hlgprev.sh [pq-input] [max-cll] [lum-scale] [timestamp] [output]`
+`hlgprev.sh [pq-input] [max-cll] [exposure] [timestamp] [output]`
 
 Begin by entering the following command:
 
@@ -190,7 +190,7 @@ Now we're ready to generate the 3D LUT using the values we've determined in the 
 To generate the LUT using the visual estimation method mentioned first:
 
 ```
-pq2hlg --max-cll 737 --lum-scale 4.2 --size 128 alita-battle-angel.cube
+pq2hlg --max-cll 737 --exposure 4.2 --size 128 alita-battle-angel.cube
 ```
 
 To generate the LUT using the more precise values mentioned in the trivia:

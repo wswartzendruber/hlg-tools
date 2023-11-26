@@ -54,11 +54,11 @@ fn main() {
             .takes_value(false)
             .conflicts_with("preview")
         )
-        .arg(Arg::with_name("lum-scale")
-            .long("lum-scale")
-            .short("l")
+        .arg(Arg::with_name("exposure")
+            .long("exposure")
+            .short("e")
             .value_name("FACTOR")
-            .help("Scales the linear brightness of the input video by the specified factor")
+            .help("Scales the exposure of the input video by the specified factor using Oklab")
             .takes_value(true)
             .required(false)
             .conflicts_with("ref-white")
@@ -160,10 +160,10 @@ fn main() {
             .required(true)
         )
         .after_help(format!("This utility follows the BT.2408 method for generating a \
-            PQ-to-HLG conversion LUT. If either --lum-scale or --ref-white are provided, \
-            the linear input brightness will either be scaled by the provided factor, or \
-            scaled to bring the provided reference white level to 203 nits, respectively. This \
-            will cause the --max-cll value to be internally adjusted as well. If the internal \
+            PQ-to-HLG conversion LUT. If either --exposure or --ref-white are provided, the \
+            exposure will either be scaled by the provided factor, or scaled to bring the \
+            provided reference white level to 203 nits, using Oklab in both cases. This will \
+            cause the --max-cll value to be internally adjusted as well. If the internal \
             MaxCLL value then exceeds 1,000 nits, BT.2408 tone mapping will be applied to \
             compress the input to 1,000 nits using either the maxRGB or R'G'B' method. From \
             there, the signal will be converted to HLG. The generated LUTs are completely full \
@@ -171,8 +171,8 @@ fn main() {
             brightness.\n\n\
             Optionally, a preview LUT can be generated to convert the input to black and white \
             SDR. This can be used to compare the converted output to available BT.709 frames \
-            once they are also converted to black and white. In this way, --lum-scale can be \
-            adjusted until the two sets of screenshots match as much as possible.\n\n\
+            once they are also converted to black and white. In this way, --exposure can be \
+            adjusted until the two sets of screenshots match as closely as possible.\n\n\
             Copyright © 2023 William Swartzendruber\n\
             Licensed under the Mozilla Public License 2.0\n\
             <{}>", env!("CARGO_PKG_REPOSITORY")).as_str())
@@ -189,40 +189,48 @@ fn main() {
     let mapper: Box<dyn Mapper> = if matches.is_present("preview") {
         header.push(String::from("preview: true"));
         Box::new(
-            match (matches.value_of("lum-scale"), matches.value_of("ref-white")) {
+            match (matches.value_of("exposure"), matches.value_of("ref-white")) {
                 (None, None) => {
                     PqSdrMapper::new(max_cll, tm_method)
                 }
-                (Some(lum_scale), None) => {
-                    header.push(format!("lum-scale: {}", lum_scale));
-                    PqSdrMapper::new_by_factor(lum_scale.parse::<f64>().unwrap(), max_cll, tm_method)
+                (Some(exposure), None) => {
+                    header.push(format!("exposure: {}", exposure));
+                    PqSdrMapper::new_by_factor(
+                        exposure.parse::<f64>().unwrap(), max_cll, tm_method
+                    )
                 }
                 (None, Some(ref_white)) => {
                     header.push(format!("ref-white: {}", ref_white));
-                    PqSdrMapper::new_by_ref_white(ref_white.parse::<f64>().unwrap(), max_cll, tm_method)
+                    PqSdrMapper::new_by_ref_white(
+                        ref_white.parse::<f64>().unwrap(), max_cll, tm_method
+                    )
                 }
                 (Some(_), Some(_)) => {
-                    unreachable!("--lum-scale and --ref-white were somehow both defined")
+                    unreachable!("--exposure and --ref-white were somehow both defined")
                 }
             }
         )
     } else {
         header.push(String::from("preview: false"));
         Box::new(
-            match (matches.value_of("lum-scale"), matches.value_of("ref-white")) {
+            match (matches.value_of("exposure"), matches.value_of("ref-white")) {
                 (None, None) => {
                     PqHlgMapper::new(max_cll, tm_method, hlg_compensate)
                 }
-                (Some(lum_scale), None) => {
-                    header.push(format!("lum-scale: {}", lum_scale));
-                    PqHlgMapper::new_by_factor(lum_scale.parse::<f64>().unwrap(), max_cll, tm_method, hlg_compensate)
+                (Some(exposure), None) => {
+                    header.push(format!("exposure: {}", exposure));
+                    PqHlgMapper::new_by_factor(
+                        exposure.parse::<f64>().unwrap(), max_cll, tm_method, hlg_compensate
+                    )
                 }
                 (None, Some(ref_white)) => {
                     header.push(format!("ref-white: {}", ref_white));
-                    PqHlgMapper::new_by_ref_white(ref_white.parse::<f64>().unwrap(), max_cll, tm_method, hlg_compensate)
+                    PqHlgMapper::new_by_ref_white(
+                        ref_white.parse::<f64>().unwrap(), max_cll, tm_method, hlg_compensate
+                    )
                 }
                 (Some(_), Some(_)) => {
-                    unreachable!("--lum-scale and --ref-white were somehow both defined")
+                    unreachable!("--exposure and --ref-white were somehow both defined")
                 }
             }
         )

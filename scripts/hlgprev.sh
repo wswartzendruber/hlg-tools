@@ -15,13 +15,13 @@
 set -e
 
 if [ "$#" -ne 5 ]; then
-	echo "hlgprev.sh [pq-input] [max-cll] [lum-scale] [timestamp] [output]"
+	echo "hlgprev.sh [pq-input] [max-cll] [exposure] [timestamp] [output]"
 	exit
 fi
 
 LUT="$(mktemp --suffix=.cube)"
 
-pq2hlg --preview --max-cll "$2" --lum-scale "$3" --size 64 "$LUT"
+pq2hlg --preview --max-cll "$2" --exposure "$3" --size 64 "$LUT"
 
 ffmpeg -ss "$4" -i "$1" -vf scale=1920:1080,format=rgb48le,lut3d="$LUT",format=yuv420p \
 	-color_primaries bt709 -color_trc bt709 -colorspace bt709 \
