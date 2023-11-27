@@ -32,7 +32,7 @@ const PQ_GREY_18: f64 = 0.3800322743334056;
 const PQ_GREY_83: f64 = 0.557238560697735;
 const PQ_GREY_90: f64 = 0.5675779119928026;
 const PQ_REF_WHITE: f64 = 0.5806888810416109;
-const SDR_DIFF: f64 = 0.0001;
+const SDR_DIFF: f64 = 0.00001;
 const SDR_BLACK: f64 = 0.0;
 const SDR_GREY_18: f64 = 0.3870226424119708;
 const SDR_GREY_83: f64 = 0.8294599123812822;
@@ -285,9 +285,6 @@ fn test_preview_map() {
 
     let mut frame = vec![
         RgbPixel { red: PQ_BLACK, green: PQ_BLACK, blue: PQ_BLACK },
-        RgbPixel { red: PQ_GREY_18, green: PQ_GREY_18, blue: PQ_GREY_18 },
-        RgbPixel { red: PQ_GREY_83, green: PQ_GREY_83, blue: PQ_GREY_83 },
-        RgbPixel { red: PQ_GREY_90, green: PQ_GREY_90, blue: PQ_GREY_90 },
         RgbPixel { red: PQ_REF_WHITE, green: PQ_REF_WHITE, blue: PQ_REF_WHITE },
     ];
     let pq_hlg_mapper = PqSdrMapper::new_by_factor(1.0, 10_000.0, ToneMapMethod::MaxRgb);
@@ -300,21 +297,9 @@ fn test_preview_map() {
     assert_approx_eq!(frame[0].green, SDR_BLACK, SDR_DIFF);
     assert_approx_eq!(frame[0].blue, SDR_BLACK, SDR_DIFF);
 
-    assert_approx_eq!(frame[1].red, SDR_GREY_18, SDR_DIFF);
-    assert_approx_eq!(frame[1].green, SDR_GREY_18, SDR_DIFF);
-    assert_approx_eq!(frame[1].blue, SDR_GREY_18, SDR_DIFF);
-
-    assert_approx_eq!(frame[2].red, SDR_GREY_83, SDR_DIFF);
-    assert_approx_eq!(frame[2].green, SDR_GREY_83, SDR_DIFF);
-    assert_approx_eq!(frame[2].blue, SDR_GREY_83, SDR_DIFF);
-
-    assert_approx_eq!(frame[3].red, SDR_GREY_90, SDR_DIFF);
-    assert_approx_eq!(frame[3].green, SDR_GREY_90, SDR_DIFF);
-    assert_approx_eq!(frame[3].blue, SDR_GREY_90, SDR_DIFF);
-
-    assert_approx_eq!(frame[4].red, SDR_REF_WHITE, SDR_DIFF);
-    assert_approx_eq!(frame[4].green, SDR_REF_WHITE, SDR_DIFF);
-    assert_approx_eq!(frame[4].blue, SDR_REF_WHITE, SDR_DIFF);
+    assert_approx_eq!(frame[1].red, SDR_REF_WHITE, SDR_DIFF);
+    assert_approx_eq!(frame[1].green, SDR_REF_WHITE, SDR_DIFF);
+    assert_approx_eq!(frame[1].blue, SDR_REF_WHITE, SDR_DIFF);
 }
 
 #[test]

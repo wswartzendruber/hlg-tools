@@ -118,13 +118,15 @@ pub fn sdn_tone_map(o: f64) -> f64 {
     // I just sat in front of Desmos trying random equations until I got a curve that looked the
     // way I wanted it to. Basically, HLG has reference white at 203 nits and max white at 1,000
     // nits. SDR has reference white at 80 nits and max white at 100 nits. So 0-203 nits should
-    // linearly map to 0-80 nits with a sharp knee for 203-1,000 nits mapping to 80-100 nits.
+    // map to 0-80 nits with a sharp knee for 203-1,000 nits mapping to 80-100 nits.
     //
+
+    let factor = 0.7331586840443699;
 
     if o < 0.0 {
         0.0
     } else if 0.0 <= o && o <= 0.203 {
-        o / 0.2537
+        (RgbPixel::new_y(o).to_xyz().to_oklab() * factor).to_xyz().to_rgb().y() * 10.0
     } else if 0.203 < o && o <= 1.0 {
         (o - 0.19).ln() / 21.0 + 1.007
     } else {
