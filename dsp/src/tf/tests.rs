@@ -12,7 +12,6 @@
 
 use super::*;
 use assert_approx_eq::assert_approx_eq;
-use more_asserts::assert_le;
 
 const DIFF: f64 = 0.0000000001;
 

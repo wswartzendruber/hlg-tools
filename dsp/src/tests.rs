@@ -28,15 +28,9 @@ const PQ_4000_NITS: f64 = 0.9025723933109373;
 const PQ_4926_NITS: f64 = 0.9249489996796816;
 const PQ_10000_NITS: f64 = 1.0;
 const PQ_BLACK: f64 = 0.0;
-const PQ_GREY_18: f64 = 0.3800322743334056;
-const PQ_GREY_83: f64 = 0.557238560697735;
-const PQ_GREY_90: f64 = 0.5675779119928026;
 const PQ_REF_WHITE: f64 = 0.5806888810416109;
 const SDR_DIFF: f64 = 0.00001;
 const SDR_BLACK: f64 = 0.0;
-const SDR_GREY_18: f64 = 0.3870226424119708;
-const SDR_GREY_83: f64 = 0.8294599123812822;
-const SDR_GREY_90: f64 = 0.8646750115119883;
 const SDR_REF_WHITE: f64 = 0.9112149320796772;
 
 #[test]
@@ -50,7 +44,7 @@ fn test_pq_hlg_map_rw_100_peak_492() {
         RgbPixel { red: PQ_10000_NITS, green: PQ_10000_NITS, blue: PQ_10000_NITS },
     ];
     let pq_hlg_mapper =
-        PqHlgMapper::new_by_ref_white(100.0, 0.49261083743842365, ToneMapMethod::MaxRgb, false);
+        PqHlgMapper::new_by_ref_white(100.0, 0.49261083743842365, ToneMapMethod::MaxRgb);
 
     for pixel in frame.iter_mut() {
         *pixel = pq_hlg_mapper.map(*pixel);
@@ -88,7 +82,7 @@ fn test_pq_hlg_map_rw_100_peak_1_970() {
         RgbPixel { red: PQ_10000_NITS, green: PQ_10000_NITS, blue: PQ_10000_NITS },
     ];
     let pq_hlg_mapper =
-        PqHlgMapper::new_by_ref_white(100.0, 1970.4433497536945, ToneMapMethod::MaxRgb, false);
+        PqHlgMapper::new_by_ref_white(100.0, 1970.4433497536945, ToneMapMethod::MaxRgb);
 
     for pixel in frame.iter_mut() {
         *pixel = pq_hlg_mapper.map(*pixel);
@@ -124,7 +118,7 @@ fn test_pq_hlg_map_rw_100_peak_4_926() {
         RgbPixel { red: PQ_4926_NITS, green: PQ_4926_NITS, blue: PQ_4926_NITS },
         RgbPixel { red: PQ_10000_NITS, green: PQ_10000_NITS, blue: PQ_10000_NITS },
     ];
-    let pq_hlg_mapper = PqHlgMapper::new_by_ref_white(100.0, 4_926.0, ToneMapMethod::MaxRgb, false);
+    let pq_hlg_mapper = PqHlgMapper::new_by_ref_white(100.0, 4_926.0, ToneMapMethod::MaxRgb);
 
     for pixel in frame.iter_mut() {
         *pixel = pq_hlg_mapper.map(*pixel);
@@ -157,7 +151,7 @@ fn test_pq_hlg_map_rw_203_peak_500() {
         RgbPixel { red: PQ_4000_NITS, green: PQ_4000_NITS, blue: PQ_4000_NITS },
         RgbPixel { red: PQ_10000_NITS, green: PQ_10000_NITS, blue: PQ_10000_NITS },
     ];
-    let pq_hlg_mapper = PqHlgMapper::new_by_ref_white(203.0, 500.0, ToneMapMethod::MaxRgb, false);
+    let pq_hlg_mapper = PqHlgMapper::new_by_ref_white(203.0, 500.0, ToneMapMethod::MaxRgb);
 
     for pixel in frame.iter_mut() {
         *pixel = pq_hlg_mapper.map(*pixel);
@@ -194,7 +188,7 @@ fn test_pq_hlg_map_rw_203_peak_1_000() {
         RgbPixel { red: PQ_4000_NITS, green: PQ_4000_NITS, blue: PQ_4000_NITS },
         RgbPixel { red: PQ_10000_NITS, green: PQ_10000_NITS, blue: PQ_10000_NITS },
     ];
-    let pq_hlg_mapper = PqHlgMapper::new_by_ref_white(203.0, 1_000.0, ToneMapMethod::MaxRgb, false);
+    let pq_hlg_mapper = PqHlgMapper::new_by_ref_white(203.0, 1_000.0, ToneMapMethod::MaxRgb);
 
     for pixel in frame.iter_mut() {
         *pixel = pq_hlg_mapper.map(*pixel);
@@ -230,7 +224,7 @@ fn test_pq_hlg_map_rw_203_peak_4_000() {
         RgbPixel { red: PQ_4000_NITS, green: PQ_4000_NITS, blue: PQ_4000_NITS },
         RgbPixel { red: PQ_10000_NITS, green: PQ_10000_NITS, blue: PQ_10000_NITS },
     ];
-    let pq_hlg_mapper = PqHlgMapper::new_by_ref_white(203.0, 4_000.0, ToneMapMethod::MaxRgb, false);
+    let pq_hlg_mapper = PqHlgMapper::new_by_ref_white(203.0, 4_000.0, ToneMapMethod::MaxRgb);
 
     for pixel in frame.iter_mut() {
         *pixel = pq_hlg_mapper.map(*pixel);
@@ -261,7 +255,7 @@ fn test_pq_hlg_map_rw_203_peak_10_000() {
         RgbPixel { red: PQ_REF_WHITE, green: PQ_REF_WHITE, blue: PQ_REF_WHITE },
         RgbPixel { red: PQ_10000_NITS, green: PQ_10000_NITS, blue: PQ_10000_NITS },
     ];
-    let pq_hlg_mapper = PqHlgMapper::new_by_ref_white(203.0, 10_000.0, ToneMapMethod::MaxRgb, false);
+    let pq_hlg_mapper = PqHlgMapper::new_by_ref_white(203.0, 10_000.0, ToneMapMethod::MaxRgb);
 
     for pixel in frame.iter_mut() {
         *pixel = pq_hlg_mapper.map(*pixel);
