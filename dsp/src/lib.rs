@@ -16,7 +16,7 @@ pub mod tf;
 pub mod tm;
 
 use pixel::RgbPixel;
-use tf::{hlg_compensate, hlg_eotf, hlg_iootf, hlg_oetf, pq_eotf, pq_ieotf, sdr_o_to_e};
+use tf::{hlg_eotf, hlg_iootf, hlg_oetf, pq_eotf, pq_ieotf, sdr_o_to_e};
 use tm::{sdn_tone_map, Bt2408ToneMapper, ToneMapMethod};
 
 pub const RED_FACTOR: f64 = 0.2627;
@@ -37,36 +37,32 @@ pub trait Mapper {
 
 pub struct PqHlgMapper {
     prepper: PqPrepper,
-    compensate: bool,
 }
 
 impl PqHlgMapper {
 
-    pub fn new(max_cll: f64, tm_method: ToneMapMethod, compensate: bool) -> Self {
-        Self::new_by_factor(1.0, max_cll, tm_method, compensate)
+    pub fn new(max_cll: f64, tm_method: ToneMapMethod) -> Self {
+        Self::new_by_factor(1.0, max_cll, tm_method)
     }
 
     pub fn new_by_ref_white(
         ref_white: f64,
         max_cll: f64,
         tm_method: ToneMapMethod,
-        compensate: bool
     ) -> Self {
 
         let factor = scale_nits_factor(ref_white, 203.0);
 
-        Self::new_by_factor(factor, max_cll, tm_method, compensate)
+        Self::new_by_factor(factor, max_cll, tm_method)
     }
 
     pub fn new_by_factor(
         factor: f64,
         max_cll: f64,
         tm_method: ToneMapMethod,
-        compensate: bool
     ) -> Self {
         Self {
             prepper: PqPrepper::new(factor, max_cll, tm_method),
-            compensate,
         }
     }
 
@@ -79,11 +75,6 @@ impl PqHlgMapper {
 
         // HLG DISPLAY LINEAR -> HLG SCENE LINEAR
         pixel = hlg_iootf(pixel);
-
-        if self.compensate == true {
-            // HLG COMPENSATION
-            pixel = hlg_compensate(pixel);
-        }
 
         // SCENE LINEAR -> HLG SIGNAL
         pixel.with_each_channel(|x| hlg_oetf(x))

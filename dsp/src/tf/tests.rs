@@ -165,28 +165,3 @@ fn test_hlg_oetf_cycle() {
         assert_approx_eq!(hlg_oetf(hlg_ioetf(x)), x, DIFF);
     }
 }
-
-#[test]
-fn test_hlg_compensation() {
-
-    const SIZE: usize = 128;
-
-    for b in 0..SIZE {
-        for g in 0..SIZE {
-            for r in 0..SIZE {
-
-                let in_pixel = hlg_iootf(RgbPixel {
-                    red: r as f64 / (SIZE - 1) as f64,
-                    green: g as f64 / (SIZE - 1) as f64,
-                    blue: b as f64 / (SIZE - 1) as f64,
-                });
-                let out_pixel = hlg_compensate(in_pixel);
-
-                assert_approx_eq!(out_pixel.y(), in_pixel.y(), DIFF);
-                assert_le!(out_pixel.red, 1.0);
-                assert_le!(out_pixel.green, 1.0);
-                assert_le!(out_pixel.blue, 1.0);
-            }
-        }
-    }
-}
