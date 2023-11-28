@@ -1,5 +1,3 @@
-#!/usr/bin/env bash
-
 #
 # Copyright 2023 William Swartzendruber
 #
@@ -12,18 +10,15 @@
 # SPDX-License-Identifier: CC0-1.0
 #
 
-set -e
+[package]
+name = "mono709"
+description = "Generates a Cube LUT for previewing BT.709 in black and white; uses Oklab"
+version = "2.0.0-beta1"
+authors = ["William Swartzendruber <wswartzendruber@gmail.com>"]
+edition = "2021"
+license = "MPL-2.0"
+repository = "https://github.com/wswartzendruber/hlg-tools"
 
-if [ "$#" -ne 3 ]; then
-	echo "sdrprev.sh [sdr-input] [timestamp] [output]"
-	exit
-fi
-
-LUT="$(mktemp --suffix=.cube)"
-
-mono709 --size 64 "$LUT"
-
-ffmpeg -ss "$2" -i "$1" -vf format=rgb48le,lut3d="$LUT",format=yuv420p \
-	-vframes 1 "$3"
-
-rm -f "$LUT"
+[dependencies]
+dsp = { path = "../dsp" }
+clap = "~2.27.0"

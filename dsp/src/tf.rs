@@ -114,6 +114,10 @@ pub fn hlg_iootf(pixel: RgbPixel) -> RgbPixel {
     pixel * pixel.y().powf(-0.16666666666666663).min(f64::MAX)
 }
 
+pub fn sdr_e_to_o(o: f64) -> f64 {
+    o.powf(2.4).clamp(0.0, 1.0)
+}
+
 pub fn sdr_o_to_e(o: f64) -> f64 {
     o.powf(0.4166666666666667).clamp(0.0, 1.0)
 }

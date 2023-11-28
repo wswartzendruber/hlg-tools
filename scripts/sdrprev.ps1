@@ -11,10 +11,15 @@
 #
 
 if ($args.count -ne 3) {
-	Write-Output "sdrprev.sh [sdr-input] [timestamp] [output]"
+	Write-Output "sdrprev.ps1 [sdr-input] [timestamp] [output]"
 	return
 }
 
-ffmpeg -ss $args[1] -i $args[0] -vf format=gray `
-	-color_primaries bt709 -color_trc bt709 -colorspace bt709 `
+$lut = "sdrprev-lut-temp.cube"
+
+mono709.exe --size 64 $lut
+
+ffmpeg.exe -ss $args[1] -i $args[0] -vf format=rgb48le,lut3d=$lut,format=yuv420p `
 	-vframes 1 $args[2]
+
+Remove-Item $lut
