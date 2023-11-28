@@ -78,7 +78,7 @@ impl Bt2408ToneMapper {
         let e2 =
             /*
              * The boundary provided in BT.2408-4 is incorrect. If used, it will cause `e2` to
-             * approach infinity as the luminosity scaling factor approaches 1.0 from the
+             * approach infinity as the exposure scaling factor approaches 1.0 from the
              * positive side. I stumbled upon the solution to this in a GitHub issue:
              * (https://github.com/mpv-player/mpv/issues/7984). The work here seems to have been
              * done by an individual named Florian Hoech. The specific answer to the infinity
