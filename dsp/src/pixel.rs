@@ -11,7 +11,7 @@
 #[cfg(test)]
 mod tests;
 
-use std::ops::{Add, Div, Mul, MulAssign};
+use std::ops::{Mul, MulAssign};
 use super::{RED_FACTOR, GREEN_FACTOR, BLUE_FACTOR};
 
 //
@@ -66,28 +66,6 @@ impl RgbPixel {
             y: 0.2627002 * self.red + 0.6779981 * self.green + 0.0593017 * self.blue,
             z: 0.0000000 * self.red + 0.0280727 * self.green + 1.0609851 * self.blue,
         }
-    }
-}
-
-impl Add<RgbPixel> for RgbPixel {
-
-    type Output = Self;
-
-    fn add(self, rhs: RgbPixel) -> Self {
-        Self {
-            red: self.red + rhs.red,
-            green: self.green + self.green,
-            blue: self.blue + self.blue,
-        }
-    }
-}
-
-impl Div<f64> for RgbPixel {
-
-    type Output = Self;
-
-    fn div(self, rhs: f64) -> Self {
-        self.with_each_channel(|x| x / rhs)
     }
 }
 
