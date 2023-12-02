@@ -64,9 +64,14 @@ impl RgbPixel {
 
     pub fn to_xyz(&self) -> XyzPixel {
         XyzPixel {
-            x: 0.6369580 * self.red + 0.1446169 * self.green + 0.1688810 * self.blue,
-            y: 0.2627002 * self.red + 0.6779981 * self.green + 0.0593017 * self.blue,
-            z: 0.0000000 * self.red + 0.0280727 * self.green + 1.0609851 * self.blue,
+            x: 0.6370101914111008 * self.red
+                + 0.14461502739696927 * self.green
+                + 0.16884478119192986 * self.blue,
+            y: 0.26272171736164046 * self.red
+                + 0.6779892755022618 * self.green
+                + 0.0592890071360975 * self.blue,
+            z: 0.028072328847646908 * self.green
+                + 1.060757671152353 * self.blue,
         }
     }
 }
@@ -102,9 +107,15 @@ impl XyzPixel {
 
     pub fn to_rgb(&self) -> RgbPixel {
         RgbPixel {
-            red: 1.7166512 * self.x - 0.3556708 * self.y - 0.2533663 * self.z,
-            green: -0.6666844 * self.x + 1.6164812 * self.y + 0.0157685 * self.z,
-            blue: 0.0176399 * self.x - 0.0427706 * self.y + 0.9421031 * self.z,
+            red: 1.7165106697619736 * self.x
+                - 0.3556416699867159 * self.y
+                - 0.25334554182190727 * self.z,
+            green: -0.6666930011826243 * self.x
+                + 1.6165022083469107 * self.y
+                + 0.015768750389995017 * self.z,
+            blue: 0.01764363876745901 * self.x
+                - 0.04277978166904462 * self.y
+                + 0.9423050727200186 * self.z,
         }
     }
 

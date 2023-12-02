@@ -12,7 +12,7 @@
 
 use super::*;
 use assert_approx_eq::assert_approx_eq;
-const DIFF: f64 = 0.000001;
+const DIFF: f64 = 0.00000000000001;
 
 #[test]
 fn test_rgb_xyz_round_trip() {
