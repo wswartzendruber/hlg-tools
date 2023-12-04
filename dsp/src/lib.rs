@@ -19,7 +19,7 @@ use pixel::RgbPixel;
 use tf::{hlg_eotf, hlg_iootf, hlg_oetf, pq_eotf, pq_ieotf, sdr_o_to_e};
 use tm::{sdn_tone_map, Bt2408ToneMapper, ToneMapMethod};
 
-pub const RED_FACTOR_2020_2020: f64 = 0.2627;
+pub const RED_FACTOR_2020: f64 = 0.2627;
 pub const GREEN_FACTOR_2020: f64 = 0.6780;
 pub const BLUE_FACTOR_2020: f64 = 0.0593;
 

@@ -12,7 +12,7 @@
 mod tests;
 
 use std::ops::{Mul, MulAssign};
-use super::{RED_FACTOR_2020_2020, GREEN_FACTOR_2020, BLUE_FACTOR_2020};
+use super::{RED_FACTOR_2020, GREEN_FACTOR_2020, BLUE_FACTOR_2020};
 
 //
 // RGB (BT.2020)
@@ -57,7 +57,7 @@ impl RgbPixel {
     }
 
     pub fn y(&self) -> f64 {
-        RED_FACTOR_2020_2020 * self.red
+        RED_FACTOR_2020 * self.red
             + GREEN_FACTOR_2020 * self.green
             + BLUE_FACTOR_2020 * self.blue
     }
