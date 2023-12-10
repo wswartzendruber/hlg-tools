@@ -103,11 +103,11 @@ fn main() {
                 };
                 let rgb_2 = rgb_1.with_each_channel(|x| sdr_e_to_o(x));
                 let oklab = OklabPixel {
-                    l: rgb_2.to_xyz().to_oklab().l,
+                    l: rgb_2.bt709_to_xyz().to_oklab().l,
                     a: 0.0,
                     b: 0.0,
                 };
-                let rgb_3 = oklab.to_xyz().to_rgb();
+                let rgb_3 = oklab.to_xyz().to_rgb_bt709();
                 let rgb_4 = rgb_3.with_each_channel(|x| sdr_o_to_e(x));
 
                 writeln!(output, "{} {} {}",

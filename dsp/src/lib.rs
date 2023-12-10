@@ -19,10 +19,6 @@ use pixel::RgbPixel;
 use tf::{hlg_eotf, hlg_iootf, hlg_oetf, pq_eotf, pq_ieotf, sdr_o_to_e};
 use tm::{sdn_tone_map, Bt2408ToneMapper, ToneMapMethod};
 
-pub const RED_FACTOR_2020: f64 = 0.2627;
-pub const GREEN_FACTOR_2020: f64 = 0.6780;
-pub const BLUE_FACTOR_2020: f64 = 0.0593;
-
 //
 // Mapper
 //
@@ -116,7 +112,13 @@ impl PqSdrMapper {
     pub fn map(&self, input: RgbPixel) -> RgbPixel {
 
         let pixel = self.prepper.map(input);
-        let mut y = pixel.to_xyz().to_oklab().monochrome().to_xyz().to_rgb().y();
+        let mut y = pixel
+            .bt2020_to_xyz()
+            .to_oklab()
+            .monochrome()
+            .to_xyz()
+            .to_rgb_bt709()
+            .y_bt709();
 
         y = sdn_tone_map(y * 10.0);
 
@@ -192,8 +194,8 @@ impl PqPrepper {
 
     fn new(factor: f64, max_cll: f64, tm_method: ToneMapMethod) -> Self {
 
-        let peak = (RgbPixel::new_y(max_cll / 10_000.0).to_xyz().to_oklab() * factor)
-            .to_xyz().to_rgb().y();
+        let peak = (RgbPixel::new_y(max_cll / 10_000.0).bt2020_to_xyz().to_oklab() * factor)
+            .to_xyz().to_rgb_bt2020().y_bt2020();
         let tm = Bt2408ToneMapper::new(peak, tm_method);
 
         Self { factor, tm }
@@ -207,7 +209,7 @@ impl PqPrepper {
         pixel = pixel.with_each_channel(|x| pq_eotf(x)).clamp(0.0, 1.0);
 
         // REFERENCE WHITE ADJUSTMENT
-        pixel = (pixel.to_xyz().to_oklab() * self.factor).to_xyz().to_rgb();
+        pixel = (pixel.bt2020_to_xyz().to_oklab() * self.factor).to_xyz().to_rgb_bt2020();
 
         // TONE MAPPING
         pixel = self.tm.map(pixel);
@@ -223,8 +225,8 @@ impl PqPrepper {
 
 fn scale_nits_factor(from: f64, to: f64) -> f64 {
 
-    let l_from = RgbPixel::new_y(from / 10_000.0).to_xyz().to_oklab().l;
-    let l_to = RgbPixel::new_y(to / 10_000.0).to_xyz().to_oklab().l;
+    let l_from = RgbPixel::new_y(from / 10_000.0).bt2020_to_xyz().to_oklab().l;
+    let l_to = RgbPixel::new_y(to / 10_000.0).bt2020_to_xyz().to_oklab().l;
 
     l_to / l_from
 }

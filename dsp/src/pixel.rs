@@ -12,10 +12,16 @@
 mod tests;
 
 use std::ops::{Mul, MulAssign};
-use super::{RED_FACTOR_2020, GREEN_FACTOR_2020, BLUE_FACTOR_2020};
+
+pub const RED_FACTOR_2020: f64 = 0.2627;
+pub const GREEN_FACTOR_2020: f64 = 0.6780;
+pub const BLUE_FACTOR_2020: f64 = 0.0593;
+pub const RED_FACTOR_709: f64 = 0.2126;
+pub const GREEN_FACTOR_709: f64 = 0.7152;
+pub const BLUE_FACTOR_709: f64 = 0.0722;
 
 //
-// RGB (BT.2020)
+// RGB
 //
 
 #[derive(Debug, Clone, Copy, PartialEq)]
@@ -56,13 +62,19 @@ impl RgbPixel {
         }
     }
 
-    pub fn y(&self) -> f64 {
+    pub fn y_bt2020(&self) -> f64 {
         RED_FACTOR_2020 * self.red
             + GREEN_FACTOR_2020 * self.green
             + BLUE_FACTOR_2020 * self.blue
     }
 
-    pub fn to_xyz(&self) -> XyzPixel {
+    pub fn y_bt709(&self) -> f64 {
+        RED_FACTOR_709 * self.red
+            + GREEN_FACTOR_709 * self.green
+            + BLUE_FACTOR_709 * self.blue
+    }
+
+    pub fn bt2020_to_xyz(&self) -> XyzPixel {
         XyzPixel {
             x: 0.6370101914111008 * self.red
                 + 0.14461502739696927 * self.green
@@ -72,6 +84,20 @@ impl RgbPixel {
                 + 0.0592890071360975 * self.blue,
             z: 0.028072328847646908 * self.green
                 + 1.060757671152353 * self.blue,
+        }
+    }
+
+    pub fn bt709_to_xyz(&self) -> XyzPixel {
+        XyzPixel {
+            x: 0.4124564 * self.red
+                + 0.3575761 * self.green
+                + 0.1804375 * self.blue,
+            y: 0.2126729 * self.red
+                + 0.7151522 * self.green
+                + 0.0721750 * self.blue,
+            z: 0.0193339 * self.red
+                + 0.1191920 * self.green
+                + 0.9503041 * self.blue,
         }
     }
 }
@@ -105,7 +131,7 @@ pub struct XyzPixel {
 
 impl XyzPixel {
 
-    pub fn to_rgb(&self) -> RgbPixel {
+    pub fn to_rgb_bt2020(&self) -> RgbPixel {
         RgbPixel {
             red: 1.7165106697619736 * self.x
                 - 0.3556416699867159 * self.y
@@ -116,6 +142,20 @@ impl XyzPixel {
             blue: 0.01764363876745901 * self.x
                 - 0.04277978166904462 * self.y
                 + 0.9423050727200186 * self.z,
+        }
+    }
+
+    pub fn to_rgb_bt709(&self) -> RgbPixel {
+        RgbPixel {
+            red: 3.2404542 * self.x
+                - 1.5371385 * self.y
+                - 0.4985314 * self.z,
+            green: -0.9692660 * self.x
+                + 1.8760108 * self.y
+                + 0.0415560 * self.z,
+            blue: 0.0556434 * self.x
+                - 0.2040259 * self.y
+                + 1.0572252 * self.z,
         }
     }
 

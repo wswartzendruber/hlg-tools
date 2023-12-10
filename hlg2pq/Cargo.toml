@@ -13,7 +13,7 @@
 [package]
 name = "hlg2pq"
 description = "Generates a Cube LUT for Converting from HLG to PQ"
-version = "2.0.0-beta2"
+version = "2.0.0-beta3"
 authors = ["William Swartzendruber <wswartzendruber@gmail.com>"]
 edition = "2021"
 license = "MPL-2.0"

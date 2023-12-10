@@ -126,7 +126,8 @@ pub fn sdn_tone_map(o: f64) -> f64 {
     if o < 0.0 {
         0.0
     } else if 0.0 <= o && o <= 0.203 {
-        (RgbPixel::new_y(o).to_xyz().to_oklab() * factor).to_xyz().to_rgb().y() * 10.0
+        (RgbPixel::new_y(o).bt709_to_xyz().to_oklab() * factor)
+            .to_xyz().to_rgb_bt709().y_bt709() * 10.0
     } else if 0.203 < o && o <= 1.0 {
         (o - 0.19).ln() / 21.0 + 1.007
     } else {

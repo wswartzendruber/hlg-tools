@@ -98,7 +98,7 @@ pub fn hlg_ootf(pixel: RgbPixel, gamma: f64) -> RgbPixel {
     // Table 5
     //
 
-    let y = pixel.y().powf(gamma - 1.0);
+    let y = pixel.y_bt2020().powf(gamma - 1.0);
 
     pixel.with_each_channel(|x| y * x)
 }
@@ -111,7 +111,7 @@ pub fn hlg_iootf(pixel: RgbPixel) -> RgbPixel {
     // Note 5i
     //
 
-    pixel * pixel.y().powf(-0.16666666666666663).min(f64::MAX)
+    pixel * pixel.y_bt2020().powf(-0.16666666666666663).min(f64::MAX)
 }
 
 pub fn sdr_e_to_o(o: f64) -> f64 {
