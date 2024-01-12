@@ -196,7 +196,7 @@ impl PqPrepper {
 
         let peak = (RgbPixel::new_y(max_cll / 10_000.0).bt2020_to_xyz().to_oklab() * factor)
             .to_xyz().to_rgb_bt2020().y_bt2020();
-        let tm = Bt2408ToneMapper::new(peak, tm_method);
+        let tm = Bt2408ToneMapper::new(peak, 0.10, tm_method);
 
         Self { factor, tm }
     }

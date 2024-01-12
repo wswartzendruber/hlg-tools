@@ -23,6 +23,7 @@ pub enum ToneMapMethod {
 
 pub struct Bt2408ToneMapper {
     peak: f64,
+    target: f64,
     lwp: f64,
     ml: f64,
     ks: f64,
@@ -31,17 +32,17 @@ pub struct Bt2408ToneMapper {
 
 impl Bt2408ToneMapper {
 
-    pub fn new(peak: f64, method: ToneMapMethod) -> Self {
+    pub fn new(peak: f64, target: f64, method: ToneMapMethod) -> Self {
 
         let lwp = pq_ieotf(peak);
-        let ml = pq_ieotf(0.10) / lwp;
+        let ml = pq_ieotf(target) / lwp;
         let ks = 1.5 * ml - 0.5;
 
-        Self { peak, lwp, ml, ks, method }
+        Self { peak, target, lwp, ml, ks, method }
     }
 
     pub fn map(&self, pixel: RgbPixel) -> RgbPixel {
-        if self.peak > 0.1 {
+        if self.peak > self.target {
             match self.method {
                 ToneMapMethod::Rgb => {
                     self.map_rgb(pixel)
