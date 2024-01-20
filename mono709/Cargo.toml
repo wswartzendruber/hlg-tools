@@ -13,7 +13,7 @@
 [package]
 name = "mono709"
 description = "Generates a Cube LUT for previewing BT.709 in black and white; uses Oklab"
-version = "2.0.0-beta3"
+version = "2.0.0"
 authors = ["William Swartzendruber <wswartzendruber@gmail.com>"]
 edition = "2021"
 license = "MPL-2.0"
