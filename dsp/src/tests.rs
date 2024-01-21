@@ -322,3 +322,30 @@ fn test_hlg_pq_map_1_000() {
     assert_approx_eq!(frame[2].green, PQ_1000_NITS, HDR_DIFF);
     assert_approx_eq!(frame[2].blue, PQ_1000_NITS, HDR_DIFF);
 }
+
+#[test]
+fn test_round_trip() {
+
+    const SIZE: usize = 128;
+
+    let pq_hlg_mapper = PqHlgMapper::new(1_000.0, ToneMapMethod::MaxRgb);
+    let hlg_pq_mapper = HlgPqMapper::new(1_000.0);
+
+    for b in 0..=SIZE {
+        for g in 0..=SIZE {
+            for r in 0..=SIZE {
+
+                let in_pixel = RgbPixel {
+                    red: (r as f64) / (SIZE as f64),
+                    green: (g as f64) / (SIZE as f64),
+                    blue: (b as f64) / (SIZE as f64),
+                };
+                let out_pixel = pq_hlg_mapper.map(hlg_pq_mapper.map(in_pixel));
+
+                assert_approx_eq!(out_pixel.red, in_pixel.red, HDR_DIFF);
+                assert_approx_eq!(out_pixel.green, in_pixel.green, HDR_DIFF);
+                assert_approx_eq!(out_pixel.blue, in_pixel.blue, HDR_DIFF);
+            }
+        }
+    }
+}
