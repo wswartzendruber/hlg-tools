@@ -57,7 +57,28 @@ impl Bt2408ToneMapper {
     }
 
     fn map_rgb(&self, pixel: RgbPixel) -> RgbPixel {
-        pixel.with_each_channel(|x| pq_eotf(self.eetf(pq_ieotf(x))))
+
+        let new_red = if pixel.red > 0.0 {
+            pq_eotf(self.eetf(pq_ieotf(pixel.red)))
+        } else {
+            0.0
+        };
+        let new_green = if pixel.green > 0.0 {
+            pq_eotf(self.eetf(pq_ieotf(pixel.green)))
+        } else {
+            0.0
+        };
+        let new_blue = if pixel.blue > 0.0 {
+            pq_eotf(self.eetf(pq_ieotf(pixel.blue)))
+        } else {
+            0.0
+        };
+
+        RgbPixel {
+            red: new_red,
+            green: new_green,
+            blue: new_blue,
+        }
     }
 
     fn map_max_rgb(&self, pixel: RgbPixel) -> RgbPixel {

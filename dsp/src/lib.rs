@@ -73,7 +73,7 @@ impl PqHlgMapper {
         pixel = hlg_iootf(pixel);
 
         // SCENE LINEAR -> HLG SIGNAL
-        pixel.with_each_channel(|x| hlg_oetf(x))
+        pixel.with_each_channel(|x| hlg_oetf(x).clamp(0.0, 1.0))
     }
 }
 
@@ -127,7 +127,7 @@ impl PqSdrMapper {
             red: sdr_o_to_e(y),
             green: sdr_o_to_e(y),
             blue: sdr_o_to_e(y),
-        }
+        }.clamp(0.0, 1.0)
     }
 }
 
@@ -170,7 +170,7 @@ impl HlgPqMapper {
         pixel *= self.max_cll / 10_000.0;
 
         // PQ DISPLAY LINEAR -> PQ SIGNAL
-        pixel.with_each_channel(|x| pq_ieotf(x))
+        pixel.with_each_channel(|x| pq_ieotf(x).clamp(0.0, 1.0))
     }
 }
 

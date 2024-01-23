@@ -349,3 +349,1433 @@ fn test_round_trip() {
         }
     }
 }
+
+#[test]
+fn test_hlg_all_finite_400_maxrgb() {
+
+    const SIZE: usize = 128;
+
+    let pq_hlg_mapper = PqHlgMapper::new(400.0, ToneMapMethod::MaxRgb);
+
+    for b in 0..=SIZE {
+        for g in 0..=SIZE {
+            for r in 0..=SIZE {
+
+                let in_pixel = RgbPixel {
+                    red: (r as f64) / (SIZE as f64),
+                    green: (g as f64) / (SIZE as f64),
+                    blue: (b as f64) / (SIZE as f64),
+                };
+                let out_pixel = pq_hlg_mapper.map(in_pixel);
+
+                assert!(out_pixel.red.is_finite());
+                assert!(out_pixel.green.is_finite());
+                assert!(out_pixel.blue.is_finite());
+            }
+        }
+    }
+}
+
+#[test]
+fn test_hlg_all_finite_1000_maxrgb() {
+
+    const SIZE: usize = 128;
+
+    let pq_hlg_mapper = PqHlgMapper::new(1_000.0, ToneMapMethod::MaxRgb);
+
+    for b in 0..=SIZE {
+        for g in 0..=SIZE {
+            for r in 0..=SIZE {
+
+                let in_pixel = RgbPixel {
+                    red: (r as f64) / (SIZE as f64),
+                    green: (g as f64) / (SIZE as f64),
+                    blue: (b as f64) / (SIZE as f64),
+                };
+                let out_pixel = pq_hlg_mapper.map(in_pixel);
+
+                assert!(out_pixel.red.is_finite());
+                assert!(out_pixel.green.is_finite());
+                assert!(out_pixel.blue.is_finite());
+            }
+        }
+    }
+}
+
+#[test]
+fn test_hlg_all_finite_4000_maxrgb() {
+
+    const SIZE: usize = 128;
+
+    let pq_hlg_mapper = PqHlgMapper::new(4_000.0, ToneMapMethod::MaxRgb);
+
+    for b in 0..=SIZE {
+        for g in 0..=SIZE {
+            for r in 0..=SIZE {
+
+                let in_pixel = RgbPixel {
+                    red: (r as f64) / (SIZE as f64),
+                    green: (g as f64) / (SIZE as f64),
+                    blue: (b as f64) / (SIZE as f64),
+                };
+                let out_pixel = pq_hlg_mapper.map(in_pixel);
+
+                assert!(out_pixel.red.is_finite());
+                assert!(out_pixel.green.is_finite());
+                assert!(out_pixel.blue.is_finite());
+            }
+        }
+    }
+}
+
+#[test]
+fn test_hlg_all_finite_10000_maxrgb() {
+
+    const SIZE: usize = 128;
+
+    let pq_hlg_mapper = PqHlgMapper::new(10_000.0, ToneMapMethod::MaxRgb);
+
+    for b in 0..=SIZE {
+        for g in 0..=SIZE {
+            for r in 0..=SIZE {
+
+                let in_pixel = RgbPixel {
+                    red: (r as f64) / (SIZE as f64),
+                    green: (g as f64) / (SIZE as f64),
+                    blue: (b as f64) / (SIZE as f64),
+                };
+                let out_pixel = pq_hlg_mapper.map(in_pixel);
+
+                assert!(out_pixel.red.is_finite());
+                assert!(out_pixel.green.is_finite());
+                assert!(out_pixel.blue.is_finite());
+            }
+        }
+    }
+}
+
+#[test]
+fn test_hlg_all_finite_100000_maxrgb() {
+
+    const SIZE: usize = 128;
+
+    let pq_hlg_mapper = PqHlgMapper::new(100_000.0, ToneMapMethod::MaxRgb);
+
+    for b in 0..=SIZE {
+        for g in 0..=SIZE {
+            for r in 0..=SIZE {
+
+                let in_pixel = RgbPixel {
+                    red: (r as f64) / (SIZE as f64),
+                    green: (g as f64) / (SIZE as f64),
+                    blue: (b as f64) / (SIZE as f64),
+                };
+                let out_pixel = pq_hlg_mapper.map(in_pixel);
+
+                assert!(out_pixel.red.is_finite());
+                assert!(out_pixel.green.is_finite());
+                assert!(out_pixel.blue.is_finite());
+            }
+        }
+    }
+}
+
+#[test]
+fn test_hlg_all_finite_400_rgb() {
+
+    const SIZE: usize = 128;
+
+    let pq_hlg_mapper = PqHlgMapper::new(400.0, ToneMapMethod::Rgb);
+
+    for b in 0..=SIZE {
+        for g in 0..=SIZE {
+            for r in 0..=SIZE {
+
+                let in_pixel = RgbPixel {
+                    red: (r as f64) / (SIZE as f64),
+                    green: (g as f64) / (SIZE as f64),
+                    blue: (b as f64) / (SIZE as f64),
+                };
+                let out_pixel = pq_hlg_mapper.map(in_pixel);
+
+                assert!(out_pixel.red.is_finite());
+                assert!(out_pixel.green.is_finite());
+                assert!(out_pixel.blue.is_finite());
+            }
+        }
+    }
+}
+
+#[test]
+fn test_hlg_all_finite_1000_rgb() {
+
+    const SIZE: usize = 128;
+
+    let pq_hlg_mapper = PqHlgMapper::new(1_000.0, ToneMapMethod::Rgb);
+
+    for b in 0..=SIZE {
+        for g in 0..=SIZE {
+            for r in 0..=SIZE {
+
+                let in_pixel = RgbPixel {
+                    red: (r as f64) / (SIZE as f64),
+                    green: (g as f64) / (SIZE as f64),
+                    blue: (b as f64) / (SIZE as f64),
+                };
+                let out_pixel = pq_hlg_mapper.map(in_pixel);
+
+                assert!(out_pixel.red.is_finite());
+                assert!(out_pixel.green.is_finite());
+                assert!(out_pixel.blue.is_finite());
+            }
+        }
+    }
+}
+
+#[test]
+fn test_hlg_all_finite_4000_rgb() {
+
+    const SIZE: usize = 128;
+
+    let pq_hlg_mapper = PqHlgMapper::new(4_000.0, ToneMapMethod::Rgb);
+
+    for b in 0..=SIZE {
+        for g in 0..=SIZE {
+            for r in 0..=SIZE {
+
+                let in_pixel = RgbPixel {
+                    red: (r as f64) / (SIZE as f64),
+                    green: (g as f64) / (SIZE as f64),
+                    blue: (b as f64) / (SIZE as f64),
+                };
+                let out_pixel = pq_hlg_mapper.map(in_pixel);
+
+                assert!(out_pixel.red.is_finite());
+                assert!(out_pixel.green.is_finite());
+                assert!(out_pixel.blue.is_finite());
+            }
+        }
+    }
+}
+
+#[test]
+fn test_hlg_all_finite_10000_rgb() {
+
+    const SIZE: usize = 128;
+
+    let pq_hlg_mapper = PqHlgMapper::new(10_000.0, ToneMapMethod::Rgb);
+
+    for b in 0..=SIZE {
+        for g in 0..=SIZE {
+            for r in 0..=SIZE {
+
+                let in_pixel = RgbPixel {
+                    red: (r as f64) / (SIZE as f64),
+                    green: (g as f64) / (SIZE as f64),
+                    blue: (b as f64) / (SIZE as f64),
+                };
+                let out_pixel = pq_hlg_mapper.map(in_pixel);
+
+                assert!(out_pixel.red.is_finite());
+                assert!(out_pixel.green.is_finite());
+                assert!(out_pixel.blue.is_finite());
+            }
+        }
+    }
+}
+
+#[test]
+fn test_hlg_all_finite_100000_rgb() {
+
+    const SIZE: usize = 128;
+
+    let pq_hlg_mapper = PqHlgMapper::new(100_000.0, ToneMapMethod::Rgb);
+
+    for b in 0..=SIZE {
+        for g in 0..=SIZE {
+            for r in 0..=SIZE {
+
+                let in_pixel = RgbPixel {
+                    red: (r as f64) / (SIZE as f64),
+                    green: (g as f64) / (SIZE as f64),
+                    blue: (b as f64) / (SIZE as f64),
+                };
+                let out_pixel = pq_hlg_mapper.map(in_pixel);
+
+                assert!(out_pixel.red.is_finite());
+                assert!(out_pixel.green.is_finite());
+                assert!(out_pixel.blue.is_finite());
+            }
+        }
+    }
+}
+
+#[test]
+fn test_hlg_all_valid_range_400_maxrgb() {
+
+    const SIZE: usize = 128;
+
+    let pq_hlg_mapper = PqHlgMapper::new(400.0, ToneMapMethod::MaxRgb);
+
+    for b in 0..=SIZE {
+        for g in 0..=SIZE {
+            for r in 0..=SIZE {
+
+                let in_pixel = RgbPixel {
+                    red: (r as f64) / (SIZE as f64),
+                    green: (g as f64) / (SIZE as f64),
+                    blue: (b as f64) / (SIZE as f64),
+                };
+                let out_pixel = pq_hlg_mapper.map(in_pixel);
+
+                assert!(0.0 <= out_pixel.red && out_pixel.red <= 1.0);
+                assert!(0.0 <= out_pixel.green && out_pixel.green <= 1.0);
+                assert!(0.0 <= out_pixel.blue && out_pixel.blue <= 1.0);
+            }
+        }
+    }
+}
+
+#[test]
+fn test_hlg_all_valid_range_1000_maxrgb() {
+
+    const SIZE: usize = 128;
+
+    let pq_hlg_mapper = PqHlgMapper::new(1_000.0, ToneMapMethod::MaxRgb);
+
+    for b in 0..=SIZE {
+        for g in 0..=SIZE {
+            for r in 0..=SIZE {
+
+                let in_pixel = RgbPixel {
+                    red: (r as f64) / (SIZE as f64),
+                    green: (g as f64) / (SIZE as f64),
+                    blue: (b as f64) / (SIZE as f64),
+                };
+                let out_pixel = pq_hlg_mapper.map(in_pixel);
+
+                assert!(0.0 <= out_pixel.red && out_pixel.red <= 1.0);
+                assert!(0.0 <= out_pixel.green && out_pixel.green <= 1.0);
+                assert!(0.0 <= out_pixel.blue && out_pixel.blue <= 1.0);
+            }
+        }
+    }
+}
+
+#[test]
+fn test_hlg_all_valid_range_4000_maxrgb() {
+
+    const SIZE: usize = 128;
+
+    let pq_hlg_mapper = PqHlgMapper::new(4000.0, ToneMapMethod::MaxRgb);
+
+    for b in 0..=SIZE {
+        for g in 0..=SIZE {
+            for r in 0..=SIZE {
+
+                let in_pixel = RgbPixel {
+                    red: (r as f64) / (SIZE as f64),
+                    green: (g as f64) / (SIZE as f64),
+                    blue: (b as f64) / (SIZE as f64),
+                };
+                let out_pixel = pq_hlg_mapper.map(in_pixel);
+
+                assert!(0.0 <= out_pixel.red && out_pixel.red <= 1.0);
+                assert!(0.0 <= out_pixel.green && out_pixel.green <= 1.0);
+                assert!(0.0 <= out_pixel.blue && out_pixel.blue <= 1.0);
+            }
+        }
+    }
+}
+
+#[test]
+fn test_hlg_all_valid_range_10000_maxrgb() {
+
+    const SIZE: usize = 128;
+
+    let pq_hlg_mapper = PqHlgMapper::new(10_000.0, ToneMapMethod::MaxRgb);
+
+    for b in 0..=SIZE {
+        for g in 0..=SIZE {
+            for r in 0..=SIZE {
+
+                let in_pixel = RgbPixel {
+                    red: (r as f64) / (SIZE as f64),
+                    green: (g as f64) / (SIZE as f64),
+                    blue: (b as f64) / (SIZE as f64),
+                };
+                let out_pixel = pq_hlg_mapper.map(in_pixel);
+
+                assert!(0.0 <= out_pixel.red && out_pixel.red <= 1.0);
+                assert!(0.0 <= out_pixel.green && out_pixel.green <= 1.0);
+                assert!(0.0 <= out_pixel.blue && out_pixel.blue <= 1.0);
+            }
+        }
+    }
+}
+
+#[test]
+fn test_hlg_all_valid_range_100000_maxrgb() {
+
+    const SIZE: usize = 128;
+
+    let pq_hlg_mapper = PqHlgMapper::new(100000.0, ToneMapMethod::MaxRgb);
+
+    for b in 0..=SIZE {
+        for g in 0..=SIZE {
+            for r in 0..=SIZE {
+
+                let in_pixel = RgbPixel {
+                    red: (r as f64) / (SIZE as f64),
+                    green: (g as f64) / (SIZE as f64),
+                    blue: (b as f64) / (SIZE as f64),
+                };
+                let out_pixel = pq_hlg_mapper.map(in_pixel);
+
+                assert!(0.0 <= out_pixel.red && out_pixel.red <= 1.0);
+                assert!(0.0 <= out_pixel.green && out_pixel.green <= 1.0);
+                assert!(0.0 <= out_pixel.blue && out_pixel.blue <= 1.0);
+            }
+        }
+    }
+}
+
+#[test]
+fn test_hlg_all_valid_range_400_rgb() {
+
+    const SIZE: usize = 128;
+
+    let pq_hlg_mapper = PqHlgMapper::new(400.0, ToneMapMethod::Rgb);
+
+    for b in 0..=SIZE {
+        for g in 0..=SIZE {
+            for r in 0..=SIZE {
+
+                let in_pixel = RgbPixel {
+                    red: (r as f64) / (SIZE as f64),
+                    green: (g as f64) / (SIZE as f64),
+                    blue: (b as f64) / (SIZE as f64),
+                };
+                let out_pixel = pq_hlg_mapper.map(in_pixel);
+
+                assert!(0.0 <= out_pixel.red && out_pixel.red <= 1.0);
+                assert!(0.0 <= out_pixel.green && out_pixel.green <= 1.0);
+                assert!(0.0 <= out_pixel.blue && out_pixel.blue <= 1.0);
+            }
+        }
+    }
+}
+
+#[test]
+fn test_hlg_all_valid_range_1000_rgb() {
+
+    const SIZE: usize = 128;
+
+    let pq_hlg_mapper = PqHlgMapper::new(1_000.0, ToneMapMethod::Rgb);
+
+    for b in 0..=SIZE {
+        for g in 0..=SIZE {
+            for r in 0..=SIZE {
+
+                let in_pixel = RgbPixel {
+                    red: (r as f64) / (SIZE as f64),
+                    green: (g as f64) / (SIZE as f64),
+                    blue: (b as f64) / (SIZE as f64),
+                };
+                let out_pixel = pq_hlg_mapper.map(in_pixel);
+
+                assert!(0.0 <= out_pixel.red && out_pixel.red <= 1.0);
+                assert!(0.0 <= out_pixel.green && out_pixel.green <= 1.0);
+                assert!(0.0 <= out_pixel.blue && out_pixel.blue <= 1.0);
+            }
+        }
+    }
+}
+
+#[test]
+fn test_hlg_all_valid_range_4000_rgb() {
+
+    const SIZE: usize = 128;
+
+    let pq_hlg_mapper = PqHlgMapper::new(4000.0, ToneMapMethod::Rgb);
+
+    for b in 0..=SIZE {
+        for g in 0..=SIZE {
+            for r in 0..=SIZE {
+
+                let in_pixel = RgbPixel {
+                    red: (r as f64) / (SIZE as f64),
+                    green: (g as f64) / (SIZE as f64),
+                    blue: (b as f64) / (SIZE as f64),
+                };
+                let out_pixel = pq_hlg_mapper.map(in_pixel);
+
+                assert!(0.0 <= out_pixel.red && out_pixel.red <= 1.0);
+                assert!(0.0 <= out_pixel.green && out_pixel.green <= 1.0);
+                assert!(0.0 <= out_pixel.blue && out_pixel.blue <= 1.0);
+            }
+        }
+    }
+}
+
+#[test]
+fn test_hlg_all_valid_range_10000_rgb() {
+
+    const SIZE: usize = 128;
+
+    let pq_hlg_mapper = PqHlgMapper::new(10_000.0, ToneMapMethod::Rgb);
+
+    for b in 0..=SIZE {
+        for g in 0..=SIZE {
+            for r in 0..=SIZE {
+
+                let in_pixel = RgbPixel {
+                    red: (r as f64) / (SIZE as f64),
+                    green: (g as f64) / (SIZE as f64),
+                    blue: (b as f64) / (SIZE as f64),
+                };
+                let out_pixel = pq_hlg_mapper.map(in_pixel);
+
+                assert!(0.0 <= out_pixel.red && out_pixel.red <= 1.0);
+                assert!(0.0 <= out_pixel.green && out_pixel.green <= 1.0);
+                assert!(0.0 <= out_pixel.blue && out_pixel.blue <= 1.0);
+            }
+        }
+    }
+}
+
+#[test]
+fn test_hlg_all_valid_range_100000_rgb() {
+
+    const SIZE: usize = 128;
+
+    let pq_hlg_mapper = PqHlgMapper::new(100_000.0, ToneMapMethod::Rgb);
+
+    for b in 0..=SIZE {
+        for g in 0..=SIZE {
+            for r in 0..=SIZE {
+
+                let in_pixel = RgbPixel {
+                    red: (r as f64) / (SIZE as f64),
+                    green: (g as f64) / (SIZE as f64),
+                    blue: (b as f64) / (SIZE as f64),
+                };
+                let out_pixel = pq_hlg_mapper.map(in_pixel);
+
+                assert!(0.0 <= out_pixel.red && out_pixel.red <= 1.0);
+                assert!(0.0 <= out_pixel.green && out_pixel.green <= 1.0);
+                assert!(0.0 <= out_pixel.blue && out_pixel.blue <= 1.0);
+            }
+        }
+    }
+}
+
+#[test]
+fn test_sdr_all_finite_400_maxrgb() {
+
+    const SIZE: usize = 128;
+
+    let pq_hlg_mapper = PqSdrMapper::new(400.0, ToneMapMethod::MaxRgb);
+
+    for b in 0..=SIZE {
+        for g in 0..=SIZE {
+            for r in 0..=SIZE {
+
+                let in_pixel = RgbPixel {
+                    red: (r as f64) / (SIZE as f64),
+                    green: (g as f64) / (SIZE as f64),
+                    blue: (b as f64) / (SIZE as f64),
+                };
+                let out_pixel = pq_hlg_mapper.map(in_pixel);
+
+                assert!(out_pixel.red.is_finite());
+                assert!(out_pixel.green.is_finite());
+                assert!(out_pixel.blue.is_finite());
+            }
+        }
+    }
+}
+
+#[test]
+fn test_sdr_all_finite_1000_maxrgb() {
+
+    const SIZE: usize = 128;
+
+    let pq_hlg_mapper = PqSdrMapper::new(1_000.0, ToneMapMethod::MaxRgb);
+
+    for b in 0..=SIZE {
+        for g in 0..=SIZE {
+            for r in 0..=SIZE {
+
+                let in_pixel = RgbPixel {
+                    red: (r as f64) / (SIZE as f64),
+                    green: (g as f64) / (SIZE as f64),
+                    blue: (b as f64) / (SIZE as f64),
+                };
+                let out_pixel = pq_hlg_mapper.map(in_pixel);
+
+                assert!(out_pixel.red.is_finite());
+                assert!(out_pixel.green.is_finite());
+                assert!(out_pixel.blue.is_finite());
+            }
+        }
+    }
+}
+
+#[test]
+fn test_sdr_all_finite_4000_maxrgb() {
+
+    const SIZE: usize = 128;
+
+    let pq_hlg_mapper = PqSdrMapper::new(4_000.0, ToneMapMethod::MaxRgb);
+
+    for b in 0..=SIZE {
+        for g in 0..=SIZE {
+            for r in 0..=SIZE {
+
+                let in_pixel = RgbPixel {
+                    red: (r as f64) / (SIZE as f64),
+                    green: (g as f64) / (SIZE as f64),
+                    blue: (b as f64) / (SIZE as f64),
+                };
+                let out_pixel = pq_hlg_mapper.map(in_pixel);
+
+                assert!(out_pixel.red.is_finite());
+                assert!(out_pixel.green.is_finite());
+                assert!(out_pixel.blue.is_finite());
+            }
+        }
+    }
+}
+
+#[test]
+fn test_sdr_all_finite_10000_maxrgb() {
+
+    const SIZE: usize = 128;
+
+    let pq_hlg_mapper = PqSdrMapper::new(10_000.0, ToneMapMethod::MaxRgb);
+
+    for b in 0..=SIZE {
+        for g in 0..=SIZE {
+            for r in 0..=SIZE {
+
+                let in_pixel = RgbPixel {
+                    red: (r as f64) / (SIZE as f64),
+                    green: (g as f64) / (SIZE as f64),
+                    blue: (b as f64) / (SIZE as f64),
+                };
+                let out_pixel = pq_hlg_mapper.map(in_pixel);
+
+                assert!(out_pixel.red.is_finite());
+                assert!(out_pixel.green.is_finite());
+                assert!(out_pixel.blue.is_finite());
+            }
+        }
+    }
+}
+
+#[test]
+fn test_sdr_all_finite_100000_maxrgb() {
+
+    const SIZE: usize = 128;
+
+    let pq_hlg_mapper = PqSdrMapper::new(100_000.0, ToneMapMethod::MaxRgb);
+
+    for b in 0..=SIZE {
+        for g in 0..=SIZE {
+            for r in 0..=SIZE {
+
+                let in_pixel = RgbPixel {
+                    red: (r as f64) / (SIZE as f64),
+                    green: (g as f64) / (SIZE as f64),
+                    blue: (b as f64) / (SIZE as f64),
+                };
+                let out_pixel = pq_hlg_mapper.map(in_pixel);
+
+                assert!(out_pixel.red.is_finite());
+                assert!(out_pixel.green.is_finite());
+                assert!(out_pixel.blue.is_finite());
+            }
+        }
+    }
+}
+
+#[test]
+fn test_sdr_all_finite_400_rgb() {
+
+    const SIZE: usize = 128;
+
+    let pq_hlg_mapper = PqSdrMapper::new(400.0, ToneMapMethod::Rgb);
+
+    for b in 0..=SIZE {
+        for g in 0..=SIZE {
+            for r in 0..=SIZE {
+
+                let in_pixel = RgbPixel {
+                    red: (r as f64) / (SIZE as f64),
+                    green: (g as f64) / (SIZE as f64),
+                    blue: (b as f64) / (SIZE as f64),
+                };
+                let out_pixel = pq_hlg_mapper.map(in_pixel);
+
+                assert!(out_pixel.red.is_finite());
+                assert!(out_pixel.green.is_finite());
+                assert!(out_pixel.blue.is_finite());
+            }
+        }
+    }
+}
+
+#[test]
+fn test_sdr_all_finite_1000_rgb() {
+
+    const SIZE: usize = 128;
+
+    let pq_hlg_mapper = PqSdrMapper::new(1_000.0, ToneMapMethod::Rgb);
+
+    for b in 0..=SIZE {
+        for g in 0..=SIZE {
+            for r in 0..=SIZE {
+
+                let in_pixel = RgbPixel {
+                    red: (r as f64) / (SIZE as f64),
+                    green: (g as f64) / (SIZE as f64),
+                    blue: (b as f64) / (SIZE as f64),
+                };
+                let out_pixel = pq_hlg_mapper.map(in_pixel);
+
+                assert!(out_pixel.red.is_finite());
+                assert!(out_pixel.green.is_finite());
+                assert!(out_pixel.blue.is_finite());
+            }
+        }
+    }
+}
+
+#[test]
+fn test_sdr_all_finite_4000_rgb() {
+
+    const SIZE: usize = 128;
+
+    let pq_hlg_mapper = PqSdrMapper::new(4_000.0, ToneMapMethod::Rgb);
+
+    for b in 0..=SIZE {
+        for g in 0..=SIZE {
+            for r in 0..=SIZE {
+
+                let in_pixel = RgbPixel {
+                    red: (r as f64) / (SIZE as f64),
+                    green: (g as f64) / (SIZE as f64),
+                    blue: (b as f64) / (SIZE as f64),
+                };
+                let out_pixel = pq_hlg_mapper.map(in_pixel);
+
+                assert!(out_pixel.red.is_finite());
+                assert!(out_pixel.green.is_finite());
+                assert!(out_pixel.blue.is_finite());
+            }
+        }
+    }
+}
+
+#[test]
+fn test_sdr_all_finite_10000_rgb() {
+
+    const SIZE: usize = 128;
+
+    let pq_hlg_mapper = PqSdrMapper::new(10_000.0, ToneMapMethod::Rgb);
+
+    for b in 0..=SIZE {
+        for g in 0..=SIZE {
+            for r in 0..=SIZE {
+
+                let in_pixel = RgbPixel {
+                    red: (r as f64) / (SIZE as f64),
+                    green: (g as f64) / (SIZE as f64),
+                    blue: (b as f64) / (SIZE as f64),
+                };
+                let out_pixel = pq_hlg_mapper.map(in_pixel);
+
+                assert!(out_pixel.red.is_finite());
+                assert!(out_pixel.green.is_finite());
+                assert!(out_pixel.blue.is_finite());
+            }
+        }
+    }
+}
+
+#[test]
+fn test_sdr_all_finite_100000_rgb() {
+
+    const SIZE: usize = 128;
+
+    let pq_hlg_mapper = PqSdrMapper::new(100_000.0, ToneMapMethod::Rgb);
+
+    for b in 0..=SIZE {
+        for g in 0..=SIZE {
+            for r in 0..=SIZE {
+
+                let in_pixel = RgbPixel {
+                    red: (r as f64) / (SIZE as f64),
+                    green: (g as f64) / (SIZE as f64),
+                    blue: (b as f64) / (SIZE as f64),
+                };
+                let out_pixel = pq_hlg_mapper.map(in_pixel);
+
+                assert!(out_pixel.red.is_finite());
+                assert!(out_pixel.green.is_finite());
+                assert!(out_pixel.blue.is_finite());
+            }
+        }
+    }
+}
+
+#[test]
+fn test_sdr_all_valid_range_400_maxrgb() {
+
+    const SIZE: usize = 128;
+
+    let pq_hlg_mapper = PqSdrMapper::new(400.0, ToneMapMethod::MaxRgb);
+
+    for b in 0..=SIZE {
+        for g in 0..=SIZE {
+            for r in 0..=SIZE {
+
+                let in_pixel = RgbPixel {
+                    red: (r as f64) / (SIZE as f64),
+                    green: (g as f64) / (SIZE as f64),
+                    blue: (b as f64) / (SIZE as f64),
+                };
+                let out_pixel = pq_hlg_mapper.map(in_pixel);
+
+                assert!(0.0 <= out_pixel.red && out_pixel.red <= 1.0);
+                assert!(0.0 <= out_pixel.green && out_pixel.green <= 1.0);
+                assert!(0.0 <= out_pixel.blue && out_pixel.blue <= 1.0);
+            }
+        }
+    }
+}
+
+#[test]
+fn test_sdr_all_valid_range_1000_maxrgb() {
+
+    const SIZE: usize = 128;
+
+    let pq_hlg_mapper = PqSdrMapper::new(1_000.0, ToneMapMethod::MaxRgb);
+
+    for b in 0..=SIZE {
+        for g in 0..=SIZE {
+            for r in 0..=SIZE {
+
+                let in_pixel = RgbPixel {
+                    red: (r as f64) / (SIZE as f64),
+                    green: (g as f64) / (SIZE as f64),
+                    blue: (b as f64) / (SIZE as f64),
+                };
+                let out_pixel = pq_hlg_mapper.map(in_pixel);
+
+                assert!(0.0 <= out_pixel.red && out_pixel.red <= 1.0);
+                assert!(0.0 <= out_pixel.green && out_pixel.green <= 1.0);
+                assert!(0.0 <= out_pixel.blue && out_pixel.blue <= 1.0);
+            }
+        }
+    }
+}
+
+#[test]
+fn test_sdr_all_valid_range_4000_maxrgb() {
+
+    const SIZE: usize = 128;
+
+    let pq_hlg_mapper = PqSdrMapper::new(4000.0, ToneMapMethod::MaxRgb);
+
+    for b in 0..=SIZE {
+        for g in 0..=SIZE {
+            for r in 0..=SIZE {
+
+                let in_pixel = RgbPixel {
+                    red: (r as f64) / (SIZE as f64),
+                    green: (g as f64) / (SIZE as f64),
+                    blue: (b as f64) / (SIZE as f64),
+                };
+                let out_pixel = pq_hlg_mapper.map(in_pixel);
+
+                assert!(0.0 <= out_pixel.red && out_pixel.red <= 1.0);
+                assert!(0.0 <= out_pixel.green && out_pixel.green <= 1.0);
+                assert!(0.0 <= out_pixel.blue && out_pixel.blue <= 1.0);
+            }
+        }
+    }
+}
+
+#[test]
+fn test_sdr_all_valid_range_10000_maxrgb() {
+
+    const SIZE: usize = 128;
+
+    let pq_hlg_mapper = PqSdrMapper::new(10_000.0, ToneMapMethod::MaxRgb);
+
+    for b in 0..=SIZE {
+        for g in 0..=SIZE {
+            for r in 0..=SIZE {
+
+                let in_pixel = RgbPixel {
+                    red: (r as f64) / (SIZE as f64),
+                    green: (g as f64) / (SIZE as f64),
+                    blue: (b as f64) / (SIZE as f64),
+                };
+                let out_pixel = pq_hlg_mapper.map(in_pixel);
+
+                assert!(0.0 <= out_pixel.red && out_pixel.red <= 1.0);
+                assert!(0.0 <= out_pixel.green && out_pixel.green <= 1.0);
+                assert!(0.0 <= out_pixel.blue && out_pixel.blue <= 1.0);
+            }
+        }
+    }
+}
+
+#[test]
+fn test_sdr_all_valid_range_100000_maxrgb() {
+
+    const SIZE: usize = 128;
+
+    let pq_hlg_mapper = PqSdrMapper::new(100000.0, ToneMapMethod::MaxRgb);
+
+    for b in 0..=SIZE {
+        for g in 0..=SIZE {
+            for r in 0..=SIZE {
+
+                let in_pixel = RgbPixel {
+                    red: (r as f64) / (SIZE as f64),
+                    green: (g as f64) / (SIZE as f64),
+                    blue: (b as f64) / (SIZE as f64),
+                };
+                let out_pixel = pq_hlg_mapper.map(in_pixel);
+
+                assert!(0.0 <= out_pixel.red && out_pixel.red <= 1.0);
+                assert!(0.0 <= out_pixel.green && out_pixel.green <= 1.0);
+                assert!(0.0 <= out_pixel.blue && out_pixel.blue <= 1.0);
+            }
+        }
+    }
+}
+
+#[test]
+fn test_sdr_all_valid_range_400_rgb() {
+
+    const SIZE: usize = 128;
+
+    let pq_hlg_mapper = PqSdrMapper::new(400.0, ToneMapMethod::Rgb);
+
+    for b in 0..=SIZE {
+        for g in 0..=SIZE {
+            for r in 0..=SIZE {
+
+                let in_pixel = RgbPixel {
+                    red: (r as f64) / (SIZE as f64),
+                    green: (g as f64) / (SIZE as f64),
+                    blue: (b as f64) / (SIZE as f64),
+                };
+                let out_pixel = pq_hlg_mapper.map(in_pixel);
+
+                assert!(0.0 <= out_pixel.red && out_pixel.red <= 1.0);
+                assert!(0.0 <= out_pixel.green && out_pixel.green <= 1.0);
+                assert!(0.0 <= out_pixel.blue && out_pixel.blue <= 1.0);
+            }
+        }
+    }
+}
+
+#[test]
+fn test_sdr_all_valid_range_1000_rgb() {
+
+    const SIZE: usize = 128;
+
+    let pq_hlg_mapper = PqSdrMapper::new(1_000.0, ToneMapMethod::Rgb);
+
+    for b in 0..=SIZE {
+        for g in 0..=SIZE {
+            for r in 0..=SIZE {
+
+                let in_pixel = RgbPixel {
+                    red: (r as f64) / (SIZE as f64),
+                    green: (g as f64) / (SIZE as f64),
+                    blue: (b as f64) / (SIZE as f64),
+                };
+                let out_pixel = pq_hlg_mapper.map(in_pixel);
+
+                assert!(0.0 <= out_pixel.red && out_pixel.red <= 1.0);
+                assert!(0.0 <= out_pixel.green && out_pixel.green <= 1.0);
+                assert!(0.0 <= out_pixel.blue && out_pixel.blue <= 1.0);
+            }
+        }
+    }
+}
+
+#[test]
+fn test_sdr_all_valid_range_4000_rgb() {
+
+    const SIZE: usize = 128;
+
+    let pq_hlg_mapper = PqSdrMapper::new(4000.0, ToneMapMethod::Rgb);
+
+    for b in 0..=SIZE {
+        for g in 0..=SIZE {
+            for r in 0..=SIZE {
+
+                let in_pixel = RgbPixel {
+                    red: (r as f64) / (SIZE as f64),
+                    green: (g as f64) / (SIZE as f64),
+                    blue: (b as f64) / (SIZE as f64),
+                };
+                let out_pixel = pq_hlg_mapper.map(in_pixel);
+
+                assert!(0.0 <= out_pixel.red && out_pixel.red <= 1.0);
+                assert!(0.0 <= out_pixel.green && out_pixel.green <= 1.0);
+                assert!(0.0 <= out_pixel.blue && out_pixel.blue <= 1.0);
+            }
+        }
+    }
+}
+
+#[test]
+fn test_sdr_all_valid_range_10000_rgb() {
+
+    const SIZE: usize = 128;
+
+    let pq_hlg_mapper = PqSdrMapper::new(10_000.0, ToneMapMethod::Rgb);
+
+    for b in 0..=SIZE {
+        for g in 0..=SIZE {
+            for r in 0..=SIZE {
+
+                let in_pixel = RgbPixel {
+                    red: (r as f64) / (SIZE as f64),
+                    green: (g as f64) / (SIZE as f64),
+                    blue: (b as f64) / (SIZE as f64),
+                };
+                let out_pixel = pq_hlg_mapper.map(in_pixel);
+
+                assert!(0.0 <= out_pixel.red && out_pixel.red <= 1.0);
+                assert!(0.0 <= out_pixel.green && out_pixel.green <= 1.0);
+                assert!(0.0 <= out_pixel.blue && out_pixel.blue <= 1.0);
+            }
+        }
+    }
+}
+
+#[test]
+fn test_sdr_all_valid_range_100000_rgb() {
+
+    const SIZE: usize = 128;
+
+    let pq_hlg_mapper = PqSdrMapper::new(100_000.0, ToneMapMethod::Rgb);
+
+    for b in 0..=SIZE {
+        for g in 0..=SIZE {
+            for r in 0..=SIZE {
+
+                let in_pixel = RgbPixel {
+                    red: (r as f64) / (SIZE as f64),
+                    green: (g as f64) / (SIZE as f64),
+                    blue: (b as f64) / (SIZE as f64),
+                };
+                let out_pixel = pq_hlg_mapper.map(in_pixel);
+
+                assert!(0.0 <= out_pixel.red && out_pixel.red <= 1.0);
+                assert!(0.0 <= out_pixel.green && out_pixel.green <= 1.0);
+                assert!(0.0 <= out_pixel.blue && out_pixel.blue <= 1.0);
+            }
+        }
+    }
+}
+
+#[test]
+fn test_pq_all_finite_400() {
+
+    const SIZE: usize = 128;
+
+    let hlg_pq_mapper = HlgPqMapper::new(400.0);
+
+    for b in 0..=SIZE {
+        for g in 0..=SIZE {
+            for r in 0..=SIZE {
+
+                let in_pixel = RgbPixel {
+                    red: (r as f64) / (SIZE as f64),
+                    green: (g as f64) / (SIZE as f64),
+                    blue: (b as f64) / (SIZE as f64),
+                };
+                let out_pixel = hlg_pq_mapper.map(in_pixel);
+
+                assert!(out_pixel.red.is_finite());
+                assert!(out_pixel.green.is_finite());
+                assert!(out_pixel.blue.is_finite());
+            }
+        }
+    }
+}
+
+#[test]
+fn test_pq_all_finite_1000() {
+
+    const SIZE: usize = 128;
+
+    let hlg_pq_mapper = HlgPqMapper::new(1_000.0);
+
+    for b in 0..=SIZE {
+        for g in 0..=SIZE {
+            for r in 0..=SIZE {
+
+                let in_pixel = RgbPixel {
+                    red: (r as f64) / (SIZE as f64),
+                    green: (g as f64) / (SIZE as f64),
+                    blue: (b as f64) / (SIZE as f64),
+                };
+                let out_pixel = hlg_pq_mapper.map(in_pixel);
+
+                assert!(out_pixel.red.is_finite());
+                assert!(out_pixel.green.is_finite());
+                assert!(out_pixel.blue.is_finite());
+            }
+        }
+    }
+}
+
+#[test]
+fn test_pq_all_finite_4000() {
+
+    const SIZE: usize = 128;
+
+    let hlg_pq_mapper = HlgPqMapper::new(4_000.0);
+
+    for b in 0..=SIZE {
+        for g in 0..=SIZE {
+            for r in 0..=SIZE {
+
+                let in_pixel = RgbPixel {
+                    red: (r as f64) / (SIZE as f64),
+                    green: (g as f64) / (SIZE as f64),
+                    blue: (b as f64) / (SIZE as f64),
+                };
+                let out_pixel = hlg_pq_mapper.map(in_pixel);
+
+                assert!(out_pixel.red.is_finite());
+                assert!(out_pixel.green.is_finite());
+                assert!(out_pixel.blue.is_finite());
+            }
+        }
+    }
+}
+
+#[test]
+fn test_pq_all_finite_10000() {
+
+    const SIZE: usize = 128;
+
+    let hlg_pq_mapper = HlgPqMapper::new(10_000.0);
+
+    for b in 0..=SIZE {
+        for g in 0..=SIZE {
+            for r in 0..=SIZE {
+
+                let in_pixel = RgbPixel {
+                    red: (r as f64) / (SIZE as f64),
+                    green: (g as f64) / (SIZE as f64),
+                    blue: (b as f64) / (SIZE as f64),
+                };
+                let out_pixel = hlg_pq_mapper.map(in_pixel);
+
+                assert!(out_pixel.red.is_finite());
+                assert!(out_pixel.green.is_finite());
+                assert!(out_pixel.blue.is_finite());
+            }
+        }
+    }
+}
+
+#[test]
+fn test_pq_all_finite_100000() {
+
+    const SIZE: usize = 128;
+
+    let hlg_pq_mapper = HlgPqMapper::new(100_000.0);
+
+    for b in 0..=SIZE {
+        for g in 0..=SIZE {
+            for r in 0..=SIZE {
+
+                let in_pixel = RgbPixel {
+                    red: (r as f64) / (SIZE as f64),
+                    green: (g as f64) / (SIZE as f64),
+                    blue: (b as f64) / (SIZE as f64),
+                };
+                let out_pixel = hlg_pq_mapper.map(in_pixel);
+
+                assert!(out_pixel.red.is_finite());
+                assert!(out_pixel.green.is_finite());
+                assert!(out_pixel.blue.is_finite());
+            }
+        }
+    }
+}
+
+#[test]
+fn test_pq_all_finite_400_rgb() {
+
+    const SIZE: usize = 128;
+
+    let hlg_pq_mapper = HlgPqMapper::new(400.0);
+
+    for b in 0..=SIZE {
+        for g in 0..=SIZE {
+            for r in 0..=SIZE {
+
+                let in_pixel = RgbPixel {
+                    red: (r as f64) / (SIZE as f64),
+                    green: (g as f64) / (SIZE as f64),
+                    blue: (b as f64) / (SIZE as f64),
+                };
+                let out_pixel = hlg_pq_mapper.map(in_pixel);
+
+                assert!(out_pixel.red.is_finite());
+                assert!(out_pixel.green.is_finite());
+                assert!(out_pixel.blue.is_finite());
+            }
+        }
+    }
+}
+
+#[test]
+fn test_pq_all_finite_1000_rgb() {
+
+    const SIZE: usize = 128;
+
+    let hlg_pq_mapper = HlgPqMapper::new(1_000.0);
+
+    for b in 0..=SIZE {
+        for g in 0..=SIZE {
+            for r in 0..=SIZE {
+
+                let in_pixel = RgbPixel {
+                    red: (r as f64) / (SIZE as f64),
+                    green: (g as f64) / (SIZE as f64),
+                    blue: (b as f64) / (SIZE as f64),
+                };
+                let out_pixel = hlg_pq_mapper.map(in_pixel);
+
+                assert!(out_pixel.red.is_finite());
+                assert!(out_pixel.green.is_finite());
+                assert!(out_pixel.blue.is_finite());
+            }
+        }
+    }
+}
+
+#[test]
+fn test_pq_all_finite_4000_rgb() {
+
+    const SIZE: usize = 128;
+
+    let hlg_pq_mapper = HlgPqMapper::new(4_000.0);
+
+    for b in 0..=SIZE {
+        for g in 0..=SIZE {
+            for r in 0..=SIZE {
+
+                let in_pixel = RgbPixel {
+                    red: (r as f64) / (SIZE as f64),
+                    green: (g as f64) / (SIZE as f64),
+                    blue: (b as f64) / (SIZE as f64),
+                };
+                let out_pixel = hlg_pq_mapper.map(in_pixel);
+
+                assert!(out_pixel.red.is_finite());
+                assert!(out_pixel.green.is_finite());
+                assert!(out_pixel.blue.is_finite());
+            }
+        }
+    }
+}
+
+#[test]
+fn test_pq_all_finite_10000_rgb() {
+
+    const SIZE: usize = 128;
+
+    let hlg_pq_mapper = HlgPqMapper::new(10_000.0);
+
+    for b in 0..=SIZE {
+        for g in 0..=SIZE {
+            for r in 0..=SIZE {
+
+                let in_pixel = RgbPixel {
+                    red: (r as f64) / (SIZE as f64),
+                    green: (g as f64) / (SIZE as f64),
+                    blue: (b as f64) / (SIZE as f64),
+                };
+                let out_pixel = hlg_pq_mapper.map(in_pixel);
+
+                assert!(out_pixel.red.is_finite());
+                assert!(out_pixel.green.is_finite());
+                assert!(out_pixel.blue.is_finite());
+            }
+        }
+    }
+}
+
+#[test]
+fn test_pq_all_finite_100000_rgb() {
+
+    const SIZE: usize = 128;
+
+    let hlg_pq_mapper = HlgPqMapper::new(100_000.0);
+
+    for b in 0..=SIZE {
+        for g in 0..=SIZE {
+            for r in 0..=SIZE {
+
+                let in_pixel = RgbPixel {
+                    red: (r as f64) / (SIZE as f64),
+                    green: (g as f64) / (SIZE as f64),
+                    blue: (b as f64) / (SIZE as f64),
+                };
+                let out_pixel = hlg_pq_mapper.map(in_pixel);
+
+                assert!(out_pixel.red.is_finite());
+                assert!(out_pixel.green.is_finite());
+                assert!(out_pixel.blue.is_finite());
+            }
+        }
+    }
+}
+
+#[test]
+fn test_pq_all_valid_range_400() {
+
+    const SIZE: usize = 128;
+
+    let hlg_pq_mapper = HlgPqMapper::new(400.0);
+
+    for b in 0..=SIZE {
+        for g in 0..=SIZE {
+            for r in 0..=SIZE {
+
+                let in_pixel = RgbPixel {
+                    red: (r as f64) / (SIZE as f64),
+                    green: (g as f64) / (SIZE as f64),
+                    blue: (b as f64) / (SIZE as f64),
+                };
+                let out_pixel = hlg_pq_mapper.map(in_pixel);
+
+                assert!(0.0 <= out_pixel.red && out_pixel.red <= 1.0);
+                assert!(0.0 <= out_pixel.green && out_pixel.green <= 1.0);
+                assert!(0.0 <= out_pixel.blue && out_pixel.blue <= 1.0);
+            }
+        }
+    }
+}
+
+#[test]
+fn test_pq_all_valid_range_1000() {
+
+    const SIZE: usize = 128;
+
+    let hlg_pq_mapper = HlgPqMapper::new(1_000.0);
+
+    for b in 0..=SIZE {
+        for g in 0..=SIZE {
+            for r in 0..=SIZE {
+
+                let in_pixel = RgbPixel {
+                    red: (r as f64) / (SIZE as f64),
+                    green: (g as f64) / (SIZE as f64),
+                    blue: (b as f64) / (SIZE as f64),
+                };
+                let out_pixel = hlg_pq_mapper.map(in_pixel);
+
+                assert!(0.0 <= out_pixel.red && out_pixel.red <= 1.0);
+                assert!(0.0 <= out_pixel.green && out_pixel.green <= 1.0);
+                assert!(0.0 <= out_pixel.blue && out_pixel.blue <= 1.0);
+            }
+        }
+    }
+}
+
+#[test]
+fn test_pq_all_valid_range_4000() {
+
+    const SIZE: usize = 128;
+
+    let hlg_pq_mapper = HlgPqMapper::new(4000.0);
+
+    for b in 0..=SIZE {
+        for g in 0..=SIZE {
+            for r in 0..=SIZE {
+
+                let in_pixel = RgbPixel {
+                    red: (r as f64) / (SIZE as f64),
+                    green: (g as f64) / (SIZE as f64),
+                    blue: (b as f64) / (SIZE as f64),
+                };
+                let out_pixel = hlg_pq_mapper.map(in_pixel);
+
+                assert!(0.0 <= out_pixel.red && out_pixel.red <= 1.0);
+                assert!(0.0 <= out_pixel.green && out_pixel.green <= 1.0);
+                assert!(0.0 <= out_pixel.blue && out_pixel.blue <= 1.0);
+            }
+        }
+    }
+}
+
+#[test]
+fn test_pq_all_valid_range_10000() {
+
+    const SIZE: usize = 128;
+
+    let hlg_pq_mapper = HlgPqMapper::new(10_000.0);
+
+    for b in 0..=SIZE {
+        for g in 0..=SIZE {
+            for r in 0..=SIZE {
+
+                let in_pixel = RgbPixel {
+                    red: (r as f64) / (SIZE as f64),
+                    green: (g as f64) / (SIZE as f64),
+                    blue: (b as f64) / (SIZE as f64),
+                };
+                let out_pixel = hlg_pq_mapper.map(in_pixel);
+
+                assert!(0.0 <= out_pixel.red && out_pixel.red <= 1.0);
+                assert!(0.0 <= out_pixel.green && out_pixel.green <= 1.0);
+                assert!(0.0 <= out_pixel.blue && out_pixel.blue <= 1.0);
+            }
+        }
+    }
+}
+
+#[test]
+fn test_pq_all_valid_range_100000() {
+
+    const SIZE: usize = 128;
+
+    let hlg_pq_mapper = HlgPqMapper::new(100000.0);
+
+    for b in 0..=SIZE {
+        for g in 0..=SIZE {
+            for r in 0..=SIZE {
+
+                let in_pixel = RgbPixel {
+                    red: (r as f64) / (SIZE as f64),
+                    green: (g as f64) / (SIZE as f64),
+                    blue: (b as f64) / (SIZE as f64),
+                };
+                let out_pixel = hlg_pq_mapper.map(in_pixel);
+
+                assert!(0.0 <= out_pixel.red && out_pixel.red <= 1.0);
+                assert!(0.0 <= out_pixel.green && out_pixel.green <= 1.0);
+                assert!(0.0 <= out_pixel.blue && out_pixel.blue <= 1.0);
+            }
+        }
+    }
+}
