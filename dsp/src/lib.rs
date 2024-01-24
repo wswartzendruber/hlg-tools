@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 William Swartzendruber
+ * Copyright 2024 William Swartzendruber
  *
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a
  * copy of the MPL was not distributed with this file, You can obtain one at
@@ -48,6 +48,17 @@ impl PqHlgMapper {
     ) -> Self {
 
         let factor = scale_nits_factor(ref_white, 203.0);
+
+        Self::new_by_factor(factor, max_cll, tm_method)
+    }
+
+    pub fn new_by_lum_scale(
+        lum_scale: f64,
+        max_cll: f64,
+        tm_method: ToneMapMethod,
+    ) -> Self {
+
+        let factor = lum_scale_to_factor(lum_scale);
 
         Self::new_by_factor(factor, max_cll, tm_method)
     }
@@ -101,6 +112,13 @@ impl PqSdrMapper {
     pub fn new_by_ref_white(ref_white: f64, max_cll: f64, tm_method: ToneMapMethod) -> Self {
 
         let factor = scale_nits_factor(ref_white, 203.0);
+
+        Self::new_by_factor(factor, max_cll, tm_method)
+    }
+
+    pub fn new_by_lum_scale(lum_scale: f64, max_cll: f64, tm_method: ToneMapMethod) -> Self {
+
+        let factor = lum_scale_to_factor(lum_scale);
 
         Self::new_by_factor(factor, max_cll, tm_method)
     }
@@ -217,6 +235,10 @@ impl PqPrepper {
         // 1,000 NIT CLAMPING
         pixel.clamp(0.0, 0.1)
     }
+}
+
+fn lum_scale_to_factor(lum_scale: f64) -> f64 {
+    lum_scale.powf(0.3333333333333333)
 }
 
 //

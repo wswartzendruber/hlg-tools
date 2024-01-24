@@ -1,5 +1,5 @@
 #
-# Copyright 2023 William Swartzendruber
+# Copyright 2024 William Swartzendruber
 #
 # To the extent possible under law, the person who associated CC0 with this file has waived all
 # copyright and related or neighboring rights to this file.
@@ -13,7 +13,7 @@
 [package]
 name = "mono709"
 description = "Generates a Cube LUT for previewing BT.709 in black and white; uses Oklab"
-version = "2.0.0"
+version = "2.1.0"
 authors = ["William Swartzendruber <wswartzendruber@gmail.com>"]
 edition = "2021"
 license = "MPL-2.0"

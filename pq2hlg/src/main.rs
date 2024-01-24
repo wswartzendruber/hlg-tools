@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 William Swartzendruber
+ * Copyright 2024 William Swartzendruber
  *
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a
  * copy of the MPL was not distributed with this file, You can obtain one at
@@ -51,7 +51,8 @@ fn main() {
             .long("exposure")
             .short("e")
             .value_name("FACTOR")
-            .help("Scales the exposure of the input video by the specified factor using Oklab")
+            .help("Scales the exposure of the input video by the specified factor using Oklab \
+                (power curve)")
             .takes_value(true)
             .required(false)
             .conflicts_with("ref-white")
@@ -77,6 +78,31 @@ fn main() {
             .help("Brightness of the input video stream's reference white level")
             .takes_value(true)
             .required(false)
+            .conflicts_with("lum-scale")
+            .validator(|value| {
+                let ref_white = value.parse::<f64>();
+                if ref_white.is_err() {
+                    return Err("Must be a floating point value".to_string())
+                }
+                let ref_white_value = ref_white.unwrap();
+                if !ref_white_value.is_normal() {
+                    return Err("Must be a normal number".to_string())
+                }
+                if !ref_white_value.is_sign_positive() {
+                    return Err("Must be a positive number".to_string())
+                }
+                Ok(())
+            })
+        )
+        .arg(Arg::with_name("lum-scale")
+            .long("lum-scale")
+            .short("l")
+            .value_name("FACTOR")
+            .help("Scales the exposure of the input video by the specified factor using Oklab \
+                (linear)")
+            .takes_value(true)
+            .required(false)
+            .conflicts_with("exposure")
             .validator(|value| {
                 let ref_white = value.parse::<f64>();
                 if ref_white.is_err() {
@@ -166,7 +192,7 @@ fn main() {
             SDR. This can be used to compare the converted output to available BT.709 frames \
             once they are also converted to black and white. In this way, --exposure can be \
             adjusted until the two sets of screenshots match as closely as possible.\n\n\
-            Copyright © 2023 William Swartzendruber\n\
+            Copyright © 2024 William Swartzendruber\n\
             Licensed under the Mozilla Public License 2.0\n\
             <{}>", env!("CARGO_PKG_REPOSITORY")).as_str())
         .get_matches();
@@ -181,48 +207,70 @@ fn main() {
     let mapper: Box<dyn Mapper> = if matches.is_present("preview") {
         header.push(String::from("preview: true"));
         Box::new(
-            match (matches.value_of("exposure"), matches.value_of("ref-white")) {
-                (None, None) => {
+            match (
+                matches.value_of("exposure"),
+                matches.value_of("ref-white"),
+                matches.value_of("lum-scale")
+            ) {
+                (None, None, None) => {
                     PqSdrMapper::new(max_cll, tm_method)
                 }
-                (Some(exposure), None) => {
+                (Some(exposure), None, None) => {
                     header.push(format!("exposure: {}", exposure));
                     PqSdrMapper::new_by_factor(
                         exposure.parse::<f64>().unwrap(), max_cll, tm_method
                     )
                 }
-                (None, Some(ref_white)) => {
+                (None, Some(ref_white), None) => {
                     header.push(format!("ref-white: {}", ref_white));
                     PqSdrMapper::new_by_ref_white(
                         ref_white.parse::<f64>().unwrap(), max_cll, tm_method
                     )
                 }
-                (Some(_), Some(_)) => {
-                    unreachable!("--exposure and --ref-white were somehow both defined")
+                (None, None, Some(lum_scale)) => {
+                    header.push(format!("lum-scale: {}", lum_scale));
+                    PqSdrMapper::new_by_lum_scale(
+                        lum_scale.parse::<f64>().unwrap(), max_cll, tm_method
+                    )
+                }
+                _ => {
+                    unreachable!("Two or more of --exposure, --ref-white, and --lum-scale were \
+                        somehow defined")
                 }
             }
         )
     } else {
         header.push(String::from("preview: false"));
         Box::new(
-            match (matches.value_of("exposure"), matches.value_of("ref-white")) {
-                (None, None) => {
+            match (
+                matches.value_of("exposure"),
+                matches.value_of("ref-white"),
+                matches.value_of("lum-scale")
+            ) {
+                (None, None, None) => {
                     PqHlgMapper::new(max_cll, tm_method)
                 }
-                (Some(exposure), None) => {
+                (Some(exposure), None, None) => {
                     header.push(format!("exposure: {}", exposure));
                     PqHlgMapper::new_by_factor(
                         exposure.parse::<f64>().unwrap(), max_cll, tm_method
                     )
                 }
-                (None, Some(ref_white)) => {
+                (None, Some(ref_white), None) => {
                     header.push(format!("ref-white: {}", ref_white));
                     PqHlgMapper::new_by_ref_white(
                         ref_white.parse::<f64>().unwrap(), max_cll, tm_method
                     )
                 }
-                (Some(_), Some(_)) => {
-                    unreachable!("--exposure and --ref-white were somehow both defined")
+                (None, None, Some(lum_scale)) => {
+                    header.push(format!("lum-scale: {}", lum_scale));
+                    PqHlgMapper::new_by_lum_scale(
+                        lum_scale.parse::<f64>().unwrap(), max_cll, tm_method
+                    )
+                }
+                _ => {
+                    unreachable!("Two or more of --exposure, --ref-white, and --lum-scale were \
+                        somehow defined")
                 }
             }
         )
