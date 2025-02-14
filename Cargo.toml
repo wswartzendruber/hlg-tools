@@ -14,6 +14,7 @@
 resolver = "2"
 
 members = [
+    "gamutreduce",
     "hlg2pq",
     "pq2hlg",
     "pqstat",

@@ -198,6 +198,17 @@ impl OklabPixel {
         }
     }
 
+    pub fn to_oklch(&self) -> OklchPixel {
+
+        let atan_ba = self.b.atan2(self.a);
+
+        OklchPixel {
+            l: self.l,
+            c: (self.a.powf(2.0) + self.b.powf(2.0)).sqrt(),
+            h: if atan_ba < 0.0 { atan_ba + 2.0 * std::f64::consts::PI } else { atan_ba },
+        }
+    }
+
     pub fn to_xyz(&self) -> XyzPixel {
 
         let l_ =
@@ -242,6 +253,24 @@ impl Mul<f64> for OklabPixel {
             l: self.l * rhs,
             a: self.a * rhs,
             b: self.b * rhs,
+        }
+    }
+}
+
+#[derive(Debug, Clone, Copy, PartialEq)]
+pub struct OklchPixel {
+    pub l: f64,
+    pub c: f64,
+    pub h: f64,
+}
+
+impl OklchPixel {
+
+    pub fn to_oklab(&self) -> OklabPixel {
+        OklabPixel {
+            l: self.l,
+            a: self.c * self.h.cos(),
+            b: self.c * self.h.sin(),
         }
     }
 }

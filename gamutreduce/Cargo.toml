@@ -1,0 +1,25 @@
+#
+# Copyright 2024 William Swartzendruber
+#
+# To the extent possible under law, the person who associated CC0 with this file has waived all
+# copyright and related or neighboring rights to this file.
+#
+# You should have received a copy of the CC0 legalcode along with this work. If not, see
+# <http://creativecommons.org/publicdomain/zero/1.0/>.
+#
+# SPDX-License-Identifier: CC0-1.0
+#
+
+[package]
+name = "gamutreduce"
+description = "Generates a Cube LUT for converting BT.2020 SDR to BT.709 SDR; uses Oklab"
+version = "2.1.0"
+authors = ["William Swartzendruber <wswartzendruber@gmail.com>"]
+edition = "2021"
+license = "MPL-2.0"
+repository = "https://github.com/wswartzendruber/hlg-tools"
+
+[dependencies]
+dsp = { path = "../dsp" }
+clap = "~2.27.0"
+rayon = "~1.10.0"
