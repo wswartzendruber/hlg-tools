@@ -21,4 +21,4 @@ repository = "https://github.com/wswartzendruber/hlg-tools"
 
 [dependencies]
 dsp = { path = "../dsp" }
-clap = "~2.27.0"
+clap = "2.34.0"

@@ -21,4 +21,4 @@ repository = "https://github.com/wswartzendruber/hlg-tools"
 
 [dev-dependencies]
 assert_approx_eq = "1.1.0"
-more-asserts = "0.2"
+more-asserts = "0.3.1"
